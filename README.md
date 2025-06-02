@@ -26,4 +26,6 @@ west-2.amazonaws.com/Single_cell_atlas_of_peripheral_immune_response_to_SARS_CoV
 ARS_CoV_2_infection.h5ad"
 ```
 An example summary of the associated is already included in `example/covid19_summary.txt`, but feel free to replace this with your own summary of the COVID-19 manuscript, where you can add analyses you wish CellVoyager to avoid.
-Then simply run `python run.py` which by default uses the COVID-19 dataset and manuscript summary.
+
+
+Then simply run `python run.py` which by default uses the COVID-19 dataset and manuscript summary. You will see the Jupyter notebooks in an `outputs` directory, which will update the notebook in real-time. Currently, the notebooks are run sequentially, but we are currently experimenting with ways to parallelize this.
