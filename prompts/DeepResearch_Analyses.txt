@@ -1,0 +1,49 @@
+## Dimensionality Reduction
+Purpose: Embed high-dimensional gene expression into lower dimensions for visualization and analysis.
+
+Non-linear Embeddings: Further reduce to 2D/3D for visualization using t-SNE or UMAP. Scanpy provides sc.tl.umap(adata) (via UMAP) and sc.tl.tsne(adata). These use the neighborhood graph (see below) to embed cells so that similar cells cluster together. For example, after sc.pp.neighbors, call sc.tl.umap(adata). Alternative embeddings include diffusion map (sc.tl.diffmap) or force-directed graph (sc.tl.draw_graph), though the latter are less commonly used now.
+
+Latent Embedding (scVI): As an advanced dimensionality reduction, the SCVI model produces a probabilistic latent space. After training SCVI, extract latent = model.get_latent_representation() and store it (e.g. in adata.obsm['X_scVI']). These latent coordinates can be used instead of PCA for UMAP/t-SNE or clustering, often yielding better batch correction or representation of complex structure
+
+## Neighborhood Graph Construction
+Purpose: Build a k-nearest-neighbor graph of cells as input for clustering and visualization.
+sc.pp.neighbors: Compute the kNN graph on the chosen low-dimensional representation (PCA or latent) with sc.pp.neighbors(adata, n_neighbors=15, n_pcs=30). This populates adata.obsp['connectivities'] and adata.obsp['distances']. The graph defines edges between similar cells. Parameters include n_neighbors, distance metric, and which embedding to use (via use_rep or default PCA).
+Graph-based Refinements: Additional options allow customizing neighbor computation (e.g. method='umap' vs 'rapids-ann', etc.), but defaults suffice for most use cases. The neighbors graph underlies downstream UMAP/t-SNE and clustering. For example, sc.pp.neighbors(adata) is typically run before sc.tl.umap(adata)
+
+
+## Clustering
+Purpose: Identify groups of similar cells (e.g. cell types or states) in an unsupervised way.
+Leiden Algorithm: A common approach is to use community detection on the kNN graph. Scanpy’s sc.tl.leiden(adata, resolution=1.0, key_added='leiden') partitions cells into clusters (stored in adata.obs['leiden']). Leiden is an improved version of Louvain and requires the neighbors graph to be precomputed. The resolution parameter controls cluster granularity (higher → more clusters).
+Louvain Algorithm: Alternatively, use sc.tl.louvain(adata), which applies the Louvain method. It also depends on sc.pp.neighbors. Both algorithms label clusters in adata.obs.
+Cluster Options: Both Leiden and Louvain can be run with different seeds or restrictions (e.g. restrict_to a subset of obs categories). One can also iterate clustering at multiple resolutions to explore structure.
+Hierarchical Dendrogram (Optional): After clustering, Scanpy can build a dendrogram of cluster relationships with sc.tl.dendrogram(adata, groupby='leiden'), which stores a linkage in adata.uns and can be plotted with sc.pl.dendrogram. This helps interpret cluster similarities.
+Result: The output is a categorical label per cell (e.g. adata.obs['leiden']) representing inferred clusters/cell groups. These are often interpreted as putative cell types or subpopulations.
+
+
+## Trajectory and Pseudotime Analysis
+Purpose: Model continuous developmental or differentiation processes.
+Diffusion Pseudotime (DPT): Scanpy includes sc.tl.dpt(adata, n_dcs=10) to compute a diffusion-based pseudotemporal ordering. One must pick a “root” cell or cluster (often the presumed progenitor); DPT then assigns each cell a pseudotime (adata.obs['dpt_pseudotime']) based on diffusion distance from the root. This creates an ordering reflecting smooth transitions.
+Partition-based Graph Abstraction (PAGA): PAGA computes a coarse-grained connectivity graph between clusters. Using sc.tl.paga(adata, groups='leiden'), one obtains adata.uns['paga'], where edges between clusters have confidence weights. Plotting sc.pl.paga(adata, threshold=0.03) shows a simplified graph of cluster relations. PAGA can also be used to initialize UMAP (sc.tl.umap(adata, init_pos='paga')) for embeddings faithful to overall topology
+
+
+## Differential Expression and Marker Gene Detection
+Purpose: Identify genes that are characteristic of clusters or conditions.
+Rank Genes per Group: Use sc.tl.rank_genes_groups to perform marker analysis. Given adata.obs[groupby] (e.g. 'leiden'), this compares each group to others (or pairwise) and ranks genes by statistical tests. Methods include t-test, Welch’s t-test, Wilcoxon, or logistic regression (method='logreg'). For example, sc.tl.rank_genes_groups(adata, 'leiden', method='wilcoxon') fills adata.uns['rank_genes_groups'] with names, scores, p-values, and log-fold changes for top markers of each cluster. One can customize the test (e.g. method='logreg' for sparse markers). Results can be visualized with sc.pl.rank_genes_groups_heatmap or sc.pl.rank_genes_groups_dotplot.
+Logistic Regression (Alternative): Setting method='logreg' performs logistic regression classification for each gene (as in Ntranos et al., 2019). It often yields robust marker sets.
+SCVI Differential Expression: The trained SCVI model provides model.differential_expression, which can test for differentially expressed genes between groups of cells in a probabilistic framework. For example, model.differential_expression(groupby="cell_type", group1="A", group2="B") returns a dataframe of DE statistics. SCVI supports 1-vs-1 or 1-vs-all testing. This method accounts for model uncertainty and can be more powerful in large datasets.
+
+
+## Gene Signature Scoring
+Purpose: Quantify the expression of gene sets (e.g. cell-cycle genes, pathways) per cell.
+General Gene Set Scoring: sc.tl.score_genes(adata, gene_list, score_name="score") computes the average expression of a set of genes (minus average of random reference genes) for each cell. The result is added to adata.obs['score_name']. This can reflect pathway activity or other signatures.
+Cell-Cycle Scoring: A specialized function sc.tl.score_genes_cell_cycle(adata, s_genes, g2m_genes) takes lists of S-phase and G2M-phase marker genes and assigns each cell an S_score, G2M_score, and a categorical phase (G1, S, or G2M). This is useful to regress out or analyze cell-cycle effects.
+Options: Gene lists (e.g. provided with Scanpy, or user-defined) can be passed. The scoring considers control gene sets (by default) to normalize the scores. Cells are labeled by dominant phase if desired.
+
+## Visualization
+Purpose: Plot results (embeddings, marker expression, QC) to interpret data.
+Embedding Plots: sc.pl.umap(adata, color=[...]) or sc.pl.tsne(...) plot the 2D embedding, coloring points by cluster, sample, or gene expression. For example, sc.pl.umap(adata, color=['leiden', 'n_genes_by_counts']). sc.pl.draw_graph (force layout) and sc.pl.paga (PAGA graph) are also available. Many sc.pl functions return Matplotlib axes if show=False.
+QC and Metadata Plots: sc.pl.violin(adata, keys, ...) creates violin plots per group (e.g. distribution of counts or gene expression across clusters). In the QC tutorial, Scanpy shows violin plots of total counts and mitochondrial percentage. sc.pl.scatter(adata, x, y, color=...) makes 2D scatter (e.g. total_counts vs n_genes).
+Marker Gene Plots: Once clusters are defined, visualizing marker genes is key. Common plots include dotplots, heatmaps, and violin plots of cluster markers. For example, sc.pl.dotplot(adata, var_names, groupby='leiden') shows mean expression (color) and percent expressed (dot size) of selected genes per cluster. Similarly, sc.pl.matrixplot is a heatmap variant. The core plotting tutorial demonstrates dotplots and violin plots for cluster markers.
+Gene Expression Distributions: sc.pl.violin(adata, gene_list, groupby='leiden') and sc.pl.stacked_violin show the distribution of one or more genes across clusters.
+Clustered Heatmaps: sc.pl.heatmap can display expression of marker genes across clusters. sc.pl.clustermap (wrapper around Seaborn) can cluster cells/genes in a heatmap, often using raw or log counts.
+Pathway/Gene Set Plots: Custom heatmaps or barplots using Matplotlib/Seaborn can be made from gene scores or DE results (using Pandas/NumPy to extract data). Scanpy’s plots cover most scRNA needs, but any Matplotlib/Seaborn function can be used on data from adata.obs, adata.var, or adata.layers. For example, one might use sns.clustermap on a subset of adata.X.

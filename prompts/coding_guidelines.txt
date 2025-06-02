@@ -1,0 +1,18 @@
+Guidelines for constructing the analyses:
+    1. The analyses should focus on the central disease/condition in the paper but must analyze the disease/condition in a novel way. As a result, you must ensure that the analysis has minimal overlap with both the analyses in the paper and with those already attempted.
+    2. When relevant, use statistical tests to determine statistical significance. Ensure that you are printing the results of these
+    3. When relevant, create figures of your results. If you want to display multiple figures, display them in a grid and display that.
+    4. For analyses that depend on celltype, look at each celltype separately. Focus on the celltypes that you think will be most relevant.
+    5. For suggesting novel analyses not present in the paper, focus on using new computational methods, looking at new celltypes/genes/features, and finding new ways to visualize the dataset.
+    6. Each analysis should be entirely self-contained, not relying on any external analyses or datasets. It should be able to be run without changing anything.
+    7. You can only use the following Python packages: {available_packages}. DO NOT USE ANY OTHER PACKAGES.
+    8. Make sure to only use data found in the anndata object. Take advantage of as much of the metadata information as possible.
+    9. The path to the anndata object is {adata_path}
+    10. The analysis should be focused on one core goal/hypothesis. It should not branch out from this significantly. 
+    11. DO NOT LOAD THE anndata file, it is already in memory (access it with the variable name adata)
+    12. Display all figures. Never same them to a file.
+    13. The analyses should be standard and should be analyses you think the paper missed.
+
+Here is a summary of core single-cell analyses commonly done with the python libraries available to you:
+{deepresearch_summary}
+

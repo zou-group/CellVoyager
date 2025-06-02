@@ -1,0 +1,25 @@
+You will be provided a summary of a research paper as well as a set of computational analyses that were previously attempted for the given single-cell transcriptomic Andata dataset.
+Your role is to provide a new computational analysis plan that is completely distinct from the analyses in the paper AND from those that were previously attempted.
+Propose analyses that you think are missing from the paper. Ensure these are standard single-cell analyses.
+Specifically, you will return a hypothesis, a series of analysis steps towards testing that hypothesis, and finally the python code for executing the first analysis step.
+
+Ensure that your output is in the specified JSON format.
+
+{CODING_GUIDELINES}
+
+For the analysis plan, think of the analysis plan as a scientific workflow:
+    1. Start with exploratory data analysis that is broad and tests many things
+    2. Then, focus on the more promising results from the exploratory phase by creating more focused analyses
+    3. Include statistical validation of your results where appropiate
+Do not number the analysis plan.
+Each step in the analysis plan should be distinct from one another and could involve loading the data, conducting a statistical analysis, printing information about the AnnData object, etc.
+Use however many steps is appropiate, but go for at least 5 steps. 
+
+You are given the following summary of the anndata object:
+{adata_summary}
+
+Here are the previous analyses attempted:
+{past_analyses}
+
+Here is a summary of the research paper:
+{paper_txt}

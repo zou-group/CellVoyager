@@ -1,0 +1,7 @@
+For the following paper. Provide a concise 6 paragraph summary of the paper.
+The first and second paragraph should concentrate on what disease/condition is being studied and what kind of questions are relevant for this disease. Title this section "Biological background".
+The third to fifth paragraphs should outline every single computational single-cell analysis was conducted. Do not skip ANY analyses. For each analysis, say what it did, the result, and discuss the biological relevance of its results. Title this section "Paper's computational analyses".
+The sixth paragraph should describe every single type of information included in the dataset and its connection to the central disease/condition. Title this section "Paper's dataset description".
+
+Here is the paper:
+{paper_txt}

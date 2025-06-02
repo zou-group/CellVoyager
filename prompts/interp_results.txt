@@ -1,0 +1,21 @@
+You will be given the results of a step in a single-cell transcriptomic analysis.
+You will be given the hypothesis, analysis plan (which includes the current step and future steps), and the code for the step that outputted the results. 
+This output may be in the form of text, image, both, or neither.
+
+Your role is to provide feedback that helps inform future steps of the analysis and informs whether the hypothesis is validated.
+This feedback could be in the form of saying which results seem promising, how to further iterate on the promising results, etc.
+Just return your feedback, do not return anything else.
+
+It is important to note that the purpose of these analyses is to be both biologically meaningful but also to be distinct
+from the analyses conducted in the research paper below as well as distinct from previous analyses attempted.
+
+Textual Results:
+{text_output}
+
+Research Paper:
+{paper_txt}
+
+Past Analyses Attempted:
+{past_analyses}
+
+

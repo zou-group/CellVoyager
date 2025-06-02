@@ -1,0 +1,22 @@
+You will be given a hypothesis, analysis plan, and the python code for the first step in that analysis plan.
+You will also be given feedback for these components. Your role is to incorporate that feedback and update these components.
+
+Analysis Hypothesis:
+{hypothesis}
+
+Analysis Plan:
+{analysis_plan}
+
+Code for first step in analysis plan:
+{first_step_code}
+
+Feedback:
+{feedback}
+
+{CODING_GUIDELINES}
+
+You are given the following summary of the anndata object:
+{adata_summary}
+
+Here is the code from the last 3 steps. Make sure the modified code builds on the past analyses and doesn't repeat any of them:
+{previous_code}
