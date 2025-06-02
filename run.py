@@ -19,16 +19,3 @@ agent.run()  # This will run all the analyses the agent decides to attempt.
 
 # Generate Jupyter notebook after analysis is complete
 generate_notebook(agent.completed_analyses, agent.output_dir)
-
-def collect_feedback():
-    # Ask for feedback from the user
-    print("Please provide feedback on the analysis (e.g., improvements or ideas for new analysis).")
-    feedback = input("Your feedback: ")
-    return feedback
-
-# Only after all analyses are completed, ask for feedback
-#feedback = collect_feedback()
-
-# Example feedback handling:
-#print("\nUser Feedback: ", feedback)
-# Here, you can send the feedback to the agent or use it to tweak future analyses.
