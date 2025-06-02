@@ -9,8 +9,11 @@ import numpy as np
 import sys
 from multiprocessing import Pool, cpu_count
 
-NUM_RUN = 3
 import sys
+import json
+import re
+
+NUM_RUN = 3
 MODEL = sys.argv[1]
 print(f'USING {MODEL}')
 
@@ -19,9 +22,9 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI()
 
-input_dir = "inputs"
-output_dir = "outputs_check"
-results_dir = "results_check"
+input_dir = "data"
+output_dir = "responses"
+results_dir = "judged"
 
 agent_output_path = os.path.join(output_dir, f"agent_analyses_unconditioned_{MODEL.replace('-', '')}_{{index}}.json")
 data_files = ["gemini_2.5_pro_qa_unconditioned.csv", "gemini_2.5_pro_qa_unconditioned_p2.csv", "gemini_2.5_pro_qa_unconditioned_p3.csv"]
@@ -38,9 +41,6 @@ df = pd.concat(dfs, ignore_index=True)
 
 analyses_full = df['analyses_full'].tolist()
 home_dir = "/home/groups/jamesz/salber/scAgent_v2"
-
-import json
-import re
 
 def fix_malformed_json(json_str):
     """Fix common JSON formatting issues"""

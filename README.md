@@ -40,3 +40,22 @@ An example summary of the associated manuscript is already included in `example/
 
 
 Then simply run `python run.py` which by default uses the COVID-19 dataset and manuscript summary. You will see the Jupyter notebooks in an `outputs` directory, which will update the notebook in real-time. Currently, the notebooks are run sequentially, but we are currently experimenting with ways to parallelize this.
+
+## CellBench
+
+To run base LLMs (gpt-4o, o3-mini) 3x on CellBench:
+
+```
+cd CellBench
+python run_base_llm.py
+python run_llm_judge.py
+```
+
+To run agent 3x on CellBench:
+
+```
+cd CellBench
+python run_agent.py {gpt-4o|o3-mini}
+```
+
+Metrics should be printed to stdout and saved in the `responses` and `judged` dirs.
