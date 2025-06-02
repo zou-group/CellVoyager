@@ -6,12 +6,12 @@ from notebook_generator import generate_notebook
 
 # Initialize the agent
 agent = AnalysisAgent(
-    h5ad_path="/scratch/users/salber/endo_data.h5ad",
-    paper_summary_path="/home/groups/jamesz/salber/scAgent/paper_summaries/endo.txt",
+    h5ad_path="example/covid19.h5ad",
+    paper_summary_path="example/covid19_summary.txt",
     openai_api_key=os.getenv('OPENAI_API_KEY'),
     model_name="o3-mini",
-    analysis_name="endo",
-    num_analyses=8
+    analysis_name="covid19",
+    num_analyses=3
 )
 
 # Run the analysis
