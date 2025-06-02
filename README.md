@@ -17,6 +17,8 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxx
 
 ## Example
 We are going to use the COVID-19 case study from the CellVoyager, which builds on [this paper](https://www.nature.com/articles/s41591-020-0944-y).
+
+
 To download the `.h5ad` object run
 ```
 curl -o example/covid19.h5ad "https://hosted-matrices-prod.s3-us-
