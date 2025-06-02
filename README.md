@@ -10,6 +10,10 @@ In `run.py` set the following parameters
 2. Set `paper_summary_path` to the absolute path of a `.txt` file containing the LLM or human generated summary of the paper
 3. Set `analysis_name` to what you want your analysis files to be saved under
 
+
+From there, all you need to do to run the agent is to execute: `python run.py`
+
+
 The current implementation of the model only support OpenAI models. As a result, it assumes you have `.env` file that contains
 ```
 OPENAI_API_KEY=sk-xxxxxxxxxxxxx
