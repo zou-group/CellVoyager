@@ -1,5 +1,12 @@
 # CellVoyager
 ## Running CellVoyager
+First clone the current repository as:
+```
+git clone https://github.com/zou-group/CellVoyager.git
+cd CellVoyager
+```
+
+
 To create the necessary environment, run
 ```
 conda env create -f CellVoyager_env.yaml
