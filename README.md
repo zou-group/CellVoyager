@@ -1,4 +1,7 @@
-# CellVoyager
+<div align="center">
+<img src="images/logo.jpeg" alt="CellVoyager Logo" width="700">
+</div>
+
 ## Running CellVoyager
 First clone the current repository as:
 ```
