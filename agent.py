@@ -20,7 +20,8 @@ import io
 
 AVAILABLE_PACKAGES = "scanpy, scvi, CellTypist, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 class AnalysisAgent:
-    def __init__(self, h5ad_path, paper_summary_path, openai_api_key, model_name, analysis_name, num_analyses=5, max_iterations=6, prompt_dir="prompts"):
+    def __init__(self, h5ad_path, paper_summary_path, openai_api_key, model_name, analysis_name, 
+                num_analyses=5, max_iterations=6, prompt_dir="prompts", output_home=".", log_home="."):
         self.h5ad_path = h5ad_path
         self.paper_summary = open(paper_summary_path).read()
         self.openai_api_key = openai_api_key
@@ -34,7 +35,7 @@ class AnalysisAgent:
         self.failed_analyses = []
         # Create unique output directory based on analysis name and timestamp
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.output_dir = os.path.join("outputs", f"{analysis_name}_{timestamp}")
+        self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
         
         self.client = openai.OpenAI(api_key=openai_api_key)
         
@@ -55,7 +56,7 @@ class AnalysisAgent:
         self.coding_system_prompt = open(os.path.join(self.prompt_dir, "coding_system_prompt.txt")).read()
 
         # Initialize logger: keeps track of all actions, prompts, responses, errors, etc.
-        self.logger = Logger(self.analysis_name)
+        self.logger = Logger(self.analysis_name, log_dir=os.path.join(log_home, "logs"))
         self.logger.log_action(
             "Agent initialized", 
             f"h5ad_path: {h5ad_path}\n" +
@@ -64,6 +65,10 @@ class AnalysisAgent:
         )
         # Initialize notebook executor
         self.executor = ExecutePreprocessor(timeout=600, kernel_name='python3')
+        
+        # Initialize persistent kernel for efficient cell execution
+        self.kernel_manager = None
+        self.kernel_client = None
 
         # Load the .obs data from the anndata file
         if self.h5ad_path == "": # JUST FOR BENCHMARKING
@@ -439,57 +444,212 @@ class AnalysisAgent:
 
         return analyses
 
+    def cleanup(self):
+        """Clean up resources, including the persistent kernel"""
+        self.stop_persistent_kernel()
+
+    def start_persistent_kernel(self):
+        """Start a persistent kernel for efficient cell execution"""
+        try:
+            from jupyter_client import KernelManager
+            from jupyter_client.kernelspec import KernelSpecManager
+            
+            # Create kernel manager
+            self.kernel_manager = KernelManager(kernel_name='python3')
+            self.kernel_manager.start_kernel()
+            
+            # Create kernel client
+            self.kernel_client = self.kernel_manager.client()
+            self.kernel_client.start_channels()
+            self.kernel_client.wait_for_ready()
+            
+            print("✅ Persistent kernel started")
+            return True
+        except Exception as e:
+            print(f"⚠️ Failed to start persistent kernel: {str(e)}")
+            return False
+    
+    def stop_persistent_kernel(self):
+        """Stop the persistent kernel"""
+        if self.kernel_client:
+            self.kernel_client.stop_channels()
+        if self.kernel_manager:
+            self.kernel_manager.shutdown_kernel()
+        print("✅ Persistent kernel stopped")
+    
+    def execute_single_cell(self, code):
+        """Execute a single cell using the persistent kernel"""
+        if not self.kernel_client:
+            return False, "No kernel available", None
+        
+        try:
+            # Execute the code
+            msg_id = self.kernel_client.execute(code)
+            
+            # Get the reply
+            reply = self.kernel_client.get_shell_msg(timeout=60)
+            
+            if reply['content']['status'] == 'ok':
+                # Get the output
+                outputs = []
+                while True:
+                    try:
+                        msg = self.kernel_client.get_iopub_msg(timeout=1)
+                        if msg['parent_header']['msg_id'] == msg_id:
+                            if msg['msg_type'] == 'stream':
+                                outputs.append({
+                                    'output_type': 'stream',
+                                    'name': msg['content']['name'],
+                                    'text': msg['content']['text']
+                                })
+                            elif msg['msg_type'] == 'execute_result':
+                                outputs.append({
+                                    'output_type': 'execute_result',
+                                    'data': msg['content']['data'],
+                                    'execution_count': msg['content']['execution_count']
+                                })
+                            elif msg['msg_type'] == 'display_data':
+                                outputs.append({
+                                    'output_type': 'display_data',
+                                    'data': msg['content']['data']
+                                })
+                            elif msg['msg_type'] == 'error':
+                                outputs.append({
+                                    'output_type': 'error',
+                                    'ename': msg['content']['ename'],
+                                    'evalue': msg['content']['evalue'],
+                                    'traceback': msg['content']['traceback']
+                                })
+                                return False, f"{msg['content']['ename']}: {msg['content']['evalue']}", outputs
+                    except:
+                        break
+                
+                return True, None, outputs
+            else:
+                return False, "Execution failed", None
+                
+        except Exception as e:
+            return False, str(e), None
+
     def run(self, max_fix_attempts=3):
         # TODO: incorporate previous code in self.fix_code for cases where the fix depends on previous code cells
         past_analyses = ""
 
-        for analysis_idx in range(self.num_analyses):
-            # Reset code memory for this analysis
-            self.code_memory = []
-            
-            print(f"\n🚀 Starting Analysis {analysis_idx+1}")
+        try:
+            for analysis_idx in range(self.num_analyses):
+                # Reset code memory for this analysis
+                self.code_memory = []
+                
+                print(f"\n🚀 Starting Analysis {analysis_idx+1}")
 
-            analysis = self.generate_initial_analysis(past_analyses)
-            hypothesis = analysis["hypothesis"]                
-            analysis_plan = analysis["analysis_plan"]
-            initial_code = analysis["first_step_code"]
-            
-            # Log only the output of the analysis
-            self.logger.log_response(f"Hypothesis: {hypothesis}\n\nAnalysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nInitial Code:\n{initial_code}", "initial_analysis")
-            
-            # Get feedback on initial analysis plan
-            modified_analysis = self.get_feedback(analysis, past_analyses, None)
+                analysis = self.generate_initial_analysis(past_analyses)
+                hypothesis = analysis["hypothesis"]                
+                analysis_plan = analysis["analysis_plan"]
+                initial_code = analysis["first_step_code"]
+                
+                # Log only the output of the analysis
+                self.logger.log_response(f"Hypothesis: {hypothesis}\n\nAnalysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nInitial Code:\n{initial_code}", "initial_analysis")
+                
+                # Get feedback on initial analysis plan
+                modified_analysis = self.get_feedback(analysis, past_analyses, None)
 
-            hypothesis = modified_analysis["hypothesis"]                
-            analysis_plan = modified_analysis["analysis_plan"]
-            current_code = modified_analysis["first_step_code"]
-            
-            # Log revised analysis plan
-            self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", "revised_analysis")
-            
-            # Create a markdown cell with the analysis plan
-            plan_markdown = "# Analysis Plan\n\n**Hypothesis**: " + hypothesis + "\n\n## Steps:\n"
-            for step in analysis_plan:
-                plan_markdown += f"- {step}\n"
+                hypothesis = modified_analysis["hypothesis"]                
+                analysis_plan = modified_analysis["analysis_plan"]
+                current_code = modified_analysis["first_step_code"]
+                
+                # Log revised analysis plan
+                self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", "revised_analysis")
+                
+                # Create a markdown cell with the analysis plan
+                plan_markdown = "# Analysis Plan\n\n**Hypothesis**: " + hypothesis + "\n\n## Steps:\n"
+                for step in analysis_plan:
+                    plan_markdown += f"- {step}\n"
 
-            # Create initial notebook with the hypothesis and plan
-            notebook = self.create_initial_notebook(hypothesis)
-            
-            # Add the analysis plan as a markdown cell
-            notebook.cells.append(nbf.v4.new_markdown_cell(plan_markdown))
-            
-            # Add a markdown cell for the first step description
-            if analysis_plan:
-                notebook.cells.append(nbf.v4.new_markdown_cell(f"## {modified_analysis['code_description']}"))
-            
-            # Add the first analysis code cell
-            initial_code = strip_code_markers(initial_code)
-            notebook.cells.append(nbf.v4.new_code_cell(initial_code))
+                # Create initial notebook with the hypothesis and plan
+                notebook = self.create_initial_notebook(hypothesis)
+                
+                # Add the analysis plan as a markdown cell
+                notebook.cells.append(nbf.v4.new_markdown_cell(plan_markdown))
+                
+                # Add a markdown cell for the first step description
+                if analysis_plan:
+                    notebook.cells.append(nbf.v4.new_markdown_cell(f"## {modified_analysis['code_description']}"))
+                
+                # Add the first analysis code cell
+                initial_code = strip_code_markers(initial_code)
+                notebook.cells.append(nbf.v4.new_code_cell(initial_code))
 
-            for iteration in range(self.max_iterations):
-                # Execute the notebook
+                for iteration in range(self.max_iterations):
+                    # Execute the notebook
+                    success, error_msg, notebook = self.execute_notebook(notebook, past_analyses)
+
+                    if success:
+                        results_interpretation = self.interpret_results(notebook, past_analyses)
+                        # Log the interpretation
+                        self.logger.log_response(results_interpretation, "results_interpretation")
+                        # Add interpretation as a markdown cell
+                        interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
+                        notebook.cells.append(interpretation_cell)
+
+                    else:
+                        print(f"⚠️ Code errored with: {error_msg}")
+                        fix_attempt, fix_successful = 0, False
+                        results_interpretation = ""  # Initialize at start of error block
+                        while fix_attempt < max_fix_attempts and not fix_successful:
+                            fix_attempt += 1
+                            print(f"  🔧 Fix attempt {fix_attempt}/{max_fix_attempts}")
+
+                            current_code = self.fix_code(current_code, error_msg)
+                            current_code = strip_code_markers(current_code)
+                            notebook.cells[-1] = nbf.v4.new_code_cell(current_code)
+
+                            success, error_msg, notebook = self.execute_notebook(notebook, past_analyses)
+
+                            if success:
+                                fix_successful = True
+                                print(f"  ✅ Fix successful on attempt {fix_attempt}")
+                                results_interpretation = self.interpret_results(notebook, past_analyses)
+                                # Log the interpretation
+                                self.logger.log_response(results_interpretation, "results_interpretation")
+                                # Add interpretation as a markdown cell
+                                interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
+                                notebook.cells.append(interpretation_cell)
+                                break
+                            else:
+                                print(f"  ❌ Fix attempt {fix_attempt} failed")
+
+                                if fix_attempt == max_fix_attempts:
+                                    print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts. Moving to next iteration.")
+                                    results_interpretation = "Current analysis step failed to run. Try an alternative approach"
+                                    interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
+                                    notebook.cells.append(interpretation_cell)
+                        if not results_interpretation:  # Only get interpretation if we haven't set the failure message
+                            results_interpretation = self.interpret_results(notebook, past_analyses)
+                            interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
+                            notebook.cells.append(interpretation_cell)
+
+                    analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
+                    next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation)
+
+                    # Get feedback on the next step(s)
+                    print("Getting feedback on the next step(s)")
+                    modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
+                    
+                    # Log the next step
+                    self.logger.log_response(f"Next step: {modified_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{modified_analysis['first_step_code']}\n```", "next_step")
+
+                    # Add the next step to the notebook
+                    #analysis_step_plan = modified_analysis["analysis_plan"][0]
+                    code_description = modified_analysis["code_description"]
+                    notebook.cells.append(nbf.v4.new_markdown_cell(f"## {code_description}"))
+                    modified_code = strip_code_markers(modified_analysis["first_step_code"])
+                    notebook.cells.append(nbf.v4.new_code_cell(modified_code))
+                    
+                    # Update the code memory with the new cell
+                    self.update_code_memory(notebook.cells)
+
+                ### Execute the FINAL cell ###
                 success, error_msg, notebook = self.execute_notebook(notebook, past_analyses)
-
                 if success:
                     results_interpretation = self.interpret_results(notebook, past_analyses)
                     # Log the interpretation
@@ -497,11 +657,10 @@ class AnalysisAgent:
                     # Add interpretation as a markdown cell
                     interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
                     notebook.cells.append(interpretation_cell)
-
                 else:
-                    print(f"⚠️ Code errored with: {error_msg}")
+                    print(f"⚠️ Final cell execution failed with: {error_msg}")
                     fix_attempt, fix_successful = 0, False
-                    results_interpretation = ""  # Initialize at start of error block
+                    results_interpretation = None
                     while fix_attempt < max_fix_attempts and not fix_successful:
                         fix_attempt += 1
                         print(f"  🔧 Fix attempt {fix_attempt}/{max_fix_attempts}")
@@ -526,85 +685,22 @@ class AnalysisAgent:
                             print(f"  ❌ Fix attempt {fix_attempt} failed")
 
                             if fix_attempt == max_fix_attempts:
-                                print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts. Moving to next iteration.")
-                                results_interpretation = "Current analysis step failed to run. Try an alternative approach"
+                                print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts.")
+                                results_interpretation = "Final analysis step failed to run."
                                 interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
                                 notebook.cells.append(interpretation_cell)
-                    if not results_interpretation:  # Only get interpretation if we haven't set the failure message
-                        results_interpretation = self.interpret_results(notebook, past_analyses)
-                        interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
-                        notebook.cells.append(interpretation_cell)
 
-                analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
-                next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation)
+                # Save the notebook
+                notebook_path = os.path.join(self.output_dir, f"{self.analysis_name}_analysis_{analysis_idx+1}.ipynb")
+                with open(notebook_path, 'w', encoding='utf-8') as f:
+                    nbf.write(notebook, f)
+                print(f"💾 Saved notebook to: {notebook_path}")
 
-                # Get feedback on the next step(s)
-                print("Getting feedback on the next step(s)")
-                modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
-                
-                # Log the next step
-                self.logger.log_response(f"Next step: {modified_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{modified_analysis['first_step_code']}\n```", "next_step")
-
-                # Add the next step to the notebook
-                #analysis_step_plan = modified_analysis["analysis_plan"][0]
-                code_description = modified_analysis["code_description"]
-                notebook.cells.append(nbf.v4.new_markdown_cell(f"## {code_description}"))
-                modified_code = strip_code_markers(modified_analysis["first_step_code"])
-                notebook.cells.append(nbf.v4.new_code_cell(modified_code))
-                
-                # Update the code memory with the new cell
-                self.update_code_memory(notebook.cells)
-
-            ### Execute the FINAL cell ###
-            success, error_msg, notebook = self.execute_notebook(notebook, past_analyses)
-            if success:
-                results_interpretation = self.interpret_results(notebook, past_analyses)
-                # Log the interpretation
-                self.logger.log_response(results_interpretation, "results_interpretation")
-                # Add interpretation as a markdown cell
-                interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
-                notebook.cells.append(interpretation_cell)
-            else:
-                print(f"⚠️ Final cell execution failed with: {error_msg}")
-                fix_attempt, fix_successful = 0, False
-                results_interpretation = None
-                while fix_attempt < max_fix_attempts and not fix_successful:
-                    fix_attempt += 1
-                    print(f"  🔧 Fix attempt {fix_attempt}/{max_fix_attempts}")
-
-                    current_code = self.fix_code(current_code, error_msg)
-                    current_code = strip_code_markers(current_code)
-                    notebook.cells[-1] = nbf.v4.new_code_cell(current_code)
-
-                    success, error_msg, notebook = self.execute_notebook(notebook, past_analyses)
-
-                    if success:
-                        fix_successful = True
-                        print(f"  ✅ Fix successful on attempt {fix_attempt}")
-                        results_interpretation = self.interpret_results(notebook, past_analyses)
-                        # Log the interpretation
-                        self.logger.log_response(results_interpretation, "results_interpretation")
-                        # Add interpretation as a markdown cell
-                        interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
-                        notebook.cells.append(interpretation_cell)
-                        break
-                    else:
-                        print(f"  ❌ Fix attempt {fix_attempt} failed")
-
-                        if fix_attempt == max_fix_attempts:
-                            print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts.")
-                            results_interpretation = "Final analysis step failed to run."
-                            interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
-                            notebook.cells.append(interpretation_cell)
-
-            # Save the notebook
-            notebook_path = os.path.join(self.output_dir, f"{self.analysis_name}_analysis_{analysis_idx+1}.ipynb")
-            with open(notebook_path, 'w', encoding='utf-8') as f:
-                nbf.write(notebook, f)
-            print(f"💾 Saved notebook to: {notebook_path}")
-
-            # TODO: modify this to include the entire analysis plan
-            past_analyses += f"{hypothesis}\n"
+                # TODO: modify this to include the entire analysis plan
+                past_analyses += f"{hypothesis}\n"
+        finally:
+            # Clean up resources
+            self.cleanup()
 
     def improve_notebook(self, notebook_path, feedback, output_path=None):
         """
@@ -795,37 +891,52 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
                     nbf.write(notebook, f)
                     print(f"💾 Saved notebook to: {notebook_path}")
                 
-                # Create temporary execution notebook
-                temp_path = os.path.join(temp_dir, "temp_notebook.ipynb")
-                with open(temp_path, 'w', encoding='utf-8') as f:
-                    nbf.write(notebook, f)
+                # Find the last code cell to execute
+                last_code_cell_index = -1
+                for i in range(len(notebook.cells) - 1, -1, -1):
+                    if notebook.cells[i].cell_type == 'code':
+                        last_code_cell_index = i
+                        break
                 
-                # Read notebook for execution
-                with open(temp_path, encoding='utf-8') as f:
-                    nb = nbf.read(f, as_version=4)
+                if last_code_cell_index == -1:
+                    print("No code cell found to execute")
+                    return True, None, notebook
                 
-                # Create notebook with just the last cell for execution
-                last_cell_nb = nbf.v4.new_notebook()
-                # Copy all cells except last (with outputs preserved)
-                for i in range(len(nb.cells) - 1):
-                    last_cell_nb.cells.append(nb.cells[i])
-                # Add the last cell to execute
-                last_cell_nb.cells.append(nb.cells[-1])
+                # Try to use persistent kernel for efficient execution
+                if self.kernel_manager is None:
+                    if not self.start_persistent_kernel():
+                        print("⚠️ Falling back to traditional execution method")
+                        return self._execute_notebook_traditional(notebook, past_analyses)
                 
-                # Execute only the last cell
-                self.executor.preprocess(last_cell_nb, {'metadata': {'path': temp_dir}})
+                # Execute only the last cell using persistent kernel
+                last_cell = notebook.cells[last_code_cell_index]
+                success, error_msg, outputs = self.execute_single_cell(last_cell.source)
                 
-                # Update original notebook with executed cell
-                nb.cells[-1] = last_cell_nb.cells[-1]
-                
-                # Save executed notebook
-                with open(temp_path, 'w', encoding='utf-8') as f:
-                    nbf.write(nb, f)
-                with open(temp_path, encoding='utf-8') as f:
-                    executed_nb = nbf.read(f, as_version=4)
-                
-                # Update the original notebook with the executed cell's output
-                notebook.cells[-1] = executed_nb.cells[-1]
+                if success:
+                    # Update the cell with outputs
+                    last_cell.outputs = outputs
+                    print(f"✅ Last cell executed successfully")
+                else:
+                    # Check if it's a kernel issue, try to restart
+                    if "No kernel available" in error_msg or "kernel" in error_msg.lower():
+                        print("⚠️ Kernel issue detected, restarting kernel...")
+                        self.stop_persistent_kernel()
+                        if self.start_persistent_kernel():
+                            success, error_msg, outputs = self.execute_single_cell(last_cell.source)
+                            if success:
+                                last_cell.outputs = outputs
+                                print(f"✅ Last cell executed successfully after kernel restart")
+                            else:
+                                last_cell.outputs = [{'output_type': 'error', 'ename': 'ExecutionError', 'evalue': error_msg, 'traceback': []}]
+                                print(f"❌ Cell execution failed: {error_msg}")
+                                return False, error_msg, notebook
+                        else:
+                            print("⚠️ Failed to restart kernel, falling back to traditional method")
+                            return self._execute_notebook_traditional(notebook, past_analyses)
+                    else:
+                        last_cell.outputs = [{'output_type': 'error', 'ename': 'ExecutionError', 'evalue': error_msg, 'traceback': []}]
+                        print(f"❌ Cell execution failed: {error_msg}")
+                        return False, error_msg, notebook
                 
                 # Save the final notebook with the executed cell
                 with open(notebook_path, 'w', encoding='utf-8') as f:
@@ -833,15 +944,14 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
                     print(f"💾 Updated notebook at: {notebook_path}")
                 
                 # Check for errors in the last cell
-                last_cell = executed_nb.cells[-1]
                 if last_cell.cell_type == 'code' and hasattr(last_cell, 'outputs'):
                     for output in last_cell.outputs:
-                        if output.output_type == 'error':
-                            error_name = output.ename
-                            error_value = output.evalue
-                            traceback = "\n".join(output.traceback) if hasattr(output, 'traceback') else ""
+                        if output.get('output_type') == 'error':
+                            error_name = output.get('ename', 'UnknownError')
+                            error_value = output.get('evalue', 'Unknown error')
+                            traceback = output.get('traceback', [])
                             error_msg = self.logger.format_traceback(error_name, error_value, traceback)
-                            self.logger.log_error(error_msg, last_cell['source'])
+                            self.logger.log_error(error_msg, last_cell.source)
                             return False, error_msg, notebook
                 
                 # Update code memory with the successfully executed notebook
@@ -851,6 +961,85 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
                 
         except Exception as e:
             print(f"⚠️ Notebook execution failed: {str(e)}")
+            return False, str(e), notebook
+    
+    def _execute_notebook_traditional(self, notebook, past_analyses):
+        """Fallback traditional execution method"""
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                # Create temporary execution notebook
+                temp_path = os.path.join(temp_dir, "temp_notebook.ipynb")
+                with open(temp_path, 'w', encoding='utf-8') as f:
+                    nbf.write(notebook, f)
+                
+                # Read notebook for execution
+                with open(temp_path, encoding='utf-8') as f:
+                    nb = nbf.read(f, as_version=4)
+                
+                # Find the last code cell to execute
+                last_code_cell_index = -1
+                for i in range(len(nb.cells) - 1, -1, -1):
+                    if nb.cells[i].cell_type == 'code':
+                        last_code_cell_index = i
+                        break
+                
+                if last_code_cell_index == -1:
+                    print("No code cell found to execute")
+                    return True, None, notebook
+                
+                # Create a notebook with only the cells that have successful outputs
+                # This ensures we don't re-execute failed cells
+                execution_nb = nbf.v4.new_notebook()
+                
+                for i, cell in enumerate(nb.cells):
+                    if i == last_code_cell_index:
+                        # This is the cell we want to execute - clear its outputs
+                        if hasattr(cell, 'outputs'):
+                            cell.outputs = []
+                        execution_nb.cells.append(cell)
+                    elif cell.cell_type == 'code':
+                        # Only include code cells that have successful outputs (no errors)
+                        has_error = False
+                        if hasattr(cell, 'outputs'):
+                            for output in cell.outputs:
+                                if output.get('output_type') == 'error':
+                                    has_error = True
+                                    break
+                        
+                        if not has_error:
+                            execution_nb.cells.append(cell)
+                        # Skip cells with errors to avoid re-executing them
+                    else:
+                        # Markdown cells are passed through as-is
+                        execution_nb.cells.append(cell)
+                
+                # Execute the notebook - this will only execute cells without outputs
+                self.executor.preprocess(execution_nb, {'metadata': {'path': temp_dir}})
+                
+                # Get the executed last cell
+                executed_last_cell = execution_nb.cells[-1]  # Should be the last cell we added
+                
+                # Update the original notebook with the executed cell's output
+                notebook.cells[last_code_cell_index] = executed_last_cell
+                
+                # Check for errors in the last cell
+                if executed_last_cell.cell_type == 'code' and hasattr(executed_last_cell, 'outputs'):
+                    for output in executed_last_cell.outputs:
+                        if output.output_type == 'error':
+                            error_name = output.ename
+                            error_value = output.evalue
+                            traceback = "\n".join(output.traceback) if hasattr(output, 'traceback') else ""
+                            error_msg = self.logger.format_traceback(error_name, error_value, traceback)
+                            self.logger.log_error(error_msg, executed_last_cell['source'])
+                            return False, error_msg, notebook
+                
+                # Update code memory with the successfully executed notebook
+                self.update_code_memory(notebook.cells)
+                
+                return True, None, notebook
+                
+        except Exception as e:
+            print(f"⚠️ Traditional notebook execution failed: {str(e)}")
             return False, str(e), notebook
 
 def strip_code_markers(text):

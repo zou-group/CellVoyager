@@ -7,8 +7,8 @@ from notebook_generator import generate_notebook
 
 # Initialize the agent
 agent = AnalysisAgent(
-    h5ad_path=os.path.join(os.getcwd(), "example/covid19.h5ad"),
-    paper_summary_path=os.path.join(os.getcwd(), "example/covid19_summary.txt"),
+    h5ad_path = os.path.join(os.getcwd(), "example/covid19.h5ad"),
+    paper_summary_path = os.path.join(os.getcwd(), "example/covid19_summary.txt"),
     openai_api_key=os.getenv('OPENAI_API_KEY'),
     model_name="o3-mini",
     analysis_name="covid19",
