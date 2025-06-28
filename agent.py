@@ -37,7 +37,7 @@ class AnalysisAgent:
         self.completed_analyses = []
         self.failed_analyses = []
         # Create unique output directory based on analysis name and timestamp
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.datetime.now().xstrftime("%Y%m%d_%H%M%S")
         self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
         
         self.client = openai.OpenAI(api_key=openai_api_key)
