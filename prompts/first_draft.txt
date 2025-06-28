@@ -3,7 +3,7 @@ Your role is to provide a new computational analysis plan that is completely dis
 Propose analyses that you think are missing from the paper. Ensure these are standard single-cell analyses.
 Specifically, you will return a hypothesis, a series of analysis steps towards testing that hypothesis, and finally the python code for executing the first analysis step.
 
-Ensure that your output is in the specified JSON format. For the code_description field, be very specific about what this particular code step does - mention the specific functions, data transformations, and computations being performed.
+Ensure that your output is in the specified JSON format.
 
 {CODING_GUIDELINES}
 

@@ -715,62 +715,6 @@ class AnalysisAgent:
                 # Update the code memory with the current notebook state
                 self.update_code_memory(notebook.cells)
 
-            ### Execute the FINAL cell ###
-            success, error_msg, notebook = self.run_last_cell(notebook)
-            if success:
-                results_interpretation = self.interpret_results(notebook, past_analyses)
-                # Log the interpretation
-                self.logger.log_response(results_interpretation, "results_interpretation")
-                # Add interpretation as a markdown cell
-                interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
-                notebook.cells.append(interpretation_cell)
-            else:
-                print(f"⚠️ Final cell execution failed with: {error_msg}")
-                self.logger.log_error(error_msg, current_code)
-                fix_attempt, fix_successful = 0, False
-                results_interpretation = None
-                while fix_attempt < max_fix_attempts and not fix_successful:
-                    fix_attempt += 1
-                    print(f"  🔧 Fix attempt {fix_attempt}/{max_fix_attempts}")
-
-                    current_code = self.fix_code(current_code, error_msg)
-                    current_code = strip_code_markers(current_code)
-                    notebook.cells[-1] = new_code_cell(current_code)
-
-                    success, error_msg, notebook = self.run_last_cell(notebook)
-
-                    if success:
-                        fix_successful = True
-                        print(f"  ✅ Fix successful on attempt {fix_attempt}")
-                        
-                        # Generate updated code description for the fixed code
-                        updated_description = self.generate_code_description(current_code)
-                        
-                        # Update the previous markdown cell with the corrected description
-                        # Find the last markdown cell that contains a code description (starts with "##")
-                        for i in range(len(notebook.cells) - 1, -1, -1):
-                            if (notebook.cells[i].cell_type == 'markdown' and 
-                                notebook.cells[i].source.startswith('##') and 
-                                'Agent Interpretation' not in notebook.cells[i].source):
-                                notebook.cells[i].source = f"## {updated_description}"
-                                break
-                        
-                        results_interpretation = self.interpret_results(notebook, past_analyses)
-                        # Log the interpretation
-                        self.logger.log_response(results_interpretation, "results_interpretation")
-                        # Add interpretation as a markdown cell
-                        interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
-                        notebook.cells.append(interpretation_cell)
-                        break
-                    else:
-                        print(f"  ❌ Fix attempt {fix_attempt} failed")
-
-                        if fix_attempt == max_fix_attempts:
-                            print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts.")
-                            results_interpretation = "Final analysis step failed to run."
-                            interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
-                            notebook.cells.append(interpretation_cell)
-
             # Save the notebook
             notebook_path = os.path.join(self.output_dir, f"{self.analysis_name}_analysis_{analysis_idx+1}.ipynb")
             with open(notebook_path, 'w', encoding='utf-8') as f:
