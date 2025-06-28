@@ -690,25 +690,29 @@ class AnalysisAgent:
                         interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
                         notebook.cells.append(interpretation_cell)
 
-                analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
-                num_steps_left = self.max_iterations - iteration - 1
-                next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
+                # Only generate next step if this is not the final iteration
+                if iteration < self.max_iterations - 1:
+                    analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
+                    num_steps_left = self.max_iterations - iteration - 1
+                    next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
 
-                # Get feedback on the next step(s)
-                print("Getting feedback on the next step(s)")
-                modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
-                
-                # Log the next step
-                self.logger.log_response(f"Next step: {modified_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{modified_analysis['first_step_code']}\n```", "next_step")
+                    # Get feedback on the next step(s)
+                    print("Getting feedback on the next step(s)")
+                    modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
+                    
+                    # Log the next step
+                    self.logger.log_response(f"Next step: {modified_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{modified_analysis['first_step_code']}\n```", "next_step")
 
-                # Add the next step to the notebook
-                #analysis_step_plan = modified_analysis["analysis_plan"][0]
-                code_description = modified_analysis["code_description"]
-                notebook.cells.append(nbf.v4.new_markdown_cell(f"## {code_description}"))
-                modified_code = strip_code_markers(modified_analysis["first_step_code"])
-                notebook.cells.append(new_code_cell(modified_code))
-                
-                # Update the code memory with the new cell
+                    # Add the next step to the notebook
+                    code_description = modified_analysis["code_description"]
+                    notebook.cells.append(nbf.v4.new_markdown_cell(f"## {code_description}"))
+                    modified_code = strip_code_markers(modified_analysis["first_step_code"])
+                    notebook.cells.append(new_code_cell(modified_code))
+                    
+                    # Update current_code for next iteration
+                    current_code = modified_code
+                    
+                # Update the code memory with the current notebook state
                 self.update_code_memory(notebook.cells)
 
             ### Execute the FINAL cell ###
