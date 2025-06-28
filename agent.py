@@ -211,7 +211,7 @@ class AnalysisAgent:
         # Keep only the most recent cells up to code_memory_size
         self.code_memory = code_cells[-self.code_memory_size:] if len(code_cells) > 0 else []
         
-    def generate_next_step_analysis(self, analysis, attempted_analyses, notebook_cells, results_interpretation):
+    def generate_next_step_analysis(self, analysis, attempted_analyses, notebook_cells, results_interpretation, num_steps_left):
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
         first_step_code = analysis["first_step_code"]
@@ -226,7 +226,7 @@ class AnalysisAgent:
         prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                CODING_GUIDELINES=self.coding_guidelines, results_interpretation=results_interpretation,
                                previous_code=recent_code, adata_summary=self.adata_summary, past_analyses=attempted_analyses,
-                               paper_txt=self.paper_summary)
+                               paper_txt=self.paper_summary, num_steps_left=num_steps_left)
         
         
         response = self.client.chat.completions.create(
@@ -333,6 +333,26 @@ class AnalysisAgent:
         fixed_code = response.choices[0].message.content
         
         return fixed_code
+
+    def generate_code_description(self, code, context=""):
+        """Generate a description for a code cell based on its content"""
+        prompt = f"""Generate 1-2 sentences describing the goal of the code, what it is doing, and why.
+
+        Code:
+        ```python
+        {code}
+        ```
+        """
+        
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=[
+                {"role": "system", "content": "You are a single-cell bioinformatics expert providing concise code descriptions."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        
+        return response.choices[0].message.content.strip()
 
     def interpret_results(self, notebook, past_analyses):
         # Get the last cell
@@ -577,6 +597,8 @@ class AnalysisAgent:
             hypothesis = modified_analysis["hypothesis"]                
             analysis_plan = modified_analysis["analysis_plan"]
             current_code = modified_analysis["first_step_code"]
+
+            print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
             
             # Log revised analysis plan
             self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", "revised_analysis")
@@ -607,6 +629,7 @@ class AnalysisAgent:
                 # Execute the notebook
                 #success, error_msg, notebook = self.execute_notebook(notebook)
                 success, error_msg, notebook = self.run_last_cell(notebook)
+                print(f"🚀 Beginning step {iteration + 1}...")
 
                 if success:
                     results_interpretation = self.interpret_results(notebook, past_analyses)
@@ -634,6 +657,19 @@ class AnalysisAgent:
                         if success:
                             fix_successful = True
                             print(f"  ✅ Fix successful on attempt {fix_attempt}")
+                            
+                            # Generate updated code description for the fixed code
+                            updated_description = self.generate_code_description(current_code)
+                            
+                            # Update the previous markdown cell with the corrected description
+                            # Find the last markdown cell that contains a code description (starts with "##")
+                            for i in range(len(notebook.cells) - 1, -1, -1):
+                                if (notebook.cells[i].cell_type == 'markdown' and 
+                                    notebook.cells[i].source.startswith('##') and 
+                                    'Agent Interpretation' not in notebook.cells[i].source):
+                                    notebook.cells[i].source = f"## {updated_description}"
+                                    break
+                            
                             results_interpretation = self.interpret_results(notebook, past_analyses)
                             # Log the interpretation
                             self.logger.log_response(results_interpretation, "results_interpretation")
@@ -655,7 +691,8 @@ class AnalysisAgent:
                         notebook.cells.append(interpretation_cell)
 
                 analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
-                next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation)
+                num_steps_left = self.max_iterations - iteration - 1
+                next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
 
                 # Get feedback on the next step(s)
                 print("Getting feedback on the next step(s)")
@@ -701,6 +738,19 @@ class AnalysisAgent:
                     if success:
                         fix_successful = True
                         print(f"  ✅ Fix successful on attempt {fix_attempt}")
+                        
+                        # Generate updated code description for the fixed code
+                        updated_description = self.generate_code_description(current_code)
+                        
+                        # Update the previous markdown cell with the corrected description
+                        # Find the last markdown cell that contains a code description (starts with "##")
+                        for i in range(len(notebook.cells) - 1, -1, -1):
+                            if (notebook.cells[i].cell_type == 'markdown' and 
+                                notebook.cells[i].source.startswith('##') and 
+                                'Agent Interpretation' not in notebook.cells[i].source):
+                                notebook.cells[i].source = f"## {updated_description}"
+                                break
+                        
                         results_interpretation = self.interpret_results(notebook, past_analyses)
                         # Log the interpretation
                         self.logger.log_response(results_interpretation, "results_interpretation")
@@ -938,6 +988,16 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
                     break
             
             if success:
+                # Generate updated code description for the fixed code
+                updated_description = self.generate_code_description(fixed_code)
+                
+                # Update the improvement description cell
+                for i in range(len(executed_notebook.cells) - 1, -1, -1):
+                    if (executed_notebook.cells[i].cell_type == 'markdown' and 
+                        executed_notebook.cells[i].source.startswith('## Improvement Implementation')):
+                        executed_notebook.cells[i].source = f"## Improvement Implementation\n\n{updated_description}"
+                        break
+                
                 results_interpretation = self.interpret_results(executed_notebook, "")
                 interpretation_cell = nbf.v4.new_markdown_cell(f"### Results \n\n{results_interpretation}")
                 executed_notebook.cells.append(interpretation_cell)

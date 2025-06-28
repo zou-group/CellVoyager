@@ -6,6 +6,8 @@ If the analysis was run successfully (you get an interpretation of its results),
 If the interpretation is that the analysis step wasn't run successfully, think about how to redo the analysis step or how to modify the analysis plan.
 Otherwise, continue to the next analysis step. Incorporate the results intepretation to tweak the analysis plan. For example, if a particular celltype was shown to be promising, focus the analysis plan on it.
 
+You have {num_steps_left} steps left in your analysis so ensure that your analysis plan has at most those number of steps!
+
 Ensure that your output is in the specified JSON format. 
 
 Original Overall Analysis Hypothesis:
