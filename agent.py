@@ -24,7 +24,8 @@ from nbformat.v4 import new_notebook, new_code_cell, new_output
 AVAILABLE_PACKAGES = "scanpy, scvi, CellTypist, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 class AnalysisAgent:
     def __init__(self, h5ad_path, paper_summary_path, openai_api_key, model_name, analysis_name, 
-                num_analyses=5, max_iterations=6, prompt_dir="prompts", output_home=".", log_home="."):
+                num_analyses=5, max_iterations=6, prompt_dir="prompts", output_home=".", log_home=".",
+                use_self_critique=True, use_VLM=True, use_documentation=True):
         self.h5ad_path = h5ad_path
         self.paper_summary = open(paper_summary_path).read()
         self.openai_api_key = openai_api_key
@@ -37,7 +38,7 @@ class AnalysisAgent:
         self.completed_analyses = []
         self.failed_analyses = []
         # Create unique output directory based on analysis name and timestamp
-        timestamp = datetime.datetime.now().xstrftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
         
         self.client = openai.OpenAI(api_key=openai_api_key)
@@ -51,7 +52,10 @@ class AnalysisAgent:
 
         # Coding guidelines: guide agent on how to write code and conduct analyses
         analyses_overview = open(os.path.join(self.prompt_dir, "DeepResearch_Analyses.txt")).read()
-        self.coding_guidelines = open(os.path.join(self.prompt_dir, "coding_guidelines.txt")).read()
+        if self.use_VLM:
+            self.coding_guidelines = open(os.path.join(self.prompt_dir, "coding_guidelines.txt")).read()
+        else:
+            self.coding_guidelines = open(os.path.join(self.prompt_dir, "coding_guidelines_NO_VLM_ABLATION.txt")).read()
         self.coding_guidelines = self.coding_guidelines.format(name=self.analysis_name, adata_path=self.h5ad_path, available_packages=AVAILABLE_PACKAGES,
                                                                deepresearch_summary=analyses_overview)
 
@@ -72,6 +76,11 @@ class AnalysisAgent:
         # Initialize persistent kernel for efficient cell execution
         self.kernel_manager = None
         self.kernel_client = None
+
+        # Primarily for ablation studies
+        self.use_self_critique = use_self_critique
+        self.use_VLM = use_VLM
+        self.use_documentation = use_documentation
 
         # Load the .obs data from the anndata file
         if self.h5ad_path == "": # JUST FOR BENCHMARKING
@@ -96,7 +105,7 @@ class AnalysisAgent:
         summarization_str = f"Below is a description of the columns in adata.obs: \n"
         columns = self.adata_obs.columns
         for col in columns:
-            unique_vals = np.unique(self.adata_obs[col])
+            unique_vals = self.adata_obs[col].unique()
             if len(unique_vals) > length_cutoff:
                 vals_str = str(unique_vals[:length_cutoff]) + f"and {len(unique_vals) - length_cutoff} other unique values..."
             else:
@@ -376,76 +385,90 @@ class AnalysisAgent:
         if testing:
             print("TEXT OUTPUT: ", text_output)
         
-        #### Extract image outputs ####
-        image_outputs = []
-        if 'outputs' in last_cell:
-            for i, output in enumerate(last_cell['outputs']):
-                if output.get('output_type') == 'display_data':
-                    image_data = output.get('data', {}).get('image/png')
-                    if image_data:
-                        # Save image to file for testing
-                        if testing:
-                            try:
-                                img_bytes = base64.b64decode(image_data)
-                                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                                img_path = os.path.join(self.output_dir, f'debug_image_{timestamp}_{i}.png')
-                                with open(img_path, 'wb') as f:
-                                    f.write(img_bytes)
-                                print(f"Saved debug image to {img_path}")
-                            except Exception as e:
-                                print(f"Error saving debug image {i}: {str(e)}")
-                            
-                        image_outputs.append({
-                            'data': image_data,
-                            'format': 'image/png'
-                        })
+        #### Extract image outputs (if using VLM) ####
+        if self.use_VLM:
+            image_outputs = []
+            if 'outputs' in last_cell:
+                for i, output in enumerate(last_cell['outputs']):
+                    if output.get('output_type') == 'display_data':
+                        image_data = output.get('data', {}).get('image/png')
+                        if image_data:
+                            # Save image to file for testing
+                            if testing:
+                                try:
+                                    img_bytes = base64.b64decode(image_data)
+                                    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                                    img_path = os.path.join(self.output_dir, f'debug_image_{timestamp}_{i}.png')
+                                    with open(img_path, 'wb') as f:
+                                        f.write(img_bytes)
+                                    print(f"Saved debug image to {img_path}")
+                                except Exception as e:
+                                    print(f"Error saving debug image {i}: {str(e)}")
+                                
+                            image_outputs.append({
+                                'data': image_data,
+                                'format': 'image/png'
+                            })
 
-        if not text_output and not image_outputs: # no output found
-            return no_interpretation
+            if not text_output and not image_outputs: # no output found
+                return no_interpretation
+        else:
+            if not text_output:
+                return no_interpretation
         
-        user_content = []
         prompt = open(os.path.join(self.prompt_dir, "interp_results.txt")).read()
         prompt = prompt.format(text_output=text_output, paper_txt=self.paper_summary,
                                CODING_GUIDELINES=self.coding_guidelines, past_analyses=past_analyses)
-        user_content.append({"type": "text", "text": prompt})
 
-        try:
-            for img in image_outputs:
-                try:
-                    # Get the image data 
-                    image_data = img['data']
-                    
-                    # Remove the base64 prefix if present
-                    if isinstance(image_data, str) and "," in image_data:
-                        image_data = image_data.split(",")[1]
-                    
-                    # Add the image to the content
-                    user_content.append({
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/png;base64,{image_data}"
-                        }
-                    })
-                except Exception as e:
-                    print(f"Warning: Error processing image: {str(e)}")
-                    continue  # Skip this image and continue with others
-                    
+        if self.use_VLM:
+            user_content = []
+            user_content.append({"type": "text", "text": prompt})
+            try:
+                for img in image_outputs:
+                    try:
+                        # Get the image data 
+                        image_data = img['data']
+                        
+                        # Remove the base64 prefix if present
+                        if isinstance(image_data, str) and "," in image_data:
+                            image_data = image_data.split(",")[1]
+                        
+                        # Add the image to the content
+                        user_content.append({
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/png;base64,{image_data}"
+                            }
+                        })
+                    except Exception as e:
+                        print(f"Warning: Error processing image: {str(e)}")
+                        continue  # Skip this image and continue with others
+                        
+                response = self.client.chat.completions.create(
+                    model = "gpt-4o",
+                    messages = [
+                        {"role": "system", "content": "You are a single-cell transcriptomics expert providing feedback on Python code and analysis plan."},
+                        {"role": "user", "content": user_content}
+                    ]
+                )
+                feedback = response.choices[0].message.content
+                self.logger.log_prompt("user", text_output, "Results Interpretation")
+            finally:
+                # Clean up image data
+                image_outputs.clear()
+                user_content.clear()
+        else:
             response = self.client.chat.completions.create(
-                model = "gpt-4o",
+                model = self.model_name,
                 messages = [
-                    {"role": "system", "content": "You are a single-cell transcriptomics expert providing feedback on Python code and analysis plan."},
-                    {"role": "user", "content": user_content}
+                    {"role": "system", "content": "You are a single-cell bioinformatics expert providing feedback on Python code and analysis plan."},
+                    {"role": "user", "content": prompt}
                 ]
             )
             feedback = response.choices[0].message.content
-            
             self.logger.log_prompt("user", text_output, "Results Interpretation")
             
-            return feedback
-        finally:
-            # Clean up image data
-            image_outputs.clear()
-            user_content.clear()
+        return feedback
     
     def get_feedback(self, analysis, past_analyses, notebook_cells, iterations=1):
         current_analysis = analysis
@@ -593,7 +616,13 @@ class AnalysisAgent:
             self.logger.log_response(f"Hypothesis: {hypothesis}\n\nAnalysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nInitial Code:\n{initial_code}", "initial_analysis")
             
             # Get feedback for the initial analysis plan and modify it accordingly
-            modified_analysis = self.get_feedback(analysis, past_analyses, None)
+            if self.use_self_critique:
+                self.logger.log_response(f"APPLYING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", "initial_self_critique")
+                modified_analysis = self.get_feedback(analysis, past_analyses, None)
+            else:
+                print("🚫 Skipping feedback on next step (no self-critique)")
+                self.logger.log_response(f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", "no_initial_self_critique")
+                modified_analysis = analysis
             hypothesis = modified_analysis["hypothesis"]                
             analysis_plan = modified_analysis["analysis_plan"]
             current_code = modified_analysis["first_step_code"]
@@ -630,6 +659,9 @@ class AnalysisAgent:
                 #success, error_msg, notebook = self.execute_notebook(notebook)
                 success, error_msg, notebook = self.run_last_cell(notebook)
                 print(f"🚀 Beginning step {iteration + 1}...")
+                
+                # Log step execution attempt
+                self.logger.log_response(f"STEP {iteration + 1} EXECUTION ATTEMPT - Analysis {analysis_idx+1}", "step_execution")
 
                 if success:
                     results_interpretation = self.interpret_results(notebook, past_analyses)
@@ -647,6 +679,9 @@ class AnalysisAgent:
                     while fix_attempt < max_fix_attempts and not fix_successful:
                         fix_attempt += 1
                         print(f"  🔧 Fix attempt {fix_attempt}/{max_fix_attempts}")
+                        
+                        # Log fix attempt start
+                        self.logger.log_response(f"FIX ATTEMPT {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_start")
 
                         current_code = self.fix_code(current_code, error_msg)
                         current_code = strip_code_markers(current_code)
@@ -657,6 +692,9 @@ class AnalysisAgent:
                         if success:
                             fix_successful = True
                             print(f"  ✅ Fix successful on attempt {fix_attempt}")
+                            
+                            # Log successful fix
+                            self.logger.log_response(f"FIX SUCCESSFUL on attempt {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_success")
                             
                             # Generate updated code description for the fixed code
                             updated_description = self.generate_code_description(current_code)
@@ -679,9 +717,16 @@ class AnalysisAgent:
                             break
                         else:
                             print(f"  ❌ Fix attempt {fix_attempt} failed")
+                            
+                            # Log failed fix attempt with error details
+                            self.logger.log_error(f"FIX ATTEMPT FAILED {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}: {error_msg}", current_code)
 
                             if fix_attempt == max_fix_attempts:
                                 print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts. Moving to next iteration.")
+                                
+                                # Log final failure
+                                self.logger.log_error(f"ALL FIX ATTEMPTS EXHAUSTED - Analysis {analysis_idx+1}, Step {iteration + 1}. Failed after {max_fix_attempts} attempts.", current_code)
+                                
                                 results_interpretation = "Current analysis step failed to run. Try an alternative approach"
                                 interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
                                 notebook.cells.append(interpretation_cell)
@@ -696,12 +741,21 @@ class AnalysisAgent:
                     num_steps_left = self.max_iterations - iteration - 1
                     next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
 
-                    # Get feedback on the next step(s)
-                    print("Getting feedback on the next step(s)")
-                    modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
+                    # Log next step generation
+                    self.logger.log_response(f"GENERATING NEXT STEP - Analysis {analysis_idx+1}, Step {iteration + 2}", "next_step_generation")
+
+                    # Get feedback on the next step(s) (only if self-critique is enabled)
+                    if self.use_self_critique:
+                        print("Getting feedback on the next step(s)")
+                        self.logger.log_response(f"APPLYING SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", "self_critique")
+                        modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
+                    else:
+                        print("🚫 Skipping feedback on next step (no self-critique)")
+                        self.logger.log_response(f"SKIPPING SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", "no_self_critique")
+                        modified_analysis = next_step_analysis
                     
                     # Log the next step
-                    self.logger.log_response(f"Next step: {modified_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{modified_analysis['first_step_code']}\n```", "next_step")
+                    self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {modified_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{modified_analysis['first_step_code']}\n```", "next_step")
 
                     # Add the next step to the notebook
                     code_description = modified_analysis["code_description"]
@@ -722,6 +776,9 @@ class AnalysisAgent:
                 clean_notebook = self.cleanup_notebook_outputs(notebook)
                 nbf.write(clean_notebook, f)
                 print(f"💾 Saved notebook to: {notebook_path}")
+
+            # Log analysis completion
+            self.logger.log_response(f"ANALYSIS {analysis_idx+1} COMPLETED - Notebook saved to: {notebook_path}", "analysis_complete")
 
             self.stop_persistent_kernel()
             print(f"✅ Completed Analysis {analysis_idx+1}")
