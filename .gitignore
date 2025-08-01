@@ -1,0 +1,7 @@
+.env
+example/covid19.h5ad
+run_agent.sh
+outputs/
+logs/
+
+._*

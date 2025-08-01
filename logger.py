@@ -65,20 +65,3 @@ class Logger:
         if code:
             msg += f"\n\nIn code:\n```python\n{code}\n```"
         self.logger.error(msg)
-    
-    # Keeping compatibility methods as no-ops
-    def log_action(self, action, details=None):
-        """No longer logs actions"""
-        pass
-    
-    def log_analysis_start(self, analysis_idx, hypothesis):
-        """No longer logs analysis start"""
-        pass
-    
-    def log_analysis_end(self, analysis_idx, status, notebook_path=None):
-        """No longer logs analysis end"""
-        pass
-    
-    def log_iteration(self, analysis_idx, iteration_idx):
-        """No longer logs iteration"""
-        pass 

@@ -25,7 +25,7 @@ AVAILABLE_PACKAGES = "scanpy, scvi, CellTypist, anndata, matplotlib, numpy, seab
 class AnalysisAgent:
     def __init__(self, h5ad_path, paper_summary_path, openai_api_key, model_name, analysis_name, 
                 num_analyses=5, max_iterations=6, prompt_dir="prompts", output_home=".", log_home=".",
-                use_self_critique=True, use_VLM=True, use_documentation=True):
+                use_self_critique=True, use_VLM=True, use_documentation=True, log_prompts = False):
         self.h5ad_path = h5ad_path
         self.paper_summary = open(paper_summary_path).read()
         self.openai_api_key = openai_api_key
@@ -34,6 +34,7 @@ class AnalysisAgent:
         self.max_iterations = max_iterations
         self.num_analyses = num_analyses
         self.prompt_dir = prompt_dir
+        self.log_prompts = log_prompts
         
         self.completed_analyses = []
         self.failed_analyses = []
@@ -50,6 +51,11 @@ class AnalysisAgent:
         # Create output directory if it doesn't exist
         os.makedirs(self.output_dir, exist_ok=True)
 
+        # Primarily for ablation studies
+        self.use_self_critique = use_self_critique
+        self.use_VLM = use_VLM
+        self.use_documentation = use_documentation
+
         # Coding guidelines: guide agent on how to write code and conduct analyses
         analyses_overview = open(os.path.join(self.prompt_dir, "DeepResearch_Analyses.txt")).read()
         if self.use_VLM:
@@ -64,23 +70,12 @@ class AnalysisAgent:
 
         # Initialize logger: keeps track of all actions, prompts, responses, errors, etc.
         self.logger = Logger(self.analysis_name, log_dir=os.path.join(log_home, "logs"))
-        self.logger.log_action(
-            "Agent initialized", 
-            f"h5ad_path: {h5ad_path}\n" +
-            f"model: {model_name}\n" +
-            f"max_iterations: {max_iterations}"
-        )
         # Initialize notebook executor
         self.executor = ExecutePreprocessor(timeout=600, kernel_name='python3')
         
         # Initialize persistent kernel for efficient cell execution
         self.kernel_manager = None
         self.kernel_client = None
-
-        # Primarily for ablation studies
-        self.use_self_critique = use_self_critique
-        self.use_VLM = use_VLM
-        self.use_documentation = use_documentation
 
         # Load the .obs data from the anndata file
         if self.h5ad_path == "": # JUST FOR BENCHMARKING
@@ -90,7 +85,6 @@ class AnalysisAgent:
             self.adata_obs = self.load_h5ad_obs(self.h5ad_path)
             self.adata_summary = self.summarize_adata_metadata()
             print("ADATA SUMMARY: ", self.adata_summary)
-            self.logger.log_action("Data loaded and summarized", self.adata_summary)
             print(f"✅ Loaded {self.h5ad_path}")
         
 
@@ -193,8 +187,8 @@ class AnalysisAgent:
         prompt = prompt.format(CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, 
                                past_analyses=attempted_analyses, paper_txt=self.paper_summary)
 
-        
-        self.logger.log_prompt("user", prompt, "Initial Analysis")
+        if self.log_prompts:
+            self.logger.log_prompt("user", prompt, "Initial Analysis")
         
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -309,7 +303,8 @@ class AnalysisAgent:
         )
         modified_analysis = json.loads(response.choices[0].message.content)
 
-        self.logger.log_prompt("user", prompt, "Incorporate Critiques")
+        if self.log_prompts:
+            self.logger.log_prompt("user", prompt, "Incorporate Critiques")
 
         return modified_analysis
     
@@ -452,7 +447,8 @@ class AnalysisAgent:
                     ]
                 )
                 feedback = response.choices[0].message.content
-                self.logger.log_prompt("user", text_output, "Results Interpretation")
+                if self.log_prompts:
+                    self.logger.log_prompt("user", text_output, "Results Interpretation")
             finally:
                 # Clean up image data
                 image_outputs.clear()
@@ -466,7 +462,8 @@ class AnalysisAgent:
                 ]
             )
             feedback = response.choices[0].message.content
-            self.logger.log_prompt("user", text_output, "Results Interpretation")
+            if self.log_prompts:
+                self.logger.log_prompt("user", text_output, "Results Interpretation")
             
         return feedback
     
@@ -592,6 +589,8 @@ class AnalysisAgent:
         return True, None, nb
 
     def run(self, max_fix_attempts=3):
+        def namer(analysis_idx, step_idx):
+            return f"{analysis_idx+1}_{step_idx}"
         # TODO: incorporate previous code in self.fix_code for cases where the fix depends on previous code cells
         past_analyses = ""
 
@@ -611,26 +610,28 @@ class AnalysisAgent:
             hypothesis = analysis["hypothesis"]                
             analysis_plan = analysis["analysis_plan"]
             initial_code = analysis["first_step_code"]
+
+            step_name = namer(analysis_idx, 1)
             
             # Log only the output of the analysis
-            self.logger.log_response(f"Hypothesis: {hypothesis}\n\nAnalysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nInitial Code:\n{initial_code}", "initial_analysis")
+            self.logger.log_response(f"Hypothesis: {hypothesis}\n\nAnalysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nInitial Code:\n{initial_code}", f"initial_analysis_{step_name}")
             
             # Get feedback for the initial analysis plan and modify it accordingly
             if self.use_self_critique:
-                self.logger.log_response(f"APPLYING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", "initial_self_critique")
                 modified_analysis = self.get_feedback(analysis, past_analyses, None)
+                self.logger.log_response(f"APPLIED INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"self_critique_{step_name}")
+
+                hypothesis = modified_analysis["hypothesis"]                
+                analysis_plan = modified_analysis["analysis_plan"]
+                current_code = modified_analysis["first_step_code"]
+
+                print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
+                # Log revised analysis plan
+                self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", f"revised_analysis_{step_name}")
             else:
                 print("🚫 Skipping feedback on next step (no self-critique)")
-                self.logger.log_response(f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", "no_initial_self_critique")
-                modified_analysis = analysis
-            hypothesis = modified_analysis["hypothesis"]                
-            analysis_plan = modified_analysis["analysis_plan"]
-            current_code = modified_analysis["first_step_code"]
-
-            print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
-            
-            # Log revised analysis plan
-            self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", "revised_analysis")
+                self.logger.log_response(f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"no_self_critique_{step_name}")
+                current_code = initial_code
             
             # Create a markdown cell with the analysis plan
             plan_markdown = "# Analysis Plan\n\n**Hypothesis**: " + hypothesis + "\n\n## Steps:\n"
@@ -655,25 +656,25 @@ class AnalysisAgent:
             notebook.cells.append(new_code_cell(current_code))
 
             for iteration in range(self.max_iterations):
+                step_name = namer(analysis_idx, iteration + 1)
                 # Execute the notebook
                 #success, error_msg, notebook = self.execute_notebook(notebook)
                 success, error_msg, notebook = self.run_last_cell(notebook)
                 print(f"🚀 Beginning step {iteration + 1}...")
-                
-                # Log step execution attempt
-                self.logger.log_response(f"STEP {iteration + 1} EXECUTION ATTEMPT - Analysis {analysis_idx+1}", "step_execution")
+        
 
                 if success:
+                    self.logger.log_response(f"STEP {iteration + 1} RAN SUCCESSFULLY - Analysis {analysis_idx+1}", f"step_execution_success_{step_name}")
                     results_interpretation = self.interpret_results(notebook, past_analyses)
                     # Log the interpretation
-                    self.logger.log_response(results_interpretation, "results_interpretation")
+                    self.logger.log_response(results_interpretation, f"results_interpretation_{step_name}")
                     # Add interpretation as a markdown cell
                     interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
                     notebook.cells.append(interpretation_cell)
 
                 else:
                     print(f"⚠️ Code errored with: {error_msg}")
-                    self.logger.log_error(error_msg, current_code)
+                    self.logger.log_response(f"STEP {iteration + 1} FAILED - Analysis {analysis_idx+1}\n\nCode:\n```python\n{current_code}\n\n Error:\n{error_msg}```", f"step_execution_failed_{step_name}")
                     fix_attempt, fix_successful = 0, False
                     results_interpretation = ""  # Initialize at start of error block
                     while fix_attempt < max_fix_attempts and not fix_successful:
@@ -681,7 +682,7 @@ class AnalysisAgent:
                         print(f"  🔧 Fix attempt {fix_attempt}/{max_fix_attempts}")
                         
                         # Log fix attempt start
-                        self.logger.log_response(f"FIX ATTEMPT {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_start")
+                        #self.logger.log_response(f"FIX ATTEMPT {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_start")
 
                         current_code = self.fix_code(current_code, error_msg)
                         current_code = strip_code_markers(current_code)
@@ -694,7 +695,7 @@ class AnalysisAgent:
                             print(f"  ✅ Fix successful on attempt {fix_attempt}")
                             
                             # Log successful fix
-                            self.logger.log_response(f"FIX SUCCESSFUL on attempt {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_success")
+                            self.logger.log_response(f"FIX SUCCESSFUL on attempt {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 2}", f"fix_attempt_success_{step_name}_{fix_attempt}")
                             
                             # Generate updated code description for the fixed code
                             updated_description = self.generate_code_description(current_code)
@@ -710,7 +711,7 @@ class AnalysisAgent:
                             
                             results_interpretation = self.interpret_results(notebook, past_analyses)
                             # Log the interpretation
-                            self.logger.log_response(results_interpretation, "results_interpretation")
+                            self.logger.log_response(results_interpretation, f"results_interpretation_{step_name}")
                             # Add interpretation as a markdown cell
                             interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
                             notebook.cells.append(interpretation_cell)
@@ -719,13 +720,14 @@ class AnalysisAgent:
                             print(f"  ❌ Fix attempt {fix_attempt} failed")
                             
                             # Log failed fix attempt with error details
-                            self.logger.log_error(f"FIX ATTEMPT FAILED {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}: {error_msg}", current_code)
+                            self.logger.log_response(f"FIX ATTEMPT FAILED {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}: {error_msg}\n\nCode:\n```python\n{current_code}\n```", f"fix_attempt_failed_{step_name}_{fix_attempt}")
 
                             if fix_attempt == max_fix_attempts:
                                 print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts. Moving to next iteration.")
+                                self.logger.log_response(f"ALL FIX ATTEMPTS EXHAUSTED - Analysis {analysis_idx+1}, Step {iteration + 1}. Failed after {max_fix_attempts} attempts.", f"fix_attempt_exhausted_{step_name}")
                                 
                                 # Log final failure
-                                self.logger.log_error(f"ALL FIX ATTEMPTS EXHAUSTED - Analysis {analysis_idx+1}, Step {iteration + 1}. Failed after {max_fix_attempts} attempts.", current_code)
+                                #self.logger.log_error(f"ALL FIX ATTEMPTS EXHAUSTED - Analysis {analysis_idx+1}, Step {iteration + 1}. Failed after {max_fix_attempts} attempts.", current_code)
                                 
                                 results_interpretation = "Current analysis step failed to run. Try an alternative approach"
                                 interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
@@ -741,21 +743,24 @@ class AnalysisAgent:
                     num_steps_left = self.max_iterations - iteration - 1
                     next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
 
-                    # Log next step generation
-                    self.logger.log_response(f"GENERATING NEXT STEP - Analysis {analysis_idx+1}, Step {iteration + 2}", "next_step_generation")
+                    self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {next_step_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{next_step_analysis['first_step_code']}\n```", f"initial_analysis_{step_name}")
 
-                    # Get feedback on the next step(s) (only if self-critique is enabled)
+                    
                     if self.use_self_critique:
-                        print("Getting feedback on the next step(s)")
-                        self.logger.log_response(f"APPLYING SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", "self_critique")
                         modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
+                        self.logger.log_response(f"APPLIED SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", f"self_critique_{step_name}")
+
+                        hypothesis = modified_analysis["hypothesis"]                
+                        analysis_plan = modified_analysis["analysis_plan"]
+                        current_code = modified_analysis["first_step_code"]
+
+                        print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
+                        # Log revised analysis plan
+                        self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", f"revised_analysis_{step_name}")
                     else:
                         print("🚫 Skipping feedback on next step (no self-critique)")
-                        self.logger.log_response(f"SKIPPING SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", "no_self_critique")
+                        self.logger.log_response(f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"no_self_critique_{step_name}")
                         modified_analysis = next_step_analysis
-                    
-                    # Log the next step
-                    self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {modified_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{modified_analysis['first_step_code']}\n```", "next_step")
 
                     # Add the next step to the notebook
                     code_description = modified_analysis["code_description"]
@@ -825,7 +830,6 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
 """
         notebook.cells.append(nbf.v4.new_code_cell(setup_code))
         
-        self.logger.log_action("Created initial notebook", f"Setup code:\n```python\n{setup_code}\n```")
         return notebook
 
     def cleanup_notebook_outputs(self, notebook):
@@ -879,7 +883,6 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
         
         # Copy original notebook
         shutil.copy2(notebook_path, output_path)
-        self.logger.log_action("Notebook copied for improvement", f"From: {notebook_path}\nTo: {output_path}")
         
         # Read notebook
         with open(notebook_path, 'r', encoding='utf-8') as f:
@@ -925,8 +928,8 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
         You are given the following summary fo the anndata object:
         {self.adata_summary}
         """
-        
-        self.logger.log_prompt("user", prompt, "Notebook Improvement")
+        if self.log_prompts:
+            self.logger.log_prompt("user", prompt, "Notebook Improvement")
         
         # Try o3-mini first
         response = self.client.chat.completions.create(

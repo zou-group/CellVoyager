@@ -41,7 +41,7 @@ class AgentTester:
         # Create test output directory
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         self.output_dir = f"test_results_{test_name}_{timestamp}"
-        os.makedirs(self.output_dir, exist_ok=True)
+        #os.makedirs(self.output_dir, exist_ok=True)
         
         # Results tracking
         self.results = {
@@ -52,6 +52,7 @@ class AgentTester:
             'final_failed_cells': 0,  # Cells that never succeeded
             'failure_rate': 0.0,  # total_failures / total_code_cells_attempted
             'final_success_rate': 0.0,  # final_successful_cells / unique_code_cells
+            'failed_fix_attempts_per_step': {},  # Per-analysis, per-step failed fix attempts data
             'analyses': [],
             'errors': []
         }
@@ -117,7 +118,7 @@ class AgentTester:
             print("⚠️ No notebooks found in output directory")
             return
         
-        # Analyze logs to count total failures (including retry attempts)
+        # Analyze logs to count total failures (including retry attempts) and per-step details
         log_stats = self._analyze_logs(agent_output_dir)
         
         # Analyze notebooks for final success rates
@@ -131,8 +132,20 @@ class AgentTester:
         
         self.results['final_successful_cells'] = final_successful
         self.results['final_failed_cells'] = unique_code_cells - final_successful
-        self.results['total_failures'] = log_stats['total_failures']
-        self.results['total_code_cells_attempted'] = log_stats['total_attempts']
+        self.results['total_failures'] = sum(s['total_failures'] for s in log_stats.values())
+        self.results['total_code_cells_attempted'] = sum(s['total_attempts'] for s in log_stats.values())
+        
+        # Add the detailed per-analysis, per-step failed fix attempts data
+        self.results['failed_fix_attempts_per_step'] = {
+            log_file: {
+                analysis_num: {
+                    step_num: step_data['failed_fix_attempts']
+                    for step_num, step_data in steps.items()
+                }
+                for analysis_num, steps in analysis_data['analyses'].items()
+            }
+            for log_file, analysis_data in log_stats.items()
+        }
         
         if unique_code_cells > 0:
             self.results['final_success_rate'] = final_successful / unique_code_cells
@@ -141,10 +154,28 @@ class AgentTester:
         
         print(f"📈 Final Success Rate: {self.results['final_success_rate']:.2%} ({final_successful}/{unique_code_cells})")
         print(f"💥 Total Failure Rate: {self.results['failure_rate']:.2%} ({self.results['total_failures']}/{self.results['total_code_cells_attempted']} attempts)")
+        
+        # Print detailed per-analysis, per-step failed fix attempts
+        if log_stats:
+            print("\n🔍 Execution Statistics per Analysis and Step:")
+            for log_file, analysis_data in log_stats.items():
+                print(f"  Log File: {os.path.basename(log_file)}")
+                for analysis_num, steps in analysis_data['analyses'].items():
+                    print(f"    Analysis {analysis_num}:")
+                    for step_num, step_data in steps.items():
+                        failed_attempts = step_data['failed_fix_attempts']
+                        total_attempts = step_data['total_attempts']
+                        successful_executions = step_data['successful_executions']
+                        if failed_attempts > 0:
+                            print(f"      Step {step_num}: {failed_attempts} failed fix attempts, {successful_executions} successful executions, {total_attempts} total attempts")
+                        else:
+                            print(f"      Step {step_num}: No failed fix attempts, {successful_executions} successful executions, {total_attempts} total attempts")
+        else:
+            print("\n✅ No execution data found in log analysis")
     
     def _analyze_logs(self, agent_output_dir):
-        """Analyze log files to count total code execution failures and attempts."""
-        log_stats = {'total_failures': 0, 'total_attempts': 0}
+        """Analyze log files to count failed fix attempts per step for each analysis."""
+        all_log_stats = {}  # Will store per-log-file results
         
         # Find log files
         log_files = []
@@ -154,20 +185,172 @@ class AgentTester:
                     log_files.append(os.path.join(root, file))
         
         for log_file in log_files:
+            # Initialize stats for this specific log file
+            log_stats = {
+                'total_failures': 0, 
+                'total_attempts': 0,
+                'analyses': {}  # Will store per-analysis, per-step data
+            }
+            
             try:
                 with open(log_file, 'r', encoding='utf-8') as f:
                     content = f.read()
-                    
-                total_fix_attempts = content.count("FIX ATTEMPT") - content.count("FIX ATTEMPT FAILED")
-                successful_fix_attempts = content.count("FIX SUCCESSFUL")
 
-                log_stats['total_failures'] = total_fix_attempts - successful_fix_attempts
-                log_stats['total_attempts'] = content.count("STEP") + total_fix_attempts
+                # Parse the log content line by line to extract log entry names from new format
+                lines = content.split('\n')
+                
+                for line in lines:
+                    # Look for the new logging format: "RESPONSE/OUTPUT: {log_entry_name}"
+                    if line.startswith("RESPONSE/OUTPUT: "):
+                        log_entry_name = line.split("RESPONSE/OUTPUT: ", 1)[1].strip()
+                        
+                        # Parse step execution success: step_execution_success_{analysis_num}_{step_num}
+                        if log_entry_name.startswith("step_execution_success_"):
+                            step_name = log_entry_name.replace("step_execution_success_", "")
+                            try:
+                                analysis_num, step_num = step_name.split("_")
+                                analysis_num, step_num = int(analysis_num), int(step_num)
+                                
+                                # Initialize nested dictionaries if needed
+                                if analysis_num not in log_stats['analyses']:
+                                    log_stats['analyses'][analysis_num] = {}
+                                if step_num not in log_stats['analyses'][analysis_num]:
+                                    log_stats['analyses'][analysis_num][step_num] = {
+                                        'failed_fix_attempts': 0,
+                                        'total_attempts': 0,
+                                        'successful_executions': 0,
+                                        'fix_succeeded': False,
+                                        'initial_success': False
+                                    }
+                                
+                                log_stats['analyses'][analysis_num][step_num]['initial_success'] = True
+                                log_stats['analyses'][analysis_num][step_num]['total_attempts'] += 1
+                                log_stats['total_attempts'] += 1
+                                
+                            except (ValueError, IndexError) as e:
+                                print(f"Warning: Could not parse step execution success: {log_entry_name}")
+                        
+                        # Parse step execution failure: step_execution_failed_{analysis_num}_{step_num}
+                        elif log_entry_name.startswith("step_execution_failed_"):
+                            step_name = log_entry_name.replace("step_execution_failed_", "")
+                            try:
+                                analysis_num, step_num = step_name.split("_")
+                                analysis_num, step_num = int(analysis_num), int(step_num)
+                                
+                                # Initialize nested dictionaries if needed
+                                if analysis_num not in log_stats['analyses']:
+                                    log_stats['analyses'][analysis_num] = {}
+                                if step_num not in log_stats['analyses'][analysis_num]:
+                                    log_stats['analyses'][analysis_num][step_num] = {
+                                        'failed_fix_attempts': 0,
+                                        'total_attempts': 0,
+                                        'successful_executions': 0,
+                                        'fix_succeeded': False,
+                                        'initial_success': False
+                                    }
+                                
+                                log_stats['analyses'][analysis_num][step_num]['total_attempts'] += 1
+                                log_stats['total_attempts'] += 1
+                                log_stats['total_failures'] += 1
+                                
+                            except (ValueError, IndexError) as e:
+                                print(f"Warning: Could not parse step execution failure: {log_entry_name}")
+                        
+                        # Parse fix attempt success: fix_attempt_success_{analysis_num}_{step_num}_{fix_attempt}
+                        elif log_entry_name.startswith("fix_attempt_success_"):
+                            parts = log_entry_name.replace("fix_attempt_success_", "").split("_")
+                            if len(parts) >= 3:
+                                try:
+                                    analysis_num, step_num = int(parts[0]), int(parts[1])
+                                    fix_attempt = int(parts[2])
+                                    
+                                    # Initialize nested dictionaries if needed
+                                    if analysis_num not in log_stats['analyses']:
+                                        log_stats['analyses'][analysis_num] = {}
+                                    if step_num not in log_stats['analyses'][analysis_num]:
+                                        log_stats['analyses'][analysis_num][step_num] = {
+                                            'failed_fix_attempts': 0,
+                                            'total_attempts': 0,
+                                            'successful_executions': 0,
+                                            'fix_succeeded': False,
+                                            'initial_success': False
+                                        }
+                                    
+                                    # Mark that this step eventually succeeded through a fix attempt
+                                    log_stats['analyses'][analysis_num][step_num]['fix_succeeded'] = True
+                                    log_stats['analyses'][analysis_num][step_num]['total_attempts'] += 1
+                                    log_stats['total_attempts'] += 1
+                                    
+                                except (ValueError, IndexError) as e:
+                                    print(f"Warning: Could not parse fix attempt success: {log_entry_name}")
+                        
+                        # Parse fix attempt failure: fix_attempt_failed_{analysis_num}_{step_num}_{fix_attempt}
+                        elif log_entry_name.startswith("fix_attempt_failed_"):
+                            parts = log_entry_name.replace("fix_attempt_failed_", "").split("_")
+                            if len(parts) >= 3:
+                                try:
+                                    analysis_num, step_num = int(parts[0]), int(parts[1])
+                                    fix_attempt = int(parts[2])
+                                    
+                                    # Initialize nested dictionaries if needed
+                                    if analysis_num not in log_stats['analyses']:
+                                        log_stats['analyses'][analysis_num] = {}
+                                    if step_num not in log_stats['analyses'][analysis_num]:
+                                        log_stats['analyses'][analysis_num][step_num] = {
+                                            'failed_fix_attempts': 0,
+                                            'total_attempts': 0,
+                                            'successful_executions': 0,
+                                            'fix_succeeded': False,
+                                            'initial_success': False
+                                        }
+                                    
+                                    log_stats['analyses'][analysis_num][step_num]['failed_fix_attempts'] += 1
+                                    log_stats['analyses'][analysis_num][step_num]['total_attempts'] += 1
+                                    log_stats['total_attempts'] += 1
+                                    log_stats['total_failures'] += 1
+                                    
+                                except (ValueError, IndexError) as e:
+                                    print(f"Warning: Could not parse fix attempt failure: {log_entry_name}")
+                        
+                        # Parse fix attempt exhausted: fix_attempt_exhausted_{analysis_num}_{step_num}
+                        elif log_entry_name.startswith("fix_attempt_exhausted_"):
+                            step_name = log_entry_name.replace("fix_attempt_exhausted_", "")
+                            try:
+                                analysis_num, step_num = step_name.split("_")
+                                analysis_num, step_num = int(analysis_num), int(step_num)
+                                
+                                # Initialize nested dictionaries if needed
+                                if analysis_num not in log_stats['analyses']:
+                                    log_stats['analyses'][analysis_num] = {}
+                                if step_num not in log_stats['analyses'][analysis_num]:
+                                    log_stats['analyses'][analysis_num][step_num] = {
+                                        'failed_fix_attempts': 0,
+                                        'total_attempts': 0,
+                                        'successful_executions': 0,
+                                        'fix_succeeded': False,
+                                        'initial_success': False
+                                    }
+                                
+                                # No need to increment counters here as the individual fix attempts are already counted
+                                
+                            except (ValueError, IndexError) as e:
+                                print(f"Warning: Could not parse fix attempt exhausted: {log_entry_name}")
                     
             except Exception as e:
                 print(f"Warning: Could not read log file {log_file}: {e}")
+            
+            # Final calculation: count successful executions based on initial success OR successful fix
+            for analysis_num, steps in log_stats['analyses'].items():
+                for step_num, step_data in steps.items():
+                    if step_data['initial_success'] or step_data['fix_succeeded']:
+                        step_data['successful_executions'] = 1
+                    else:
+                        step_data['successful_executions'] = 0
+            
+            # Store this log file's results
+            all_log_stats[log_file] = log_stats
         
-        return log_stats
+        return all_log_stats
     
     def _analyze_single_notebook(self, notebook_path):
         """Analyze a single notebook to determine code cell success rates."""
