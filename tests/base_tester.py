@@ -21,7 +21,7 @@ from nbconvert.preprocessors import ExecutePreprocessor
 class AgentTester:
     """Base class for testing agent configurations and measuring code execution success rates."""
     
-    def __init__(self, h5ad_path, manuscript_path, test_name="default", num_analyses=3, max_iterations=3):
+    def __init__(self, h5ad_path, manuscript_path, test_name="default", num_analyses=3, max_iterations=3, base_output_dir=None):
         """
         Initialize the tester.
         
@@ -31,6 +31,7 @@ class AgentTester:
             test_name (str): Name for this test configuration
             num_analyses (int): Number of analyses to run
             max_iterations (int): Max iterations per analysis
+            base_output_dir (str): Base directory where test results should be created (optional)
         """
         self.h5ad_path = h5ad_path
         self.manuscript_path = manuscript_path
@@ -40,7 +41,12 @@ class AgentTester:
         
         # Create test output directory
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        self.output_dir = f"test_results_{test_name}_{timestamp}"
+        test_dir_name = f"test_results_{test_name}_{timestamp}"
+        
+        if base_output_dir:
+            self.output_dir = os.path.join(base_output_dir, test_dir_name)
+        else:
+            self.output_dir = test_dir_name
         #os.makedirs(self.output_dir, exist_ok=True)
         
         # Results tracking
@@ -87,6 +93,7 @@ class AgentTester:
                 max_iterations=self.max_iterations,
                 output_home=self.output_dir,
                 log_home=self.output_dir,
+                prompt_dir=os.path.join(os.path.dirname(os.path.dirname(__file__)), "prompts"),
                 use_self_critique=use_self_critique,
                 use_VLM=use_VLM
             )
@@ -107,31 +114,11 @@ class AgentTester:
         """Analyze generated notebooks and logs to count total failures and final success rates."""
         print("📊 Analyzing generated notebooks and logs...")
         
-        # Find all notebooks in the output directory
-        notebook_files = []
-        for root, dirs, files in os.walk(agent_output_dir):
-            for file in files:
-                if file.endswith('.ipynb'):
-                    notebook_files.append(os.path.join(root, file))
-        
-        if not notebook_files:
-            print("⚠️ No notebooks found in output directory")
-            return
-        
-        # Analyze logs to count total failures (including retry attempts) and per-step details
+        # ALWAYS analyze logs first and preserve results immediately
+        print("📄 Analyzing log files...")
         log_stats = self._analyze_logs(agent_output_dir)
         
-        # Analyze notebooks for final success rates
-        for notebook_path in notebook_files:
-            analysis_results = self._analyze_single_notebook(notebook_path)
-            self.results['analyses'].append(analysis_results)
-        
-        # Calculate final statistics
-        unique_code_cells = sum(a['total_code_cells'] for a in self.results['analyses'])
-        final_successful = sum(a['successful_cells'] for a in self.results['analyses'])
-        
-        self.results['final_successful_cells'] = final_successful
-        self.results['final_failed_cells'] = unique_code_cells - final_successful
+        # Save log-based statistics immediately (these are reliable)
         self.results['total_failures'] = sum(s['total_failures'] for s in log_stats.values())
         self.results['total_code_cells_attempted'] = sum(s['total_attempts'] for s in log_stats.values())
         
@@ -147,12 +134,74 @@ class AgentTester:
             for log_file, analysis_data in log_stats.items()
         }
         
-        if unique_code_cells > 0:
-            self.results['final_success_rate'] = final_successful / unique_code_cells
+        # Calculate log-based success estimates
+        total_successful_steps = 0
+        total_steps = 0
+        for log_file, analysis_data in log_stats.items():
+            for analysis_num, steps in analysis_data['analyses'].items():
+                for step_num, step_data in steps.items():
+                    total_steps += 1
+                    if step_data['successful_executions'] > 0:
+                        total_successful_steps += 1
+        
+        print(f"📊 Log analysis complete: {self.results['total_failures']} failures, {self.results['total_code_cells_attempted']} attempts")
+        print(f"📊 Log-based success estimate: {total_successful_steps}/{total_steps} steps successful")
+        
+        # Find all notebooks in the output directory
+        notebook_files = []
+        for root, dirs, files in os.walk(agent_output_dir):
+            for file in files:
+                if file.endswith('.ipynb'):
+                    notebook_files.append(os.path.join(root, file))
+        
+        # Try notebook analysis, but don't let it break everything
+        notebook_analysis_successful = False
+        try:
+            if not notebook_files:
+                print("⚠️ No notebooks found in output directory")
+                # Use log-based estimates for final statistics
+                self.results['final_successful_cells'] = total_successful_steps
+                self.results['final_failed_cells'] = total_steps - total_successful_steps
+            else:
+                print(f"📓 Analyzing {len(notebook_files)} notebook(s)...")
+                
+                # Analyze notebooks for final success rates
+                for notebook_path in notebook_files:
+                    analysis_results = self._analyze_single_notebook(notebook_path)
+                    self.results['analyses'].append(analysis_results)
+                
+                # Calculate final statistics from notebook analysis
+                unique_code_cells = sum(a['total_code_cells'] for a in self.results['analyses'])
+                final_successful = sum(a['successful_cells'] for a in self.results['analyses'])
+                
+                self.results['final_successful_cells'] = final_successful
+                self.results['final_failed_cells'] = unique_code_cells - final_successful
+                
+                notebook_analysis_successful = True
+                print(f"📓 Notebook analysis complete: {final_successful}/{unique_code_cells} cells successful")
+                
+        except Exception as e:
+            print(f"⚠️ Notebook analysis failed: {e}")
+            print("📊 Using log-based estimates for final statistics...")
+            
+            # Fall back to log-based estimates
+            self.results['final_successful_cells'] = total_successful_steps
+            self.results['final_failed_cells'] = total_steps - total_successful_steps
+            self.results['analyses'] = []  # Clear any partial results
+        
+        # Calculate success rates using the final values (from either notebook or log analysis)
+        final_total_cells = self.results['final_successful_cells'] + self.results['final_failed_cells']
+        if final_total_cells > 0:
+            self.results['final_success_rate'] = self.results['final_successful_cells'] / final_total_cells
+        else:
+            self.results['final_success_rate'] = 0.0
+            
         if self.results['total_code_cells_attempted'] > 0:
             self.results['failure_rate'] = self.results['total_failures'] / self.results['total_code_cells_attempted']
+        else:
+            self.results['failure_rate'] = 0.0
         
-        print(f"📈 Final Success Rate: {self.results['final_success_rate']:.2%} ({final_successful}/{unique_code_cells})")
+        print(f"📈 Final Success Rate: {self.results['final_success_rate']:.2%} ({self.results['final_successful_cells']}/{final_total_cells})")
         print(f"💥 Total Failure Rate: {self.results['failure_rate']:.2%} ({self.results['total_failures']}/{self.results['total_code_cells_attempted']} attempts)")
         
         # Print detailed per-analysis, per-step failed fix attempts

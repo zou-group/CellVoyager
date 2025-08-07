@@ -25,7 +25,8 @@ AVAILABLE_PACKAGES = "scanpy, scvi, CellTypist, anndata, matplotlib, numpy, seab
 class AnalysisAgent:
     def __init__(self, h5ad_path, paper_summary_path, openai_api_key, model_name, analysis_name, 
                 num_analyses=5, max_iterations=6, prompt_dir="prompts", output_home=".", log_home=".",
-                use_self_critique=True, use_VLM=True, use_documentation=True, log_prompts = False):
+                use_self_critique=True, use_VLM=True, use_documentation=True, log_prompts = False,
+                max_fix_attempts=3):
         self.h5ad_path = h5ad_path
         self.paper_summary = open(paper_summary_path).read()
         self.openai_api_key = openai_api_key
@@ -35,6 +36,7 @@ class AnalysisAgent:
         self.num_analyses = num_analyses
         self.prompt_dir = prompt_dir
         self.log_prompts = log_prompts
+        self.max_fix_attempts = max_fix_attempts
         
         self.completed_analyses = []
         self.failed_analyses = []
@@ -57,16 +59,47 @@ class AnalysisAgent:
         self.use_documentation = use_documentation
 
         # Coding guidelines: guide agent on how to write code and conduct analyses
-        analyses_overview = open(os.path.join(self.prompt_dir, "DeepResearch_Analyses.txt")).read()
+        self._analyses_overview = open(os.path.join(self.prompt_dir, "DeepResearch_Analyses.txt")).read()
         if self.use_VLM:
-            self.coding_guidelines = open(os.path.join(self.prompt_dir, "coding_guidelines.txt")).read()
+            self.coding_guidelines_template = open(os.path.join(self.prompt_dir, "coding_guidelines.txt")).read()
         else:
-            self.coding_guidelines = open(os.path.join(self.prompt_dir, "coding_guidelines_NO_VLM_ABLATION.txt")).read()
-        self.coding_guidelines = self.coding_guidelines.format(name=self.analysis_name, adata_path=self.h5ad_path, available_packages=AVAILABLE_PACKAGES,
-                                                               deepresearch_summary=analyses_overview)
+            self.coding_guidelines_template = open(os.path.join(self.prompt_dir, "coding_guidelines_NO_VLM_ABLATION.txt")).read()
 
         # System prompt for coding agents
         self.coding_system_prompt = open(os.path.join(self.prompt_dir, "coding_system_prompt.txt")).read()
+
+        # Augment analyses overview via DeepResearch using paper summary (disease info, prior analyses, dataset details, untested ideas)
+        try:
+            import importlib.util
+            module_path = os.path.join(os.path.dirname(__file__), "deepresearch.py")
+            spec = importlib.util.spec_from_file_location("cv_deepresearch", module_path)
+            module = importlib.util.module_from_spec(spec) if spec and spec.loader else None
+            if module and spec and spec.loader:
+                spec.loader.exec_module(module)
+                DeepResearcher = getattr(module, "DeepResearcher", None)
+            else:
+                DeepResearcher = None
+
+            if DeepResearcher is not None:
+                researcher = DeepResearcher(self.openai_api_key)
+                # Provide both the paper summary and dataset metadata so deep research can tailor background
+                dr_summary = researcher.research_from_paper_summary(self.paper_summary, self.adata_summary)
+                if isinstance(dr_summary, str) and dr_summary.strip():
+                    self._analyses_overview = (
+                        self._analyses_overview
+                        + "\n\n## DeepResearch (paper-derived)\n"
+                        + dr_summary.strip()
+                    )
+        except Exception as e:
+            print(f"Warning: DeepResearch failed or was skipped: {e}")
+
+        # Finalize coding guidelines with the (possibly augmented) overview
+        self.coding_guidelines = self.coding_guidelines_template.format(
+            name=self.analysis_name,
+            adata_path=self.h5ad_path,
+            available_packages=AVAILABLE_PACKAGES,
+            deepresearch_summary=self._analyses_overview,
+        )
 
         # Initialize logger: keeps track of all actions, prompts, responses, errors, etc.
         self.logger = Logger(self.analysis_name, log_dir=os.path.join(log_home, "logs"))
@@ -200,7 +233,20 @@ class AnalysisAgent:
         )
         result = response.choices[0].message.content
         
-        analysis = json.loads(result)
+        # Debug logging for API response issues
+        if result is None:
+            print(f"⚠️ API returned None response in generate_initial_analysis")
+            print(f"   Model: {self.model_name}")
+            print(f"   Response object: {response}")
+            raise ValueError("OpenAI API returned None response for initial analysis")
+        
+        try:
+            analysis = json.loads(result)
+        except json.JSONDecodeError as e:
+            print(f"⚠️ JSON decode error in generate_initial_analysis: {e}")
+            print(f"   Raw result: {repr(result)}")
+            raise
+        
         return analysis
     
     def update_code_memory(self, notebook_cells):
@@ -242,7 +288,20 @@ class AnalysisAgent:
         )
         result = response.choices[0].message.content
 
-        analysis = json.loads(result)
+        # Debug logging for API response issues
+        if result is None:
+            print(f"⚠️ API returned None response in generate_next_step")
+            print(f"   Model: {self.model_name}")
+            print(f"   Response object: {response}")
+            raise ValueError("OpenAI API returned None response for next step")
+        
+        try:
+            analysis = json.loads(result)
+        except json.JSONDecodeError as e:
+            print(f"⚠️ JSON decode error in generate_next_step: {e}")
+            print(f"   Raw result: {repr(result)}")
+            raise
+        
         return analysis
 
     def critique_step(self, analysis, past_analyses, notebook_cells):
@@ -301,7 +360,21 @@ class AnalysisAgent:
             ],
             response_format={"type": "json_object"}
         )
-        modified_analysis = json.loads(response.choices[0].message.content)
+        result = response.choices[0].message.content
+        
+        # Debug logging for API response issues
+        if result is None:
+            print(f"⚠️ API returned None response in incorporate_critique")
+            print(f"   Model: {self.model_name}")
+            print(f"   Response object: {response}")
+            raise ValueError("OpenAI API returned None response for critique incorporation")
+        
+        try:
+            modified_analysis = json.loads(result)
+        except json.JSONDecodeError as e:
+            print(f"⚠️ JSON decode error in incorporate_critique: {e}")
+            print(f"   Raw result: {repr(result)}")
+            raise
 
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Incorporate Critiques")
@@ -588,7 +661,7 @@ class AnalysisAgent:
 
         return True, None, nb
 
-    def run(self, max_fix_attempts=3):
+    def run(self):
         def namer(analysis_idx, step_idx):
             return f"{analysis_idx+1}_{step_idx}"
         # TODO: incorporate previous code in self.fix_code for cases where the fix depends on previous code cells
@@ -629,6 +702,7 @@ class AnalysisAgent:
                 # Log revised analysis plan
                 self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", f"revised_analysis_{step_name}")
             else:
+                modified_analysis = analysis
                 print("🚫 Skipping feedback on next step (no self-critique)")
                 self.logger.log_response(f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"no_self_critique_{step_name}")
                 current_code = initial_code
@@ -677,9 +751,9 @@ class AnalysisAgent:
                     self.logger.log_response(f"STEP {iteration + 1} FAILED - Analysis {analysis_idx+1}\n\nCode:\n```python\n{current_code}\n\n Error:\n{error_msg}```", f"step_execution_failed_{step_name}")
                     fix_attempt, fix_successful = 0, False
                     results_interpretation = ""  # Initialize at start of error block
-                    while fix_attempt < max_fix_attempts and not fix_successful:
+                    while fix_attempt < self.max_fix_attempts and not fix_successful:
                         fix_attempt += 1
-                        print(f"  🔧 Fix attempt {fix_attempt}/{max_fix_attempts}")
+                        print(f"  🔧 Fix attempt {fix_attempt}/{self.max_fix_attempts}")
                         
                         # Log fix attempt start
                         #self.logger.log_response(f"FIX ATTEMPT {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_start")
@@ -695,7 +769,7 @@ class AnalysisAgent:
                             print(f"  ✅ Fix successful on attempt {fix_attempt}")
                             
                             # Log successful fix
-                            self.logger.log_response(f"FIX SUCCESSFUL on attempt {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 2}", f"fix_attempt_success_{step_name}_{fix_attempt}")
+                            self.logger.log_response(f"FIX SUCCESSFUL on attempt {fix_attempt}/{self.max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 2}", f"fix_attempt_success_{step_name}_{fix_attempt}")
                             
                             # Generate updated code description for the fixed code
                             updated_description = self.generate_code_description(current_code)
@@ -720,11 +794,11 @@ class AnalysisAgent:
                             print(f"  ❌ Fix attempt {fix_attempt} failed")
                             
                             # Log failed fix attempt with error details
-                            self.logger.log_response(f"FIX ATTEMPT FAILED {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}: {error_msg}\n\nCode:\n```python\n{current_code}\n```", f"fix_attempt_failed_{step_name}_{fix_attempt}")
+                            self.logger.log_response(f"FIX ATTEMPT FAILED {fix_attempt}/{self.max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}: {error_msg}\n\nCode:\n```python\n{current_code}\n```", f"fix_attempt_failed_{step_name}_{fix_attempt}")
 
-                            if fix_attempt == max_fix_attempts:
-                                print(f"  ⚠️ Failed to fix after {max_fix_attempts} attempts. Moving to next iteration.")
-                                self.logger.log_response(f"ALL FIX ATTEMPTS EXHAUSTED - Analysis {analysis_idx+1}, Step {iteration + 1}. Failed after {max_fix_attempts} attempts.", f"fix_attempt_exhausted_{step_name}")
+                            if fix_attempt == self.max_fix_attempts:
+                                print(f"  ⚠️ Failed to fix after {self.max_fix_attempts} attempts. Moving to next iteration.")
+                                self.logger.log_response(f"ALL FIX ATTEMPTS EXHAUSTED - Analysis {analysis_idx+1}, Step {iteration + 1}. Failed after {self.max_fix_attempts} attempts.", f"fix_attempt_exhausted_{step_name}")
                                 
                                 # Log final failure
                                 #self.logger.log_error(f"ALL FIX ATTEMPTS EXHAUSTED - Analysis {analysis_idx+1}, Step {iteration + 1}. Failed after {max_fix_attempts} attempts.", current_code)
