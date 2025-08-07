@@ -23,3 +23,6 @@ Here are the previous analyses attempted:
 
 Here is a summary of the research paper:
 {paper_txt}
+
+Here is a summary of relevant biological information for finding a novel idea:
+{deepresearch_background}

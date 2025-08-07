@@ -13,6 +13,12 @@ MODULE_DIR = THIS_DIR.parent  # salber/CellVoyager
 if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
+import types
+
+# Ensure importing module under test doesn't fail if openai isn't installed
+if 'openai' not in sys.modules:
+    sys.modules['openai'] = types.SimpleNamespace(OpenAI=lambda *a, **k: None)
+
 import deepresearch  # noqa: E402
 
 

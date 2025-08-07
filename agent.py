@@ -68,7 +68,7 @@ class AnalysisAgent:
         # System prompt for coding agents
         self.coding_system_prompt = open(os.path.join(self.prompt_dir, "coding_system_prompt.txt")).read()
 
-        # Augment analyses overview via DeepResearch using paper summary (disease info, prior analyses, dataset details, untested ideas)
+        # Augment via DeepResearch using paper summary and dataset details (stored separately)
         try:
             import importlib.util
             module_path = os.path.join(os.path.dirname(__file__), "deepresearch.py")
@@ -80,16 +80,15 @@ class AnalysisAgent:
             else:
                 DeepResearcher = None
 
+            # Always initialize background string so attribute exists even if DeepResearch fails
+            self.deepresearch_background = ""
+
             if DeepResearcher is not None:
                 researcher = DeepResearcher(self.openai_api_key)
                 # Provide both the paper summary and dataset metadata so deep research can tailor background
                 dr_summary = researcher.research_from_paper_summary(self.paper_summary, self.adata_summary)
                 if isinstance(dr_summary, str) and dr_summary.strip():
-                    self._analyses_overview = (
-                        self._analyses_overview
-                        + "\n\n## DeepResearch (paper-derived)\n"
-                        + dr_summary.strip()
-                    )
+                    self.deepresearch_background = dr_summary.strip()
         except Exception as e:
             print(f"Warning: DeepResearch failed or was skipped: {e}")
 
@@ -98,7 +97,7 @@ class AnalysisAgent:
             name=self.analysis_name,
             adata_path=self.h5ad_path,
             available_packages=AVAILABLE_PACKAGES,
-            deepresearch_summary=self._analyses_overview,
+            analyses_overview=self._analyses_overview,
         )
 
         # Initialize logger: keeps track of all actions, prompts, responses, errors, etc.
@@ -218,7 +217,8 @@ class AnalysisAgent:
     def generate_initial_analysis(self, attempted_analyses):
         prompt = open(os.path.join(self.prompt_dir, "first_draft.txt")).read()
         prompt = prompt.format(CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, 
-                               past_analyses=attempted_analyses, paper_txt=self.paper_summary)
+                               past_analyses=attempted_analyses, paper_txt=self.paper_summary,
+                               deepresearch_background=self.deepresearch_background)
 
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Initial Analysis")
