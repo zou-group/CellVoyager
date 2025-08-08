@@ -11,9 +11,7 @@ class DeepResearcher:
     """
 
     def __init__(self, openai_api_key: str):
-        # Prefer environment if already set, otherwise use provided key
-        api_key = os.environ.get("OPENAI_API_KEY", openai_api_key)
-        self.client = openai.OpenAI(api_key=api_key)
+        self.client = openai.OpenAI(api_key=openai_api_key)
         # Allow overriding via env; default to lightweight for faster turnaround
         self.model = os.environ.get(
             "DEEP_RESEARCH_MODEL",
@@ -34,7 +32,11 @@ class DeepResearcher:
             for item in getattr(response, "output", []) or []:
                 if getattr(item, "type", None) == "message":
                     for c in getattr(item, "content", []) or []:
-                        if getattr(c, "type", None) == "text":
+                        if getattr(c, "type", None) == "output_text":
+                            t = getattr(c, "text", None)
+                            if isinstance(t, str):
+                                parts.append(t)
+                        elif getattr(c, "type", None) == "text":
                             t = getattr(c, "text", None)
                             if isinstance(t, str):
                                 parts.append(t)
@@ -49,16 +51,22 @@ class DeepResearcher:
             kwargs = {
                 "model": self.model,
                 "input": prompt,
+                "tools": [{"type": "web_search_preview"}],  # Required for deep research models
             }
             # Respect optional max tokens; some users report truncation defaults
             if max_output_tokens is not None:
                 kwargs["max_output_tokens"] = max_output_tokens
 
+            #print("PROMPT: ", prompt)
+            #print("KWARGS: ", kwargs)
             response = self.client.responses.create(**kwargs)
+            print("RESPONSE: ", response)
             text = self._extract_output_text(response)
+            print("TEXT: ", text)
             return text or ""
         except Exception as e:
             # Be silent to keep upstream behavior unchanged; caller already guards
+            print("ERROR: ", e)
             return ""
 
     def research_from_paper_summary(

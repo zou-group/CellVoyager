@@ -84,6 +84,7 @@ class AnalysisAgent:
             self.deepresearch_background = ""
 
             if DeepResearcher is not None:
+                print("DEEPRESEARCH IS NOT NONE")
                 researcher = DeepResearcher(self.openai_api_key)
                 # Provide both the paper summary and dataset metadata so deep research can tailor background
                 dr_summary = researcher.research_from_paper_summary(self.paper_summary, self.adata_summary)
