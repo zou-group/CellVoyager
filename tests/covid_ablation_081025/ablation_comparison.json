@@ -1,0 +1,1916 @@
+{
+  "timestamp": "2025-08-11T11:36:49.144081",
+  "summary": {
+    "no_vlm_no_critique_20250810": {
+      "final_success_rate": 0.8111111111111111,
+      "total_failure_rate": 0.4351145038167939,
+      "final_successful_cells": 73,
+      "final_failed_cells": 17,
+      "total_failures": 57,
+      "total_attempts": 131,
+      "num_analyses": 10
+    },
+    "baseline_20250810": {
+      "final_success_rate": 0.0,
+      "total_failure_rate": 1.0,
+      "final_successful_cells": 0,
+      "final_failed_cells": 2,
+      "total_failures": 7,
+      "total_attempts": 7,
+      "num_analyses": 0
+    },
+    "no_critique_20250810": {
+      "final_success_rate": 0.8796296296296297,
+      "total_failure_rate": 0.5388888888888889,
+      "final_successful_cells": 95,
+      "final_failed_cells": 13,
+      "total_failures": 97,
+      "total_attempts": 180,
+      "num_analyses": 12
+    },
+    "no_vlm_20250810": {
+      "final_success_rate": 0.6666666666666666,
+      "total_failure_rate": 0.625,
+      "final_successful_cells": 36,
+      "final_failed_cells": 18,
+      "total_failures": 65,
+      "total_attempts": 104,
+      "num_analyses": 6
+    }
+  },
+  "detailed_results": {
+    "no_vlm_no_critique_20250810": {
+      "test_name": "no_vlm_no_critique_20250810",
+      "total_code_cells_attempted": 131,
+      "total_failures": 57,
+      "final_successful_cells": 73,
+      "final_failed_cells": 17,
+      "failure_rate": 0.4351145038167939,
+      "final_success_rate": 0.8111111111111111,
+      "failed_fix_attempts_per_step": {
+        "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/logs/test_no_vlm_no_critique_log_20250810_005336.log": {
+          "1": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 1,
+            "8": 0
+          },
+          "2": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "3": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "4": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "5": {
+            "1": 3,
+            "2": 3,
+            "3": 0,
+            "4": 0,
+            "5": 3,
+            "6": 3,
+            "7": 2,
+            "8": 0
+          },
+          "6": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 1,
+            "6": 0,
+            "7": 0,
+            "8": 3
+          },
+          "7": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 3,
+            "7": 0,
+            "8": 0
+          },
+          "8": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 1,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "9": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "10": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 3,
+            "6": 3,
+            "7": 0,
+            "8": 0
+          },
+          "11": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          }
+        }
+      },
+      "analyses": [
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_2.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 1,
+          "failed_cells": 8,
+          "success_rate": 0.1111111111111111,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": false,
+              "code_preview": "import scanpy as sc\n\n# Subset the data for neutrophils only\nneutrophils = adata[adata.obs['cell_type..."
+            },
+            {
+              "cell_index": 7,
+              "success": false,
+              "code_preview": "monocytes_t_cells = adata[adata.obs['cell_type_coarse'].isin(['CD14 Monocyte', 'CD8 T', 'CD4 T'])]"
+            },
+            {
+              "cell_index": 10,
+              "success": false,
+              "code_preview": "cd14_monocytes_cd8_t_cells = adata[adata.obs['cell_type_coarse'].isin(['CD14 Monocyte', 'CD8 T'])]"
+            },
+            {
+              "cell_index": 13,
+              "success": false,
+              "code_preview": "cd14_monocytes_cd8_t_cells = adata[adata.obs['cell_type_coarse'].isin(['CD14 Monocyte', 'CD8 T'])]"
+            },
+            {
+              "cell_index": 16,
+              "success": false,
+              "code_preview": "cd14_monocytes_cd8_t_cells = adata[adata.obs['cell_type_coarse'].isin(['CD14 Monocyte', 'CD8 T'])]"
+            },
+            {
+              "cell_index": 19,
+              "success": false,
+              "code_preview": "t_and_nk_cells = adata[adata.obs['cell_type_coarse'].isin(['CD4 T', 'CD8 T', 'NK'])]"
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "monocytes = adata[adata.obs['cell_type_coarse'] == 'CD14 Monocyte']"
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "cd16_monocytes = adata[adata.obs['cell_type_coarse'] == 'CD16 Monocyte']"
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_4.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "print(adata.obs['cell_type_coarse'].value_counts())"
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Step 2: Analyze the expression of ligands and receptors in monocytes and T ce..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nfrom scipy import stats\n\n# Define additional receptors to in..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nfrom scipy import stats\n\n# Interferon-driven genes for anal..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nfrom scipy import stats\n\n# Define ligands and receptors of i..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nfrom scipy import stats\n\n# Define interferon-regulated genes of interest\ninterf..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "import scanpy as sc\nfrom scipy import stats\n\n# Broadened set of interferon-regulated and response ge..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Define glycolysis and hypoxia-related genes\nglycolysis_gen..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_10.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 7,
+          "failed_cells": 2,
+          "success_rate": 0.7777777777777778,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Subset to platelets using coarse cell annotations\nplatelets = adata[adata.obs..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import anndata as ad\n\n# Subset to monocytes and T cells using coarse cell annotations\nmonocytes_tcel..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Differential ligand-receptor expression analysis between severe COVID-19 pati..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Ensure data normalization and quality control\nsc.pp.normal..."
+            },
+            {
+              "cell_index": 16,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Check for NaN values in the dataset\nif np.any(np.isnan(ad..."
+            },
+            {
+              "cell_index": 19,
+              "success": false,
+              "code_preview": "\nimport anndata as ad\n\n# Example initialization (must be replaced with actual data initialization)\n#..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport anndata as ad\n\n# Assuming 'adata' is defined somewhere in the previous c..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport anndata as ad\n\n# Assuming `immune_cells` is an AnnData object, we first ..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_3.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Filter for platelet cells based on the cell_type_coarse or cell_type_fine\npl..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Stratify data by COVID-19 severity\ncovid_vent = platelet_cells[platelet_cells..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Filter for monocytes and T cells using their cell type labels\nt_cell_types = ..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Focus on ligand-receptor pairs in monocytes and T cells\nligand_pairs = {'TNF'..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Preprocess data for monocyte and T cell subsets\nsc.pp.subsample(monocytes, fr..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Define additional cytokine and recept..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nfrom scipy.stats import ttest_ind\n\n# List of cytokines with s..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Target ligand-receptor pairs\nligand_receptor_pairs = {'TNF..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_1.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Filter data for platelet clusters\nplatelet_data = adata[adata.obs['cell_type_..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Conduct differential expression analysis\nsc.tl.rank_genes_groups(platelet_dat..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Filter data for monocytes and T cells\nmonocyte_t_cell_data = adata[adata.obs[..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import pandas as pd\nfrom scipy.stats import spearmanr\n\n# Subset the monocyte and T cell data for the..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Define a broadened list of cytokines and their receptors\nalternative_ligands..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Subset the data for monocytes and T cells\nmono_tcell_data = adata[adata.obs['..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Pathway enrichment analysis for cytokine receptors\ncytokine_genes = ['TNFRSF..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Filter the data for CD14 Monocytes and CD8 T cells\nmono_tcell_data = adata[a..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_7.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 8,
+          "failed_cells": 1,
+          "success_rate": 0.8888888888888888,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\n\n# Step 1: Identify and subset mesenchymal stem cells (MSCs) from the dataset.\n# Utilizing existing..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "# Step 2: Subset monocytes and T cells for further analysis.\n# Selecting relevant immune cell types ..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Differential expression analysis on CD14 Monocytes for HLA class II genes\nmo..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Subset T cells for further analysis using annotations.\nT_cells = adata[adata...."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Differential expression analysis for ligand-receptor genes in CD4 T cells.\ncd..."
+            },
+            {
+              "cell_index": 19,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Differential expression analysis for CD14 Monocytes, focused on ventilated v..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Subset CD14 Monocytes for further analysis\nmonocytes_cd14..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nfrom scipy.stats import spearmanr\n\n# Extract interferon-stimulated genes expres..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_8.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Normalizing and preprocessing the data\nsc.pp.normalize_total(adata, target_su..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Perform PCA for dimensionality reduction\nsc.tl.pca(adata, svd_solver='arpack'..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\nsc.pp.neighbors(adata)\nsc.tl.umap(adata, min_dist=0.3, spread=1.0)\nprint('UMAP embedding complete.'..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "sc.tl.leiden(adata, resolution=1.0)\nprint('Leiden clustering complete. Identified clusters:', len(ad..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\nimport numpy as np\nimport pandas as pd\n\n# Annotate clusters with known cell markers\ncell_markers = ..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Make sure marker genes exist in adata.var_names\nmonocyte_markers = [marker f..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Perform ligand-receptor analysis\nmonocyte_genes = ['TNF'..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport numpy as np\nfrom scipy.stats import wilcoxon\n\n# Fix ..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_9.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\n# Subset the data for B lineage cells using adata.obs cell_type_fine annotations\nb_lineage_adata = ..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "b_lineage_adata = adata[adata.obs['cell_type_coarse'].isin(['B', 'PB'])].copy()\n\n# Check if there ar..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Perform differential expression analysis\nsc.tl.rank_genes_groups(b_lineage_ad..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Subset monocyte lineage cells\nmonocyte_adata = adata[adata.obs['cell_type_coa..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Differential Gene Expression Analysis specifically for CD14+ vs CD16+ monocyt..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Subset data for monocytes and T cells\nmonocyte_tcell_adata = adata[adata.obs[..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Subsetting for T Cells within monocyte and T cell data\nc..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nfrom scipy.stats import ttest_ind\n\n# Using the calculated lo..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_5.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 5,
+          "failed_cells": 4,
+          "success_rate": 0.5555555555555556,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Subset the data by condition and cell type to perform DE..."
+            },
+            {
+              "cell_index": 7,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Subset the data by condition\nadata_covid = adata[adata.o..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Quality control: Filter cells with high mitochondrial ge..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Perform PCA for dimensionality reduction\nsc.tl.pca(adata, n_comps=50)\n\n# Vis..."
+            },
+            {
+              "cell_index": 16,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Assume `adata` is correctly defined and preprocessed Ann..."
+            },
+            {
+              "cell_index": 19,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Subset the data by condition focusing on monocytes and T..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Subset the data by condition\nadata_covid = adata[adata.o..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Assuming the following lines should properly define or p..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_no_critique_20250810_005316/outputs/test_no_vlm_no_critique_20250810_005336/test_no_vlm_no_critique_analysis_6.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 7,
+          "failed_cells": 2,
+          "success_rate": 0.7777777777777778,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": false,
+              "code_preview": "import scanpy as sc\n\n# Subset to include only the relevant myeloid/granulocyte clusters\nrelevant_clu..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport scvi\n\n# Re-set the relevant clusters after failure in..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import pandas as pd\nimport scanpy as sc\nimport scvi\n\n# Differential expression analysis using SCVI\ns..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport scvi\n\n# Use latent space for clustering\nadata_subset = adata[adata.obs['c..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\nimport pandas as pd\nimport scanpy as sc\n\n# Conduct differential expression analysis for each cluste..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Filter relevant cell types for interaction analysis\nmono..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport scvi\n\n# Focus on T cells and Monocytes\nadata_t_cells..."
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Set root cell for diffusion pseudotime analysis\nadata_t_cells_monocytes.obs[..."
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    "baseline_20250810": {
+      "test_name": "baseline_20250810",
+      "total_code_cells_attempted": 7,
+      "total_failures": 7,
+      "final_successful_cells": 0,
+      "final_failed_cells": 2,
+      "failure_rate": 1.0,
+      "final_success_rate": 0.0,
+      "failed_fix_attempts_per_step": {
+        "covid_ablation_081025/test_results_baseline_20250810_005338/logs/test_baseline_log_20250810_005437.log": {
+          "1": {
+            "1": 3,
+            "2": 2
+          }
+        }
+      },
+      "analyses": [],
+      "errors": []
+    },
+    "no_critique_20250810": {
+      "test_name": "no_critique_20250810",
+      "total_code_cells_attempted": 180,
+      "total_failures": 97,
+      "final_successful_cells": 95,
+      "final_failed_cells": 13,
+      "failure_rate": 0.5388888888888889,
+      "final_success_rate": 0.8796296296296297,
+      "failed_fix_attempts_per_step": {
+        "covid_ablation_081025/test_results_no_critique_20250810_005316/logs/test_no_critique_log_20250810_005336.log": {
+          "1": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 1,
+            "8": 0
+          },
+          "2": {
+            "1": 1,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "3": {
+            "1": 1,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 2,
+            "8": 0
+          },
+          "4": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 2
+          },
+          "5": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "6": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 2,
+            "7": 0,
+            "8": 3
+          },
+          "7": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 3,
+            "5": 3,
+            "6": 0,
+            "7": 3,
+            "8": 0
+          },
+          "8": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 2,
+            "6": 0,
+            "7": 3,
+            "8": 3
+          },
+          "9": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "10": {
+            "1": 0,
+            "2": 0,
+            "3": 3,
+            "4": 0,
+            "5": 0,
+            "6": 1,
+            "7": 2,
+            "8": 1
+          },
+          "11": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 2
+          },
+          "12": {
+            "1": 0,
+            "2": 0,
+            "3": 3,
+            "4": 3,
+            "5": 3,
+            "6": 3,
+            "7": 3,
+            "8": 3
+          },
+          "13": {
+            "1": 3,
+            "2": 0
+          }
+        }
+      },
+      "analyses": [
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_5.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# 1. Evaluate expression levels of NET-related genes in neutrophils\nnet_genes =..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# 2. Differential expression analysis using Wilcoxon rank-sum test\nde_genes = s..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Filter for Activated Granulocyte to look at specific expression patterns\nadat..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nfrom scipy.stats import spearmanr\nimport matplotlib.pyplot as plt\nimport seabor..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\nfrom scipy.stats import spearmanr\nimport matplotlib.pyplot as plt\nimport seaborn..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# As..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom scipy.stats import spea..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom scipy.stats import sp..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_3.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\nthreshold = 0.5  # Set an appropriate threshold value based on your data\nsc.tl.score_genes(adata, g..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Compare suppressive_score with cytokine exp..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "from scipy import stats\n\n# Calculate correlation coefficients and p-values\npearson_corr_tnf = stats...."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nfrom scipy import stats\n\n# Perform cell-type specific correlations\ncell_types = ..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import pandas as pd\n\n# Data quality check for IL6 expression specifically in CD14 Monocytes and CD8 ..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Differential expression analysis on CD14+ Monocytes and CD8+ T cells\ncell_typ..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Assuming 'adata' is defined and contains the necessary 'u..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Assuming 'adata' is defined and contains the necessary 'un..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_8.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 7,
+          "failed_cells": 2,
+          "success_rate": 0.7777777777777778,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Score monocytes for suppressive myeloid markers\nsuppressiv..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Compute neighborhood graph and recluster monocytes based on the suppressive s..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Identify monocytes and T cells\nmonocytes = adata[adata.ob..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Identify monocytes and T cells clusters based on receptor-ligand analysis\nmon..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Compute the neighborhood graph of cells; needed before clustering and differ..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Run dendrogram for better visualization of cluster relationships\nsc.tl.dendro..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Assuming adata is defi..."
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Filter for developing neutrophils\nneutrophils = adata[adata.obs['cell_type_c..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_9.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Define a gene set for glycolysis and score it..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Define a gene set for oxidative phosphorylati..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Define gene set for interferon response and s..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Filter dataset for COVID-..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import numpy as np\nfrom scipy import stats\nimport scanpy as sc\n\n# Define subsets of data\ncovid_cd14 ..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Filtering for monocyte subtypes indicating di..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\n# Extract monocytes and T c..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Per..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_10.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 8,
+          "failed_cells": 1,
+          "success_rate": 0.8888888888888888,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Select the relevant cytokine receptors and su..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Select the relevant cytokine receptors and su..."
+            },
+            {
+              "cell_index": 10,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\n# Selecting Monocyte subse..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Define interferon-induced genes of interest\ni..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Select monocytes and T cells\ncell_types = ['C..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nimport..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nfrom scipy.stats import mannwhitneyu\n\n# Extract cells of interest\nmonocytes = adata[adata.obs['cell..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Subset data for monocyte and T cell subsets\nmonocytes = adata[adata.obs['cel..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_7.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 6,
+          "failed_cells": 3,
+          "success_rate": 0.6666666666666666,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Define T-cell exhaustion and activation markers\nexhaustion..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "# Calculate correlation between exhaustion/effector scores and clinical metadata\nclinical_factors = ..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\n# Preprocess and normalize data\nsc.pp.filter_cells(adata, min_genes=200)\nsc.pp.filter_genes(adata, ..."
+            },
+            {
+              "cell_index": 13,
+              "success": false,
+              "code_preview": "\nimport scvi\n\n# Set up SCVI model\nscvi.model.SCVI.setup_anndata(adata)\n\n# Train the SCVI model\nmodel..."
+            },
+            {
+              "cell_index": 16,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\nsc.pp.filter_cells(adata, min_genes=200)\nsc.pp.filter_genes(adata, min_cells=3..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Visualize exhaustion and effector scores alon..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\n# Examp..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import matplotlib.pyplot as plt\nimport seaborn as sns\nimport pandas as pd\n\n# Subset to CD8 T-cells\nc..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_12.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 3,
+          "failed_cells": 6,
+          "success_rate": 0.3333333333333333,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\nligands = ['TNF', 'IL6']\nreceptors = ['TNFRSF1A', 'IL6R']\ncommunication_pairs = [(lig, rec) for lig..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import pandas as pd\nfrom collections import defaultdict\n\nligands = ['TNF', 'IL6', 'CXCL10', 'CCL2']\n..."
+            },
+            {
+              "cell_index": 10,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Ensure a valid adata object is loaded or initialized bef..."
+            },
+            {
+              "cell_index": 13,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Ensure adata is defined before the below operations\n# Filter for CD8 T cells..."
+            },
+            {
+              "cell_index": 16,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Assuming adata is already defined in the context\n\n# Filter for Treg cells\nad..."
+            },
+            {
+              "cell_index": 19,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Verify if 'adata' is defined\n# If not, initialize it with data from a source..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Ensure adata is definitively set before processing\n# Isolate CD4+ T and CD8+..."
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Assuming 'adata' is available in the context, filter for Treg cells\nadata_tr..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_2.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Exploratory visualization of platelet-relate..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "\ndef ligand_receptor_analysis(adata, ligands, receptors):\n    import pandas as pd\n    interaction_sc..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\nsc.pp.neighbors(adata)\nsc.tl.leiden(adata, resolution=1.0, key_added='leiden_monocytes_clusters')\ns..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "sc.tl.rank_genes_groups(adata, 'leiden_monocytes_clusters', method='wilcoxon')\nsc.pl.rank_genes_grou..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Pathway enrichment analysis of DE genes\nrank_genes_groups..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "sc.tl.rank_genes_groups(adata, 'Status', method='wilcoxon', n_genes=100, key_added='rank_genes_coagu..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Define functions to run pathway enrichment analysis\nrank_..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Ensure presence of requ..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_1.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Define..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nfrom scip..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Ensur..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Subset T cells for receptor analysis\ncd8_t_ce..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\n# Subset CD14+ monocytes and T cells for ligand-receptor analysis\nmonocytes = adata[adata.obs['cell..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Subset CD16+ monocytes and T cells for subclu..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Perfo..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Ensure..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_11.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\n# Define glycolytic gene list\nglycolytic_genes = ['HK1', 'HK2', 'HK3', 'GPI', 'PFKP', 'PFKL', 'PFKM..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "# Select relevant immune cell types\ncell_types = ['CD14 Monocyte', 'CD8 T', 'NK']\nadata_subset = ada..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "# Subset to focus on CD14+ monocytes for COVID-19 and Healthy controls\nimport scanpy as sc\ncd14_adat..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Define gene lists for o..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\n# Subset the data to focus on CD16+ monocytes and CD8 T cells\ncd16_cd8_adata = adata[adata.obs['cel..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\n# Define gene lists for oxidative phosphorylation\noxidative_phosphorylation_genes = ['NDUFA1', 'NDU..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Compute the neighborhood graph on the data\nsc.pp.neighbors(adata, n_neighbor..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Subset to focus on T and NK cells\nnk_t_adata = adata[adata.obs['cell_type_co..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_6.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 8,
+          "failed_cells": 1,
+          "success_rate": 0.8888888888888888,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\nfrom scanpy import AnnData\nimport numpy as np\nimport scanpy as sc\n\n# Define metabolic gene sets for..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Redefine otm gene set without 'MTATP6' and add 'NDUFV1'\notm_genes_refined = [..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Ensure the dataset is properly subsetted and use only NK cells for this analy..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "# Step 2: Clustering NK cells to find subsets\n\nimport scanpy as sc\n\n# Reducing dimensions\nsc.tl.pca(..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\n# Filter NK cells based on ICU status\nnk_cells_icu = nk_cells[nk_cells.obs['Admission'] == 'ICU']\n\n..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Ensure the dataset is properly subsetted and use only developing neutrophils..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Subset the dataset to focus on T cells\nt_cells = adata[adata.obs['cell_type_..."
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Subset the dataset to focus on T cells\nselected_clusters = t_cells[t_cells.o..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_critique_20250810_005316/outputs/test_no_critique_20250810_005336/test_no_critique_analysis_4.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 9,
+          "failed_cells": 0,
+          "success_rate": 1.0,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# View the cell type annotations\nsc.pl.umap(ad..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Calculate differential expression\nsc.t..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Set up for ligand-receptor interaction analysis\nsc.pl.embedding(myeloid_adata..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Calculate differential expression specific to monocytes ..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nfrom scipy.stats import fisher_exact\n\n# Filter monocytes fro..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\n# Define potential ligand-r..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Def..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nfrom ..."
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    "no_vlm_20250810": {
+      "test_name": "no_vlm_20250810",
+      "total_code_cells_attempted": 104,
+      "total_failures": 65,
+      "final_successful_cells": 36,
+      "final_failed_cells": 18,
+      "failure_rate": 0.625,
+      "final_success_rate": 0.6666666666666666,
+      "failed_fix_attempts_per_step": {
+        "covid_ablation_081025/test_results_no_vlm_20250810_005322/logs/test_no_vlm_log_20250810_005348.log": {
+          "1": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 3,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "2": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 3,
+            "8": 3
+          },
+          "3": {
+            "1": 0,
+            "2": 3,
+            "3": 0,
+            "4": 2,
+            "5": 0,
+            "6": 0,
+            "7": 3,
+            "8": 0
+          },
+          "4": {
+            "1": 0,
+            "2": 0,
+            "3": 3,
+            "4": 3,
+            "5": 3,
+            "6": 3,
+            "7": 2,
+            "8": 0
+          },
+          "5": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 3,
+            "8": 0
+          },
+          "6": {
+            "1": 0,
+            "2": 3,
+            "3": 3,
+            "4": 1,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "7": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          }
+        }
+      },
+      "analyses": [
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_20250810_005322/outputs/test_no_vlm_20250810_005347/test_no_vlm_analysis_1.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 5,
+          "failed_cells": 4,
+          "success_rate": 0.5555555555555556,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "filtered_adata = adata[adata.obs['nCount_RNA'] > 1000].copy()\nfiltered_adata = filtered_adata[filter..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "\n# Check for existence of required columns before filtering\nassert 'nCount_RNA' in adata.obs.columns..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\n# Confirm successful cell filtering with EDA and summary statistics\nassert 'nCount_RNA' in adata.ob..."
+            },
+            {
+              "cell_index": 13,
+              "success": false,
+              "code_preview": "\n# First step: Identify distinct immune cell types using CellTypist\nfrom celltypist import models, a..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\n# Step 1: Feature Characterization using Cell Cycle Scoring\nimport scanpy as sc\n\n# Identify marker ..."
+            },
+            {
+              "cell_index": 19,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Ensure data is filtered for quality and the presence of T cells\nfiltered_t_c..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Preliminary quality control\nadata = adata[adata.obs['nCou..."
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "import scanpy as sc\nimport scvi\n\n# Set up SCVI model with random seed for reproducibility\nscvi.model..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_20250810_005322/outputs/test_no_vlm_20250810_005347/test_no_vlm_analysis_5.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 8,
+          "failed_cells": 1,
+          "success_rate": 0.8888888888888888,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "# Subset T cells and NK cells focusing on severe COVID-19 and healthy individuals\nt_cells_nk_cells =..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Filter for T cells and NK cells for bo..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Define comprehensive gene lists for ke..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport logging\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO)\nlogg..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport logging\n\n# Set up logging for detailed validation\nlogging.basicConfig(le..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport logging\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO)\nlogg..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Define gene lists for metabolic and i..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nimport logging\n\n# Initialize logger\nlogging.basicConfig(leve..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_20250810_005322/outputs/test_no_vlm_20250810_005347/test_no_vlm_analysis_2.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 7,
+          "failed_cells": 2,
+          "success_rate": 0.7777777777777778,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Check for required columns in adata.ob..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Step 1: Isolate and preprocess specific immune cell data..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "import numpy as np\nimport scanpy as sc\nimport pandas as pd\n\n# Define function to perform QC filterin..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Define function for dynamic quality co..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Ensure dataset is correctly subsetted before clustering\nassert cd16_monocyte..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Differential Expression Analysis focusing on ligand-receptor pairs\nsc.tl.rank..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Perform DE analysis on CD16 Monocytes and \u03b3\u03b4 T cells sepa..."
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Load known ligand-receptor pairs from a reference file\nf..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_20250810_005322/outputs/test_no_vlm_20250810_005347/test_no_vlm_analysis_4.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 3,
+          "failed_cells": 6,
+          "success_rate": 0.3333333333333333,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "def summarize_cell_counts(adata, cell_types=['CD14 Monocyte', 'CD16 Monocyte', 'DC'], groups=['COVID..."
+            },
+            {
+              "cell_index": 7,
+              "success": true,
+              "code_preview": "cell_type = 'CD14 Monocyte'\nstatus_criteria = 'COVID'\nvent_status = 'Vent'\n\ncd14_monocytes = adata[(..."
+            },
+            {
+              "cell_index": 10,
+              "success": false,
+              "code_preview": "\n# Import necessary packages\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Filter CD..."
+            },
+            {
+              "cell_index": 13,
+              "success": false,
+              "code_preview": "\n# Import necessary packages\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Ensure th..."
+            },
+            {
+              "cell_index": 16,
+              "success": false,
+              "code_preview": "\n# Import necessary packages\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Verify ba..."
+            },
+            {
+              "cell_index": 19,
+              "success": false,
+              "code_preview": "\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Verify batch column presence, logging..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "\nimport numpy as np\nimport scanpy as sc\nimport scvi\n\n# Ensure adata is copied correctly before any o..."
+            },
+            {
+              "cell_index": 25,
+              "success": false,
+              "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\nimport scvi\n\n# Verify that the anndata ob..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_20250810_005322/outputs/test_no_vlm_20250810_005347/test_no_vlm_analysis_6.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 6,
+          "failed_cells": 3,
+          "success_rate": 0.6666666666666666,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Define comprehensive list of glycolysis-related genes\n# Ex..."
+            },
+            {
+              "cell_index": 7,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\nfrom scipy import stats\n\n# Define the essential list of oxid..."
+            },
+            {
+              "cell_index": 10,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\nfrom scipy import stats\n\n# Recalculate oxidative phosphoryla..."
+            },
+            {
+              "cell_index": 13,
+              "success": false,
+              "code_preview": "\nimport pandas as pd\nfrom scipy import stats\n\n# Ensure adata.raw is not None\nif adata.raw is not Non..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport warnings\n\n# Ensure gene names in adata are consistent ..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport pandas as pd\nimport numpy as np\n\n# Ensure gene names are uppercase and un..."
+            },
+            {
+              "cell_index": 22,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Assuming 'adata' is defined before this snippet\n\n# Ensure..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Ensure gene names are unique and uppercase\nadata.var_nam..."
+            }
+          ]
+        },
+        {
+          "notebook_path": "covid_ablation_081025/test_results_no_vlm_20250810_005322/outputs/test_no_vlm_20250810_005347/test_no_vlm_analysis_3.ipynb",
+          "total_code_cells": 9,
+          "successful_cells": 7,
+          "failed_cells": 2,
+          "success_rate": 0.7777777777777778,
+          "cell_details": [
+            {
+              "cell_index": 1,
+              "success": true,
+              "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+            },
+            {
+              "cell_index": 4,
+              "success": true,
+              "code_preview": "\nimport numpy as np\nimport pandas as pd\n\n# Extract relevant cell types focused on activated CD8 T ce..."
+            },
+            {
+              "cell_index": 7,
+              "success": false,
+              "code_preview": "\nfrom scipy import stats\nimport pandas as pd\n\n# Define cell types of interest and prepare storage\nce..."
+            },
+            {
+              "cell_index": 10,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nfrom scipy import stats\n\ns_genes = ['MCM5', 'PCNA', 'TYMS',..."
+            },
+            {
+              "cell_index": 13,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nfrom scvi.model import SCVI\nimport scvi\n\n# Assuming the original AnnData object..."
+            },
+            {
+              "cell_index": 16,
+              "success": true,
+              "code_preview": "import scanpy as sc\n\n# Subset the AnnData object to include only CD8 T cells\nadata_cd8 = adata[adata..."
+            },
+            {
+              "cell_index": 19,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\n\n# Subset the AnnData object to include only CD8 T cells with specific Ventilat..."
+            },
+            {
+              "cell_index": 22,
+              "success": false,
+              "code_preview": "\nimport scanpy as sc\n\n# Validate cell metadata and filter for CD8 T cells and CD14 Monocytes in COVI..."
+            },
+            {
+              "cell_index": 25,
+              "success": true,
+              "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nfrom scipy import stats\n\n# Subset the AnnData object to inc..."
+            }
+          ]
+        }
+      ],
+      "errors": []
+    }
+  }
+}

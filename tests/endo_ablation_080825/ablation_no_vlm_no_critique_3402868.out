@@ -1,0 +1,18 @@
+🚀 Running ablation test: no_vlm_no_critique
+   Self-critique: ❌
+   VLM: ❌
+   Analyses: 25
+   Max iterations: 8
+
+🧪 Testing no_vlm_no_critique...
+   Self-critique: ❌
+   VLM: ❌
+❌ Error during agent execution: 'deepresearch_summary'
+💾 Results saved to: endo_ablation_080825/results_no_vlm_no_critique.json
+📊 NO_VLM_NO_CRITIQUE Results:
+   Final Success Rate: 0.00%
+   Total Failure Rate: 0.00%
+   Final Successful Cells: 0
+   Total Failures: 0
+   Total Attempts: 0
+✅ Ablation test no_vlm_no_critique completed!

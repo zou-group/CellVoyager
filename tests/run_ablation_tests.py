@@ -23,7 +23,7 @@ def create_batch_script(config, h5ad_path, manuscript_path, num_analyses, max_it
     Create a batch script for a specific ablation configuration.
     
     Args:
-        config (dict): Configuration dictionary with test_name, use_self_critique, use_VLM
+        config (dict): Configuration dictionary with test_name, use_self_critique, use_VLM, use_documentation
         h5ad_path (str): Path to .h5ad file
         manuscript_path (str): Path to manuscript file
         num_analyses (int): Number of analyses
@@ -37,6 +37,7 @@ def create_batch_script(config, h5ad_path, manuscript_path, num_analyses, max_it
     test_name = config["test_name"]
     use_self_critique = config["use_self_critique"]
     use_VLM = config["use_VLM"]
+    use_documentation = config["use_documentation"]
     
     # Create batch script content
     batch_script_content = f"""#!/bin/bash
@@ -68,7 +69,8 @@ python single_ablation_test.py \\
     --max-iterations {max_iterations} \\
     --output-dir "{output_dir}" \\
     {"--use-self-critique" if use_self_critique else "--no-self-critique"} \\
-    {"--use-vlm" if use_VLM else "--no-vlm"}
+    {"--use-vlm" if use_VLM else "--no-vlm"} \\
+    {"--use-documentation" if use_documentation else "--no-documentation"}
 
 echo "✅ Ablation test {test_name} completed!"
 """
@@ -116,16 +118,20 @@ def main():
     parser.add_argument("--no-self-critique", action="store_true", help="Disable self-critique")
     parser.add_argument("--use-vlm", action="store_true", help="Enable VLM")
     parser.add_argument("--no-vlm", action="store_true", help="Disable VLM")
+    parser.add_argument("--use-documentation", action="store_true", help="Enable documentation lookup")
+    parser.add_argument("--no-documentation", action="store_true", help="Disable documentation lookup")
     
     args = parser.parse_args()
     
     # Determine boolean flags
     use_self_critique = args.use_self_critique and not args.no_self_critique
     use_VLM = args.use_vlm and not args.no_vlm
+    use_documentation = args.use_documentation and not args.no_documentation
     
     print(f"🚀 Running ablation test: {args.test_name}")
     print(f"   Self-critique: {'✅' if use_self_critique else '❌'}")
     print(f"   VLM: {'✅' if use_VLM else '❌'}")
+    print(f"   Documentation: {'✅' if use_documentation else '❌'}")
     print(f"   Analyses: {args.num_analyses}")
     print(f"   Max iterations: {args.max_iterations}")
     
@@ -157,7 +163,8 @@ def main():
         # Run test with specific ablation flags
         results = tester.test_agent(
             use_self_critique=use_self_critique,
-            use_VLM=use_VLM
+            use_VLM=use_VLM,
+            use_documentation=use_documentation
         )
         
         # Save individual results to output directory
@@ -214,10 +221,11 @@ def submit_batch_jobs(h5ad_path, manuscript_path, num_analyses=2, max_iterations
     
     # Define test configurations
     configurations = [
-        {"test_name": "baseline", "use_self_critique": True, "use_VLM": True},
-        {"test_name": "no_vlm", "use_self_critique": True, "use_VLM": False},
-        {"test_name": "no_critique", "use_self_critique": False, "use_VLM": True},
-        {"test_name": "no_vlm_no_critique", "use_self_critique": False, "use_VLM": False},
+        {"test_name": "baseline", "use_self_critique": True, "use_VLM": True, "use_documentation": True},
+        {"test_name": "no_vlm", "use_self_critique": True, "use_VLM": False, "use_documentation": True},
+        {"test_name": "no_critique", "use_self_critique": False, "use_VLM": True, "use_documentation": True},
+        {"test_name": "no_vlm_no_critique", "use_self_critique": False, "use_VLM": False, "use_documentation": True},
+        {"test_name": "no_documentation", "use_self_critique": True, "use_VLM": True, "use_documentation": False},
     ]
     
     job_ids = []

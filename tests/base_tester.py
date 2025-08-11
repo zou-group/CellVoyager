@@ -63,13 +63,14 @@ class AgentTester:
             'errors': []
         }
     
-    def test_agent(self, use_self_critique=True, use_VLM=True):
+    def test_agent(self, use_self_critique=True, use_VLM=True, use_documentation=True):
         """
         Test a specific agent configuration using built-in ablation flags.
         
         Args:
             use_self_critique (bool): Whether to enable self-critique functionality
             use_VLM (bool): Whether to enable Vision Language Model functionality
+            use_documentation (bool): Whether to enable documentation lookup functionality
         
         Returns:
             dict: Test results
@@ -77,6 +78,7 @@ class AgentTester:
         print(f"\n🧪 Testing {self.test_name}...")
         print(f"   Self-critique: {'✅' if use_self_critique else '❌'}")
         print(f"   VLM: {'✅' if use_VLM else '❌'}")
+        print(f"   Documentation: {'✅' if use_documentation else '❌'}")
         
         try:
             # Import the agent class here to avoid circular imports
@@ -95,7 +97,8 @@ class AgentTester:
                 log_home=self.output_dir,
                 prompt_dir=os.path.join(os.path.dirname(os.path.dirname(__file__)), "prompts"),
                 use_self_critique=use_self_critique,
-                use_VLM=use_VLM
+                use_VLM=use_VLM,
+                use_documentation=use_documentation
             )
             
             # Run the agent

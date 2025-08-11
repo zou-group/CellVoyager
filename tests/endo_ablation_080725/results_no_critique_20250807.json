@@ -1,0 +1,1616 @@
+{
+  "test_name": "no_critique_20250807",
+  "total_code_cells_attempted": 467,
+  "total_failures": 330,
+  "final_successful_cells": 154,
+  "final_failed_cells": 71,
+  "failure_rate": 0.7066381156316917,
+  "final_success_rate": 0.6844444444444444,
+  "failed_fix_attempts_per_step": {
+    "endo_ablation_080725/test_results_no_critique_20250807_122802/logs/test_no_critique_log_20250807_122821.log": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 3,
+        "7": 3,
+        "8": 0
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 3,
+        "6": 3,
+        "7": 1,
+        "8": 0
+      },
+      "3": {
+        "1": 1,
+        "2": 0,
+        "3": 3,
+        "4": 0,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "8": 3
+      },
+      "4": {
+        "1": 0,
+        "2": 0,
+        "3": 2,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "5": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 3,
+        "5": 0,
+        "6": 3,
+        "7": 3,
+        "8": 3
+      },
+      "6": {
+        "1": 3,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "7": {
+        "1": 0,
+        "2": 0,
+        "3": 3,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 3,
+        "8": 0
+      },
+      "8": {
+        "1": 0,
+        "2": 0,
+        "3": 2,
+        "4": 3,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 2
+      },
+      "9": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 3,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "8": 3
+      },
+      "10": {
+        "1": 0,
+        "2": 3,
+        "3": 0,
+        "4": 3,
+        "5": 0,
+        "6": 3,
+        "7": 3,
+        "8": 3
+      },
+      "11": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 3,
+        "5": 0,
+        "6": 3,
+        "7": 3,
+        "8": 1
+      },
+      "12": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 3
+      },
+      "13": {
+        "1": 0,
+        "2": 3,
+        "3": 2,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 3,
+        "8": 3
+      },
+      "14": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 3,
+        "5": 3,
+        "6": 0,
+        "7": 3,
+        "8": 0
+      },
+      "15": {
+        "1": 2,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 2,
+        "8": 3
+      },
+      "16": {
+        "1": 3,
+        "2": 0,
+        "3": 3,
+        "4": 3,
+        "5": 0,
+        "6": 0,
+        "7": 3,
+        "8": 0
+      },
+      "17": {
+        "1": 0,
+        "2": 0,
+        "3": 3,
+        "4": 0,
+        "5": 3,
+        "6": 3,
+        "7": 0,
+        "8": 0
+      },
+      "18": {
+        "1": 1,
+        "2": 3,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 1
+      },
+      "19": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 3,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "20": {
+        "1": 3,
+        "2": 0,
+        "3": 3,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 3,
+        "8": 3
+      },
+      "21": {
+        "1": 0,
+        "2": 3,
+        "3": 0,
+        "4": 3,
+        "5": 0,
+        "6": 0,
+        "7": 3,
+        "8": 1
+      },
+      "22": {
+        "1": 0,
+        "2": 3,
+        "3": 0,
+        "4": 0,
+        "5": 3,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "23": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 0,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "8": 3
+      },
+      "24": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 3,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "25": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_5.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Ensure 'day' column is categorical\nadata.obs..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Ensure that `adata` has been processed corre..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Annotate the clusters using known markers\nmarker_genes = {\n    'Stromal fibro..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Ass..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n# Compute the diffusion map embeddings\nsc.tl.diffmap(adata)\n# Visualize the diff..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Assuming diffusion map is computed\nsc.tl.dpt(adata, n_dcs=10, min_group_size..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nfrom scvi.data import setup_anndata\nfrom scvi.model import SCVI\n\n# Assuming 'ad..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport pandas as pd\nfrom scvi.model import SCVI..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_3.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 4,
+      "failed_cells": 5,
+      "success_rate": 0.4444444444444444,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Ensure mitochondrial genes are annotated\nada..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure the data is of floating type\nadata.X = adata.X.astype(float)\n\n# Compu..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Set up pseudotime trajectory analysis\nsc.tl.dpt(data_subset, n_dcs=10, min_g..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset data for unciliated epithelial cells\nepithelial_cells = adata[adata.o..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Load required data subset\nmac_and_smooth = adata[adata.obs['cell_type'].isin..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Focus on stromal fibroblasts\nstromal_fibroblasts = adata[adata.o..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Focus on ciliated cells\nciliated_cells = adata[adata.obs['cell_t..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Assuming `adata` is already loaded and preprocessed.\n\n# Subset f..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_25.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 2,
+      "failed_cells": 7,
+      "success_rate": 0.2222222222222222,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Subset the data to only include stromal fibr..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Perform clustering using the Leiden algorith..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport gseapy as gp\nimport pandas as pd\n\n# Subset the data to only include strom..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Perform differential expression analysis on stromal fibr..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Filter and normalize stromal fibroblast data\nstromal_adata = adata[adata.obs[..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Subset stromal fibroblast data\nstromal_adata = adata[adata.obs['cell_type'] =..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Load necessary packages and prepare data\nstro..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\n# Sub..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_8.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Define a list of metabolic pathway genes (example pathwa..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Extract unciliated epithel..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport s..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure data is of floating or complex floating data type before computing ne..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Filter lymphocytes data\nlymphocytes_mask = adata.obs['cell_type'] == 'Lympho..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform differential expression analysis for lymphocyte clusters\nsc.tl.rank_g..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Log-transform the data\nsc.pp.log1p(lymphocytes_data)\n\n# Re-run differential e..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Filter data for smooth muscle cells\nsmooth_muscle_mask = adata.obs['cell_typ..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_23.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Ensure data is of floating type\nadata.X = ad..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport numpy as np\n\n# Calculate Coefficient of Variation (CV) for each gene within smooth muscle ce..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\nsc.tl.rank_genes_groups(adata, 'cell_type', method='wilcoxon')\nsc.pl.rank_genes_..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Log transform the data\nsc.pp.log1p(adata)\n\n# Rerun differe..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport numpy as np\n\n# Subset the anndata object for unciliated epithelial cells\nunciliated_epitheli..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Load your Anndata object (example with dummy data for context, ensure your d..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport numpy as np\n\n# Subset the anndata object for unciliated epithelial cells\nunciliated_epitheli..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Ensure unciliated_epithelial_cells is a valid AnnData obj..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_9.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 4,
+      "failed_cells": 5,
+      "success_rate": 0.4444444444444444,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Select transporters for expression examination\ntransporters = ['SLC5A1', 'SL..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Apply log transformation\nsc.pp.log1p(adata, base=2)\n\n# Verify variance stabil..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform differential expression analysis on identified clusters from UMAP\n# ..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scvi\n\n# Set up and train scVI model\nscvi.data.setup_anndata(adata, batch_key='donor', labels..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\nimport torch\n\n# Assuming `adata` is already loaded and contains the..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Assuming the model setup and training has been done previously:\n..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Assume that the Scanpy AnnData object 'adata' has already been s..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport scanpy as sc\nimport numpy as np\n\n# Ensure you are using compatible versions of s..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_15.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Ensure adata.X is a float data type\nadata.X ..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform Leiden clustering to identify distinct clusters within the UMAP plot\n..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Annotate clusters using known markers to identify major cell types\nmarker_gen..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Data Preprocessing\n# Convert raw count data to log scale for variance stabili..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Ensure gene names are in uppercase\nadata.var_names = ada..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Select specific GO terms related to endometrial processes\nendometrial_go_term..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Assuming adata is already defined and prepared in the co..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Subset adata to only i..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_22.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure data in adata.X is of floating data type\nadata.X = adata.X.astype(flo..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform Diffusion Pseudotime (DPT) analysis\n# Extract subset data for Smooth..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Focus analysis on Ciliated epithelial cells\nciliated_cells = adata[adata.obs[..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Load and process Ciliated epithelial cells\nciliated_cells = adata[adata.obs['..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure you have a neighbors graph calculated for clustering\nsc.pp.neighbors(..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset data for unciliated epithelia\nunciliated_cells = adata[adata.obs['cel..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Performing marker gene analysis for cluster annotation\nsc.tl.rank_genes_group..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\n# Ensure prior computation..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_16.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\nfrom scvi.model import SCVI\n\n# Setting up the SCVI model\nscvi_model = SCVI(adata)\n\n# Train the SCVI..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform quality control\nsc.pp.filter_cells(adata, min_genes=200)\nsc.pp.filte..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Use the latest version of scvi-tools which may have the fix for ..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\n# Import necessary libraries\nimport scanpy as sc\n\n# Assume adata is defined beforehand, example:\n# ..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Assume adata is defined beforehand and subsets for stromal fibroblasts\nstrom..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset data for unciliated epithelial cells\nunciliated_adata = adata[adata.ob..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Assuming adata contains the data only for stromal fibroblasts\nda..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Assuming adata is defined beforehand\nstromal_adata = adata[adata.obs['cell_ty..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_10.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 4,
+      "failed_cells": 5,
+      "success_rate": 0.4444444444444444,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset the dataset to focus on stromal fibroblasts and unciliated epithelial ..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport anndata as ad\n\n# Load your AnnData object here; this would be your full pipeline..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset the dataset to focus on endothelial cells\nendothelial_data = adata[ada..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Already subsetted endothelial data\n\n# Prepare data by fin..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset the dataset to focus on unciliated epithelial cells and macrophages.\ns..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Use Macrophages and Unciliated epithelial cells from the previous selection ..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset the dataset to focus on macrophages\nmacrophage_data = adata[adata.obs..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Load the 'macrophage_hvg' AnnData object before using it\n..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_21.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Filter the AnnData object for unciliated epithelial cells\nepithelial_cells = ..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Check if the data has been filtered correctly to ensure there are features f..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Step 1: Identify unciliated epithelial cells and preprocess\nunciliated_cells ..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Ensure compatibility\nscvi.settings.reset_logging_handler()\n\n# St..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Identifying unciliated epithelial cells\nunciliated_cells = adata[adata.obs['c..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Ensure compatibility\nsc.settings.verbosity = 3\n\n# Dimensionality reduction us..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Assuming unciliated_cells is already defined and processed\n\n# Compute neighb..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Assuming unciliated_cells is already defined and processed\n\n# Ensure the 'da..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_20.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport scanpy as sc\n\n# Assuming data is preprocessed and stored in adata and scvi tooli..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure data is of floating type\nadata.X = adata.X.astype(float)\n\n# Perform P..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport scanpy as sc\n\n# Ensure the correct installation of scvi-tools and its dependenci..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\n# Load necessary libraries\nimport scanpy as sc\n\n# Define gene sets (example lists)\nmetabolic_genes ..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "# Differential Gene Expression Analysis\nimport scanpy as sc\n\n# Filter for smooth muscle cells and ma..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Log-normalize the data\nadata_raw = adata.copy()\nsc.pp.log1p(adata)\n\n# Filter ..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport scanpy as sc\n\n# Assuming `adata` is defined in the previous context\n# Filter for..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Assuming `adata_smooth_macrophages` is previously defined\n# Setu..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_13.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\n# Filter the data to focus on unciliated epithelial cells\nunciliated_cells = adata[adata.obs['cell_..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\nimport numpy as np\n\n# Check that scvi is compatible with your torch..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure your adata object is of a floating type\nadata.X = adata.X.astype('flo..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Differential gene expression analysis\nsc.tl.rank_genes_gr..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Normalize the data for better comparison of gene expression\nsc.pp.normalize_t..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import pandas as pd\nfrom scipy.stats import zscore\n\n# Load the unciliated epithelial cells\ndata = ad..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Ensure 'day' is categori..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Extract top variable genes identified previously\nvariabl..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_19.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Assuming adata is alrea..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport pandas as pd\n\n# Focu..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Score metabolic pathway activity using high-variance gen..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\n# Load necessary modules\nimport scanpy as sc\nimport numpy as np\nimport matplotlib.pyplot as plt\nimp..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\n# Set root cell for pseudotime analysis based on day 7 high metabolic variability\nhigh_metabolic_do..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Focus on unciliated epithelial cells\nadata_un = adata[ada..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Log-transform the data\nsc.pp.log1p(ada..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimpor..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_7.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Canonical markers for cell cycle phases\ns_genes = ['MCM5', 'PCNA', 'TYMS', 'F..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Set visualization param..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Focus on stromal fibroblasts and unciliated epithelia\nadata_sub = adata[adat..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Normalize and preprocess the data to recompute neighbor graph\nsc.pp.normalize..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform UMAP on the processed data\ndata = adata\nsc.tl.umap(data)\n\n# Perform ..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Focus on hormone receptor analysis\nadata_hormone = adata[:, adata.var_names.s..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure 'day' is a categorical datatype\nadata.obs['day'] = adata.obs['day'].a..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Ensure 'day' is a categorical datatype\nadata.obs['day'] = adata.obs['day'].as..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_12.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\n\nimport scanpy as sc\nimport pandas as pd\n\n# Identify transcription factors from gene expression dat..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Step: Dimensionality Redu..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n# Perform UMAP on PCA results\nsc.pp.neighbors(stromal_adata, ..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Differential expression analysis\nstromal_adata = adata[adata.obs['cell_type']..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure log transformation is applied\nsc.pp.log1p(stromal_adata)\n\n# Convert '..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Prepare the data: Subset stromal_adata based on significa..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Differentiate stromal fibroblasts per menstrual day: log transformation\nstro..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Prepare data for GSEA manually as gse..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_18.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure the data is of floating type\nadata.X = adata.X.astype('float64')\n\n# C..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure the data is floating type\nadata.X = adata.X.astype('float64')\n\n# Perf..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Ensure the data is floating type\nadata.X = adata.X.astype('float64')\n\n# Compu..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Ensure the data is floating type\nadata.X = adata.X.astype('float64')\n\n# Compu..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Ensure the data is floating type\nadata.X = adata.X.astype('float64')\n\n# Perfo..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure 'day' is a categorical variable\nadata.obs['day'] = adata.obs['day'].a..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Logarithmize the data\nadata = adata.copy()\nsc.pp.log1p(ada..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Ens..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_14.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Step 1: Investigate gene expression levels of estrogen and progesterone rece..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Step 2: Perform a Differential Expression Analysis for receptor genes in cell..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\nsc.pp.log1p(adata)\n\n# Step 2 (modified): Re-run Differential Expression Analysis..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Step 2: Perform GSEA on the ranked receptor gene lists\nr..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Assuming 'adata' already contains the necessary data\n# Precompute neighbors\n..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Step 1: Differential Expression Analysis of Receptor Genes\nestrogen_receptor_..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport numpy as np\nfrom scipy.stats import ttest_ind\n\n# Loa..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\nimport numpy as np\n\n# Define function for correlation analys..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_17.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset data to focus on macrophages\nmacrophage_data = adata[adata.obs['cell_t..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset data to focus on macrophages\nmacrophage_data = adata[adata.obs['cell_t..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Conduct trajectory analysis by first constructing a neigh..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset data to focus on macrophages\nmacrophage_data = adata[adata.obs['cell_t..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\n# Import required libraries\nimport scanpy as sc\nimport scvi\nimport anndata\n\n# Assuming macrophage_d..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\n# Import required libraries\nimport scanpy as sc\nimport scvi\nimport anndata\n\n# Assuming 'adata' is d..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "# Import required libraries\nimport scanpy as sc\nimport numpy as np\nimport seaborn as sns\nimport matp..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "# Import required libraries\nimport scanpy as sc\nfrom scipy.stats import spearmanr\nimport pandas as p..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform differential expression analysis\nsc.tl.rank_genes_groups(adata, grou..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\n# Step 1: Normalize and logarithmize the data\nimport scanpy as sc\n\n# Normalize and logarithmize dat..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform differential expression analysis\nsc.tl.rank_genes_groups(adata, group..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Ensure 'day' column is categorical\nadata.obs['day'] = ad..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform pseudotime analysis for macrophages\n# Ensure 'day' is set as a categ..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure 'day' is categorical\nadata.obs['day'] = adata.obs['day'].astype('cate..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Set 'day' as a categorical variable\nadata.obs['day'] = a..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Extract smooth muscle cells\nsmooth_muscle_cells = adata[adata.obs['cell_type..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\n# Step 1: Data Normalization and Preprocessing\nimport scanpy as sc\n\n# Assuming adata is preloaded\n#..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport scanpy as sc\n\n# Step 2: Quality Control and Filtering\nsc.pp.calculate_qc_..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import numpy as np\nimport scanpy as sc\n\n# Step 2: Dimensionality Reduction\n# Perform PCA\ndata_pca = ..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Differential Expression Analysis\nsc.tl.rank_genes_groups(adata, groupby='cell..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Step 2: Dimensionality Reduction\n# Perform Diffusion Maps\ndata_dm = sc.tl.dif..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Compute PCA\nsc.tl.pca(adata)\n\n# Compute neighbors using PCA results\nsc.pp.ne..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport anndata as ad\n\n# Assume 'adata' is an AnnData object that is already loaded\n# Se..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Define cell cycle genes\ns_genes = ['MCM5', 'PCNA', 'TYMS', 'FEN1', 'MCM2', '..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_11.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# UMAP Visualization for unciliated epithelial..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Clustering with Leiden algorithm\nsc.tl.leiden(adata_epithelial, resolution=1...."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Differential expression analysis between clusters\nsc.tl.rank_genes_groups(ada..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nfrom scvi.model import SCVI\n\n# Logarithmize data\nadata_epith..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform PCA on unciliated epithelial cell data\nadata_epithelial = adata[adata..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset the analysis to unciliated epithelial cells\nadata_epithelial_velocity..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Assuming 'adata_epithelia..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Predefined metabolic gene sets\nmetabolic_gen..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_6.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\nimport scvi\nfrom anndata import AnnData\n\n# Ensure adata is defined before using it\n# Initialize and..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure adata.X is of float type\nadata.X = adata.X.astype(float)\n\n# Filter fo..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import matplotlib.pyplot as plt\n\n# Ensure smooth muscle cells have PCA computed\neigenvalues = smooth..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Filter for Macrophages\nmacrophage_cells = adata[adata.obs['cell_type'] == 'Ma..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Differential expression analysis on macrophage clusters\nsc.tl.rank_genes_gro..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Log transform the data\nsc.pp.log1p(macrophage_cells)\n\n# Differential expressi..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nfrom scipy.stats import hypergeom\n\ndef go_enrichment(genes,..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\ndef specific_go_enrichment(adata, cell_type, threshold_log..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_4.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nsc.tl.score_genes_cell_cycle(adata, s_genes=['MCM5', 'PCNA', 'TYMS', 'FEN1', 'M..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Scores for gene sets related to stress, immune regulation..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Convert 'day' column to categorical and ensure it's string-like\nadata.obs['d..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Log-transform the data\nsc.pp.log1p(adata)\n\n# Select cells of interest\nadata_..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset for endothelial cells\nadata_endothelia = adata[adata.obs['cell_type']..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset for endothelial cells\nadata_endothelia = adata[adata.obs['cell_type']..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Differential gene expression analysis within endothelial cells\nadata_endothe..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Run diffusion pseudotime\nsc.tl.diffmap(adata_endothelia)  # Ensure that Diff..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_24.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\nsc.pp.highly_variable_genes(adata, flavor='cell_ranger', n_top_genes=2000)\nadat..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform PCA using HVGs\ndata_stromal = adata[adata.obs['cell_type'] == 'Strom..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform UMAP for better visualization of stromal fibroblasts\nsc.pp.neighbors..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform pseudotime analysis using Diffusion Pseudotime (DPT)\nsc.tl.dpt(data_..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset for unciliated epithelial cells and perform PCA\nadata_ue = adata[adata..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Convert 'day' column to categorical\nadata.obs['day'] = a..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import numpy as np\nimport scanpy as sc\n\n# Correct the raw data by logarithmizing\nadata_ue = adata[ad..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import pandas as pd\nimport scanpy as sc\nfrom scipy.stats import fisher_exact\n\n# Assuming transcripti..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

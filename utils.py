@@ -67,6 +67,11 @@ def get_documentation(code: str) -> str:
 
     docs = []
     for name in sorted(set(call_names)):
+        # Only include functions that start with 'sc.' (scanpy) or 'scvi.' (scvi-tools)
+        ###### MODIFY IN NEEDED FOR OTHER PACKAGES ######
+        if not (name.startswith('sc.') or name.startswith('scvi.') or name.startswith('scanpy.')):
+            continue
+            
         try:
             fn  = resolve_obj(name, ns)
             doc = inspect.getdoc(fn) or "<no docstring>"

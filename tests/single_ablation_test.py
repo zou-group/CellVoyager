@@ -27,16 +27,20 @@ def main():
     parser.add_argument("--no-self-critique", action="store_true", help="Disable self-critique")
     parser.add_argument("--use-vlm", action="store_true", help="Enable VLM")
     parser.add_argument("--no-vlm", action="store_true", help="Disable VLM")
+    parser.add_argument("--use-documentation", action="store_true", help="Enable documentation lookup")
+    parser.add_argument("--no-documentation", action="store_true", help="Disable documentation lookup")
     
     args = parser.parse_args()
     
     # Determine boolean flags
     use_self_critique = args.use_self_critique and not args.no_self_critique
     use_VLM = args.use_vlm and not args.no_vlm
+    use_documentation = args.use_documentation and not args.no_documentation
     
     print(f"🚀 Running ablation test: {args.test_name}")
     print(f"   Self-critique: {'✅' if use_self_critique else '❌'}")
     print(f"   VLM: {'✅' if use_VLM else '❌'}")
+    print(f"   Documentation: {'✅' if use_documentation else '❌'}")
     print(f"   Analyses: {args.num_analyses}")
     print(f"   Max iterations: {args.max_iterations}")
     
@@ -68,7 +72,8 @@ def main():
         # Run test with specific ablation flags
         results = tester.test_agent(
             use_self_critique=use_self_critique,
-            use_VLM=use_VLM
+            use_VLM=use_VLM,
+            use_documentation=use_documentation
         )
         
         # Save individual results to output directory

@@ -1,13 +1,10 @@
 import openai
 import os
 import json
-import scanpy as sc
 import nbformat as nbf
 import pandas as pd
 from nbconvert.preprocessors import ExecutePreprocessor
-import tempfile
 import numpy as np
-import gc
 import datetime
 from logger import Logger
 import base64
@@ -15,11 +12,10 @@ import h5py
 from h5py import Dataset, Group
 import re
 import shutil
-from PIL import Image
-import io
 from jupyter_client import KernelManager
-from jupyter_client.kernelspec import KernelSpecManager
-from nbformat.v4 import new_notebook, new_code_cell, new_output
+from nbformat.v4 import new_code_cell, new_output
+from deepresearch import DeepResearcher
+from utils import get_documentation
 
 AVAILABLE_PACKAGES = "scanpy, scvi, CellTypist, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 class AnalysisAgent:
@@ -38,8 +34,6 @@ class AnalysisAgent:
         self.log_prompts = log_prompts
         self.max_fix_attempts = max_fix_attempts
         
-        self.completed_analyses = []
-        self.failed_analyses = []
         # Create unique output directory based on analysis name and timestamp
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
@@ -63,35 +57,10 @@ class AnalysisAgent:
         if self.use_VLM:
             self.coding_guidelines_template = open(os.path.join(self.prompt_dir, "coding_guidelines.txt")).read()
         else:
-            self.coding_guidelines_template = open(os.path.join(self.prompt_dir, "coding_guidelines_NO_VLM_ABLATION.txt")).read()
+            self.coding_guidelines_template = open(os.path.join(self.prompt_dir, "ablations", "coding_guidelines_NO_VLM_ABLATION.txt")).read()
 
         # System prompt for coding agents
         self.coding_system_prompt = open(os.path.join(self.prompt_dir, "coding_system_prompt.txt")).read()
-
-        # Augment via DeepResearch using paper summary and dataset details (stored separately)
-        try:
-            import importlib.util
-            module_path = os.path.join(os.path.dirname(__file__), "deepresearch.py")
-            spec = importlib.util.spec_from_file_location("cv_deepresearch", module_path)
-            module = importlib.util.module_from_spec(spec) if spec and spec.loader else None
-            if module and spec and spec.loader:
-                spec.loader.exec_module(module)
-                DeepResearcher = getattr(module, "DeepResearcher", None)
-            else:
-                DeepResearcher = None
-
-            # Always initialize background string so attribute exists even if DeepResearch fails
-            self.deepresearch_background = ""
-
-            if DeepResearcher is not None:
-                print("DEEPRESEARCH IS NOT NONE")
-                researcher = DeepResearcher(self.openai_api_key)
-                # Provide both the paper summary and dataset metadata so deep research can tailor background
-                dr_summary = researcher.research_from_paper_summary(self.paper_summary, self.adata_summary)
-                if isinstance(dr_summary, str) and dr_summary.strip():
-                    self.deepresearch_background = dr_summary.strip()
-        except Exception as e:
-            print(f"Warning: DeepResearch failed or was skipped: {e}")
 
         # Finalize coding guidelines with the (possibly augmented) overview
         self.coding_guidelines = self.coding_guidelines_template.format(
@@ -119,6 +88,22 @@ class AnalysisAgent:
             self.adata_summary = self.summarize_adata_metadata()
             print("ADATA SUMMARY: ", self.adata_summary)
             print(f"✅ Loaded {self.h5ad_path}")
+
+        # DeepResearch for idea generation
+        print("Running DeepResearch...")
+        try:
+            deepresearch = DeepResearcher(self.openai_api_key)
+
+            # Always initialize background string so attribute exists even if DeepResearch fails
+            self.deepresearch_background = ""
+
+            # Provide both the paper summary and dataset metadata so deep research can tailor background
+            dr_summary = deepresearch.research_from_paper_summary(self.paper_summary, self.adata_summary, AVAILABLE_PACKAGES)
+            self.deepresearch_background = dr_summary.strip()
+            print("✅ DeepResearch completed")
+            print("DEEPRESEARCH BACKGROUND: ", self.deepresearch_background[:100])
+        except Exception as e:
+            print(f"Warning: DeepResearch failed or was skipped: {e}")
         
 
 
@@ -319,10 +304,18 @@ class AnalysisAgent:
             # Use the code memory for generating the next step
             recent_code = "\n\n# Next Cell\n".join(reversed(self.code_memory))
 
-        prompt = open(os.path.join(self.prompt_dir, "critic.txt")).read()
-        prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
-                               CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
-                               paper_txt=self.paper_summary, previous_code=recent_code)
+        if self.use_documentation:
+            prompt = open(os.path.join(self.prompt_dir, "critic.txt")).read()
+            # Get relevant documentation on the single-cell packages being used in the first step code
+            documentation = get_documentation(first_step_code)
+            prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
+                                CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
+                                paper_txt=self.paper_summary, previous_code=recent_code, documentation=documentation)
+        else:
+            prompt = open(os.path.join(self.prompt_dir, "ablations", "critic_NO_DOCUMENTATION.txt")).read()
+            prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
+                                CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
+                                paper_txt=self.paper_summary, previous_code=recent_code)
 
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -382,8 +375,16 @@ class AnalysisAgent:
 
         return modified_analysis
     
-    def fix_code(self, code, error, other_code=""):
+    def fix_code(self, code, error, other_code="", documentation=""):
         """Attempts to fix code that produced an error"""
+        
+        # Get the last 8 code cells from memory for context
+        past_code_context = ""
+        if self.code_memory:
+            past_cells = self.code_memory[-8:]  # Get last 8 code cells
+            past_code_context = "\n\n".join([f"# Previous code cell {i+1}:\n{cell}" for i, cell in enumerate(past_cells)])
+        
+        # Build the base prompt
         prompt = f"""Fix this code that produced an error:
         
         Code:
@@ -394,12 +395,21 @@ class AnalysisAgent:
         Error:
         {error}
 
+        Provide only the fixed code with no explanation.
+        You can only use the following packages: {AVAILABLE_PACKAGES}
+
         Here is previous code/context (if any):
         {other_code}
         
-        Provide only the fixed code with no explanation.
-        You can only use the following packages: {AVAILABLE_PACKAGES}
-        """
+        Here are the past code cells for additional context (last 8 cells):
+        {past_code_context}"""
+        
+        # Only add documentation section if use_documentation is enabled
+        if self.use_documentation and documentation:
+            prompt += f"""
+
+        Finally, here is documentation about some of the functions being called, ensure that the code is using the proper parameters/functions:
+        {documentation}"""
         
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -665,10 +675,11 @@ class AnalysisAgent:
     def run(self):
         def namer(analysis_idx, step_idx):
             return f"{analysis_idx+1}_{step_idx}"
-        # TODO: incorporate previous code in self.fix_code for cases where the fix depends on previous code cells
         past_analyses = ""
 
         for analysis_idx in range(self.num_analyses):
+            hypotheses_analysis = []
+
             # Reset code memory for this analysis
             self.code_memory = []
             
@@ -699,7 +710,6 @@ class AnalysisAgent:
                 analysis_plan = modified_analysis["analysis_plan"]
                 current_code = modified_analysis["first_step_code"]
 
-                print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
                 # Log revised analysis plan
                 self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", f"revised_analysis_{step_name}")
             else:
@@ -759,7 +769,10 @@ class AnalysisAgent:
                         # Log fix attempt start
                         #self.logger.log_response(f"FIX ATTEMPT {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_start")
 
-                        current_code = self.fix_code(current_code, error_msg)
+                        # Get relevant documentation on the single-cell packages being used
+                        documentation = get_documentation(current_code) if self.use_documentation else ""
+                        
+                        current_code = self.fix_code(current_code, error_msg, documentation=documentation)
                         current_code = strip_code_markers(current_code)
                         notebook.cells[-1] = nbf.v4.new_code_cell(current_code)
 
@@ -812,6 +825,8 @@ class AnalysisAgent:
                         interpretation_cell = nbf.v4.new_markdown_cell(f"### Agent Interpretation\n\n{results_interpretation}")
                         notebook.cells.append(interpretation_cell)
 
+                hypotheses_analysis.append(hypothesis)
+
                 # Only generate next step if this is not the final iteration
                 if iteration < self.max_iterations - 1:
                     analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
@@ -863,8 +878,7 @@ class AnalysisAgent:
             self.stop_persistent_kernel()
             print(f"✅ Completed Analysis {analysis_idx+1}")
 
-            # TODO: modify this to include the entire analysis plan
-            past_analyses += f"{hypothesis}\n"
+            past_analyses += "\n".join(hypotheses_analysis)
 
 
         # Clean up resources
@@ -938,163 +952,6 @@ print(f"Data loaded: {{adata.shape[0]}} cells and {{adata.shape[1]}} genes")
         
         return notebook
 
-
-    def improve_notebook(self, notebook_path, feedback, output_path=None):
-        """
-        Improve a notebook using o3-mini based on expert feedback
-        
-        Args:
-            notebook_path (str): Path to the notebook to improve
-            feedback (str): Expert feedback for improvements
-            output_path (str, optional): Output path for improved notebook
-        
-        Returns:
-            str: Path to the improved notebook
-        """
-        # Set default output path
-        if not output_path:
-            base_name = os.path.splitext(os.path.basename(notebook_path))[0]
-            output_path = os.path.join(self.output_dir, f"{base_name}_improved.ipynb")
-        
-        # Copy original notebook
-        shutil.copy2(notebook_path, output_path)
-        
-        # Read notebook
-        with open(notebook_path, 'r', encoding='utf-8') as f:
-            notebook = nbf.read(f, as_version=4)
-        
-        # Extract content for context
-        content = "Notebook content:\n\n"
-        
-        # Get all cells
-        for i, cell in enumerate(notebook.cells):
-            cell_num = i + 1
-            if cell.cell_type == 'markdown':
-                content += f"Markdown Cell {cell_num}:\n{cell.source}\n\n"
-            elif cell.cell_type == 'code':
-                content += f"Code Cell {cell_num}:\n{cell.source}\n\n"
-                # Capture cell output
-                if hasattr(cell, 'outputs'):
-                    content += "Cell Output:\n"
-                    for output in cell.outputs:
-                        if output.get('output_type') == 'stream':  # print statements
-                            content += output.get('text', '')
-                        elif output.get('output_type') == 'execute_result':  # variable outputs
-                            content += str(output.get('data', {}).get('text/plain', ''))
-                    content += "\n"
-
-        # Create prompt for o3-mini
-        prompt = f"""
-
-        You will be given a Jupyter notebook that execute a single-cell transcriptomics comptuational analysis.
-        You will also be given expert feedback for how to improve the analysis.
-        Your role is to generate python code for the new code cell that implements the suggested improvements.
-
-        ONLY RETURN THE PYTHON CODE. NOTHING ELSE.
-
-        Current Jupyter notebook content:
-        {content}
-
-        Expert feedback for improvement:
-        {feedback}
-
-        {self.coding_guidelines}
-
-        You are given the following summary fo the anndata object:
-        {self.adata_summary}
-        """
-        if self.log_prompts:
-            self.logger.log_prompt("user", prompt, "Notebook Improvement")
-        
-        # Try o3-mini first
-        response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": "You are a coding assistant helping to improve single-cell analysis notebooks."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        new_code = response.choices[0].message.content.strip()
-        
-        # Clean code and add to notebook
-        new_code = strip_code_markers(new_code)
-        
-        # Add feedback as markdown cell
-        feedback_cell = nbf.v4.new_markdown_cell(f"## Expert Feedback\n\n{feedback}")
-        notebook.cells.append(feedback_cell)
-        
-        # Add improvement description
-        improvement_cell = nbf.v4.new_markdown_cell("## Improvement Implementation")
-        notebook.cells.append(improvement_cell)
-        
-        # Add new code cell
-        code_cell = nbf.v4.new_code_cell(new_code)
-        notebook.cells.append(code_cell)
-        
-        # Save improved notebook
-        with open(output_path, 'w', encoding='utf-8') as f:
-            # Clean notebook outputs before writing
-            clean_notebook = self.cleanup_notebook_outputs(notebook)
-            nbf.write(clean_notebook, f)
-        
-        # Execute the new cell
-        print("Executing improved code cell...")
-        success, error_msg, executed_notebook = self.run_last_cell(notebook)
-        
-        if success:
-            # Interpret results
-            results_interpretation = self.interpret_results(executed_notebook, "")
-            self.logger.log_response(results_interpretation, "improvement results")
-            
-            # Add interpretation
-            interpretation_cell = nbf.v4.new_markdown_cell(f"### Results\n\n{results_interpretation}")
-            executed_notebook.cells.append(interpretation_cell)
-            
-            # Save final notebook
-            with open(output_path, 'w', encoding='utf-8') as f:
-                # Clean notebook outputs before writing
-                clean_notebook = self.cleanup_notebook_outputs(executed_notebook)
-                nbf.write(clean_notebook, f)
-            
-            print(f"✅ Notebook improved successfully: {output_path}")
-            
-        else:
-            fixed_code = new_code
-            for attempt in range(3):
-                print(f"⚠️ {'Improved code had errors' if attempt == 0 else f'Fix attempt {attempt} failed'}: {error_msg}")
-                fixed_code = self.fix_code(fixed_code, error_msg, other_code = content)
-                fixed_code = strip_code_markers(fixed_code)
-                notebook.cells[-1] = nbf.v4.new_code_cell(fixed_code)
-                
-                success, error_msg, executed_notebook = self.run_last_cell(notebook)
-                if success:
-                    break
-            
-            if success:
-                # Generate updated code description for the fixed code
-                updated_description = self.generate_code_description(fixed_code)
-                
-                # Update the improvement description cell
-                for i in range(len(executed_notebook.cells) - 1, -1, -1):
-                    if (executed_notebook.cells[i].cell_type == 'markdown' and 
-                        executed_notebook.cells[i].source.startswith('## Improvement Implementation')):
-                        executed_notebook.cells[i].source = f"## Improvement Implementation\n\n{updated_description}"
-                        break
-                
-                results_interpretation = self.interpret_results(executed_notebook, "")
-                interpretation_cell = nbf.v4.new_markdown_cell(f"### Results \n\n{results_interpretation}")
-                executed_notebook.cells.append(interpretation_cell)
-                
-                with open(output_path, 'w', encoding='utf-8') as f:
-                    # Clean notebook outputs before writing
-                    clean_notebook = self.cleanup_notebook_outputs(executed_notebook)
-                    nbf.write(clean_notebook, f)
-                print(f"✅ Notebook improved after fix: {output_path}")
-            else:
-                print(f"❌ Could not fix improved code after 3 attempts: {error_msg}")
-                self.logger.log_error(f"Improvement failed after 3 attempts: {error_msg}", fixed_code)
-        
-        return output_path
 
 def strip_code_markers(text):
     # Remove ```python, ``` and ```

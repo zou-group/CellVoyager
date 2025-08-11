@@ -57,40 +57,18 @@ class DeepResearcher:
             if max_output_tokens is not None:
                 kwargs["max_output_tokens"] = max_output_tokens
 
-            #print("PROMPT: ", prompt)
-            #print("KWARGS: ", kwargs)
             response = self.client.responses.create(**kwargs)
-            print("RESPONSE: ", response)
             text = self._extract_output_text(response)
-            print("TEXT: ", text)
             return text or ""
         except Exception as e:
             # Be silent to keep upstream behavior unchanged; caller already guards
-            print("ERROR: ", e)
             return ""
 
     def research_from_paper_summary(
-        self, paper_summary: str, adata_summary: Optional[str]) -> str:
+        self, paper_summary: str, adata_summary: Optional[str], available_packages: str) -> str:
         """Invoke Deep Research using provided dataset/paper context.
         """
-        context_sections = []
-        if paper_summary:
-            context_sections.append(f"Paper summary:\n{paper_summary}")
-        if adata_summary:
-            context_sections.append(f"AnnData overview:\n{adata_summary}")
-
-        context = "\n\n".join(context_sections)
-        user_prompt = f"""
-You are a computational single-cell transcriptomics expert.
-
-Use the paper context below and perform additional web research as needed. Produce four concise sections with citations. Emphasize biological background relevant for scRNA-seq and avoid repeating analyses already performed in the paper.
-
-1) Background for scRNA-seq: Concise biological background on the disease that is relevant for scRNA-seq analysis. Do not restate analyses or findings already performed in the paper. Cite sources.
-2) Already tried in the paper: Brief bullet list summarizing analyses/methods the paper already performed (to establish what to avoid duplicating). Keep this short.
-3) Dataset-aware considerations: Based on dataset metadata in the context (e.g., samples, tissues, cell types, perturbations), list biological considerations and potential confounders that matter for downstream scRNA-seq analysis. Cite sources where applicable.
-4) Untested, feasible analyses: 4–8 bullet points for analyses not yet tested in the paper, feasible with scanpy/scvi/CellTypist only, and explicitly distinct from (2). Cite where relevant.
-
-Context:\n{context}
-""".strip()
+        user_prompt = open(os.path.join(os.path.dirname(__file__), "prompts", "deepresearch.txt")).read()
+        user_prompt = user_prompt.format(paper_summary=paper_summary, adata_summary=adata_summary, available_packages=available_packages)
 
         return self._run_deep_research(user_prompt, max_output_tokens=64_000)

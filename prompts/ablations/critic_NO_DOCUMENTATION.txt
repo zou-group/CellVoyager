@@ -28,6 +28,3 @@ Summary of the research paper:
 
 Previous Analysis Attempted:
 {past_analyses}
-
-Finally, here is documentation about some of the functions being called, ensure that the code is using the proper parameters/functions:
-{documentation}
