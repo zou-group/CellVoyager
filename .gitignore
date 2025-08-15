@@ -4,5 +4,6 @@ run_agent.sh
 outputs/
 logs/
 jobs_files/
+CellBench_2/
 
 ._*

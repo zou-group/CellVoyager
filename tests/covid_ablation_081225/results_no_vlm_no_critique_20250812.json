@@ -1,0 +1,86 @@
+{
+  "test_name": "no_vlm_no_critique_20250812",
+  "total_code_cells_attempted": 20,
+  "total_failures": 10,
+  "final_successful_cells": 8,
+  "final_failed_cells": 1,
+  "failure_rate": 0.5,
+  "final_success_rate": 0.8888888888888888,
+  "failed_fix_attempts_per_step": {
+    "covid_ablation_081225/test_results_no_vlm_no_critique_20250812_113704/logs/test_no_vlm_no_critique_log_20250812_113725.log": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": 3,
+        "4": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "covid_ablation_081225/test_results_no_vlm_no_critique_20250812_113704/outputs/test_no_vlm_no_critique_20250812_113725/test_no_vlm_no_critique_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nfrom scipy import stats\nimport numpy as np\nimport scanpy as sc\n\n# Define gene lists for glycolysis ..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Distinguish between mature and developing neutrophils base..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\n# Define gene lists related to granulopoiesis\nemergency_granulopoiesis_genes = ['ELANE', 'LTF', 'MM..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "# Ensure gene expression normalization and availability for the key granulopoiesis-related genes\nsc...."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Verify the presence of emergency granulopoiesis genes in t..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Select developing neutrophils specifically\ndeveloping_neu..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Normalize data and log transform to prepare for accurate m..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Ensure data is normalized and log-transformed\nsc.pp.norma..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

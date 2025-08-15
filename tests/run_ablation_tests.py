@@ -44,7 +44,7 @@ def create_batch_script(config, h5ad_path, manuscript_path, num_analyses, max_it
 #SBATCH --job-name=ablation_{test_name}
 #SBATCH --output={output_dir}/ablation_{test_name}_%j.out
 #SBATCH --error={output_dir}/ablation_{test_name}_%j.err
-#SBATCH --time=6:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=128G
 #SBATCH --cpus-per-task=1
 #SBATCH --partition=jamesz

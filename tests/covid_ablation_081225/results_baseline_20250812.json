@@ -1,0 +1,147 @@
+{
+  "test_name": "baseline_20250812",
+  "total_code_cells_attempted": 26,
+  "total_failures": 11,
+  "final_successful_cells": 13,
+  "final_failed_cells": 5,
+  "failure_rate": 0.4230769230769231,
+  "final_success_rate": 0.7222222222222222,
+  "failed_fix_attempts_per_step": {
+    "covid_ablation_081225/test_results_baseline_20250812_113702/logs/test_baseline_log_20250812_113718.log": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 3,
+        "7": 3,
+        "8": 0
+      },
+      "3": {
+        "1": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "covid_ablation_081225/test_results_baseline_20250812_113702/outputs/test_baseline_20250812_113718/test_baseline_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\nfrom matplotlib import pyplot as plt\n\n# Normalize the data\nsc.pp.normalize_total..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "sub_a = adata[adata.obs['cell_type_coarse'].isin(['CD14 Monocyte', 'CD8 T', 'CD4 T'])]  \nsc.pp.highl..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import numpy as np\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Perform differential expre..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nfrom scipy.spatial.distance ..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Filter data for monocytes ..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Prepare gene lists for pa..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Set the neighbors and perform PAGA\nadata_cd14..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Focus on Monocytes and T cells\nmonocytes_tcel..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "covid_ablation_081225/test_results_baseline_20250812_113702/outputs/test_baseline_20250812_113718/test_baseline_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\n# Filter for CD4 T cells based on cell_type_coarse column \nif 'cell_type_coarse' in adata.obs.colum..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "if 'cell_type_coarse' in adata.obs.columns:\n    cd4_t_cells = adata[adata.obs['cell_type_coarse'] ==..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "# Ensure data is normalized and scaled before PCA\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset the data to focus on CD14 & CD16 monocytes, and CD4 T cells\nmonocytes_..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport s..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset data for CD14 and CD16 monocytes\nmonocytes = adata[adata.obs['cell_ty..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Subset data for CD4 and CD8 T cells, checking for nulls i..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Subset data for CD4, CD8 T cells, and monocytes\ncells = a..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

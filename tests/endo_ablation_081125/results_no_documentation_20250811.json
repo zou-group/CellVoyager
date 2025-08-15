@@ -1,0 +1,151 @@
+{
+  "test_name": "no_documentation_20250811",
+  "total_code_cells_attempted": 35,
+  "total_failures": 16,
+  "final_successful_cells": 7,
+  "final_failed_cells": 11,
+  "failure_rate": 0.45714285714285713,
+  "final_success_rate": 0.3888888888888889,
+  "failed_fix_attempts_per_step": {
+    "endo_ablation_081125/test_results_no_documentation_20250811_121717/logs/test_no_documentation_log_20250811_121738.log": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "2": {
+        "1": 2,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "3": {
+        "1": 2,
+        "2": 0,
+        "3": 3,
+        "4": 0,
+        "5": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "endo_ablation_081125/test_results_no_documentation_20250811_121717/outputs/test_no_documentation_20250811_121738/test_no_documentation_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 2,
+      "failed_cells": 7,
+      "success_rate": 0.2222222222222222,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport numpy as np\nfrom scipy.stats import mann..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "# Generate and visualize statistically significant correlation matrices for ESR1 and PGR with other ..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "# Perform differential expression analysis of ESR1 and PGR in immune cells\nimport scanpy as sc\nimpor..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "# Verify data adequacy and perform differential expression analysis\nimport scanpy as sc\nimport numpy..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport scanpy as sc\n\n# Import SCVI and scanpy modules\n\n# Filter immune cell data for SC..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nfrom scipy.stats import spearmanr\n\n# Load..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\nfrom scipy.stats import spearmanr, pearsonr\nimport matplotli..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport scvi\nimport pandas as pd\nfrom statsmodels.stats.multitest import fdrcorre..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_081125/test_results_no_documentation_20250811_121717/outputs/test_no_documentation_20250811_121738/test_no_documentation_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "# Step 1: Calculate and store a score for cellular senescence for each cell\ngenes_of_interest = ['CD..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\nsc.settings.verbosity = 3  # Set verbosity leve..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport pandas as pd\nimpor..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Normalize data\nsc.pp.normalize_total(unciliat..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nfrom scipy.stats import mannwhitneyu\nimport numpy as np\n\n# Ensure 'day' column ..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "# Perform pseudotime analysis\nimport scanpy as sc\n\n# Ensure data preprocessing is complete, includin..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Filter unciliated epitheli..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Filter unciliated epithelial cells\nunciliated..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

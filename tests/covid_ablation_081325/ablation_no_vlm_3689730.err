@@ -1,0 +1,1436 @@
+Lmod Warning:
+-------------------------------------------------------------------------------
+The following dependent module(s) are not currently loaded: gcc/12.4.0
+(required by: R/4.4.2), gcc/14.2.0 (required by: openblas/0.3.28)
+-------------------------------------------------------------------------------
+
+
+
+
+The following have been reloaded with a version change:
+  1) python/3.12.1 => python/3.9.0
+
+Global seed set to 0
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/sklearn/utils/deprecation.py:95: FutureWarning: Function setup_anndata is deprecated; Please use the model-specific setup_anndata methods instead. The global method will be removed in version 0.15.0.
+  warnings.warn(msg, category=FutureWarning)
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/abc.py:119: FutureWarning: SparseDataset is deprecated and will be removed in late 2024. It has been replaced by the public classes CSRDataset and CSCDataset.
+
+For instance checks, use `isinstance(X, (anndata.experimental.CSRDataset, anndata.experimental.CSCDataset))` instead.
+
+For creation, use `anndata.experimental.sparse_dataset(X)` instead.
+
+  return _abc_instancecheck(cls, instance)
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Set SLURM handle signals.
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/abc.py:119: FutureWarning: SparseDataset is deprecated and will be removed in late 2024. It has been replaced by the public classes CSRDataset and CSCDataset.
+
+For instance checks, use `isinstance(X, (anndata.experimental.CSRDataset, anndata.experimental.CSCDataset))` instead.
+
+For creation, use `anndata.experimental.sparse_dataset(X)` instead.
+
+  return _abc_instancecheck(cls, instance)
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/model/base/_base_model.py:150: UserWarning: Make sure the registered X field in anndata contains unnormalized count data.
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/sklearn/utils/deprecation.py:95: FutureWarning: Function setup_anndata is deprecated; Please use the model-specific setup_anndata methods instead. The global method will be removed in version 0.15.0.
+  warnings.warn(msg, category=FutureWarning)
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Set SLURM handle signals.
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scvi/distributions/_negative_binomial.py:433: UserWarning: The value argument must be within the support of the distribution
+  warnings.warn(
+slurmstepd: error: *** JOB 3689730 ON sh04-05n01 CANCELLED AT 2025-08-14T15:11:37 DUE TO TIME LIMIT ***

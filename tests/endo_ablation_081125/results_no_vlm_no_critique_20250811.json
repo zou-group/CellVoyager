@@ -1,0 +1,218 @@
+{
+  "test_name": "no_vlm_no_critique_20250811",
+  "total_code_cells_attempted": 58,
+  "total_failures": 30,
+  "final_successful_cells": 16,
+  "final_failed_cells": 11,
+  "failure_rate": 0.5172413793103449,
+  "final_success_rate": 0.5925925925925926,
+  "failed_fix_attempts_per_step": {
+    "endo_ablation_081125/test_results_no_vlm_no_critique_20250811_121720/logs/test_no_vlm_no_critique_log_20250811_121744.log": {
+      "1": {
+        "1": 1,
+        "2": 0,
+        "3": 0,
+        "4": 3,
+        "5": 0,
+        "6": 3,
+        "7": 0,
+        "8": 0
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "3": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "4": {
+        "1": 0,
+        "2": 3,
+        "3": 2,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "endo_ablation_081125/test_results_no_vlm_no_critique_20250811_121720/outputs/test_no_vlm_no_critique_20250811_121744/test_no_vlm_no_critique_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport pandas as pd\n\n# Extract expression data for key hormone receptors and rec..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nadata.var['n_counts'] = np.asarray(adata.X.sum(axis=0)).flatten()\nadata.var['mean'] = np.asarray(ad..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nadata = adata[adata.obs['cell_type'].isin(['Stromal fibroblasts', 'Unciliated epithelia', 'Ciliated..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Review exploratory analysis before ad..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Apply less stringent filtering\nadata_f..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Extract expression data for key hormon..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Re-evaluate data preprocessing\nadata_f..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Filter data for relevant cell types\na..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_081125/test_results_no_vlm_no_critique_20250811_121720/outputs/test_no_vlm_no_critique_20250811_121744/test_no_vlm_no_critique_analysis_3.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 3,
+      "failed_cells": 6,
+      "success_rate": 0.3333333333333333,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\nunciliated_epithelial_cells = adata[adata.obs['cell_type'].isin(['Unciliated epithelia 1', 'Uncilia..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "unciliated_epithelial_cells = adata[adata.obs['cell_type'].str.contains('Unciliated epithelia')].cop..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "unciliated_epithelial_cells = adata[adata.obs['cell_type'].isin(['Unciliated epithelia 1', 'Unciliat..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "unciliated_epithelial_cells = adata[adata.obs['cell_type'].str.contains('Unciliated epithelia')].cop..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nif adata.raw is not None:\n    adata = adata.raw.to_adata()\nadata = adata[:, adata.var.index].copy()..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "if adata.raw is not None:\n    adata = adata.raw.to_adata()\nadata = adata[:, adata.var.index].copy()\n..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Assuming 'unciliated_epithelial_cells' is pre-defined from previous step\nsc.p..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import numpy as np\nimport pandas as pd\nfrom scipy.stats import ttest_ind\nimport scanpy as sc\n\n# Cons..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_081125/test_results_no_vlm_no_critique_20250811_121720/outputs/test_no_vlm_no_critique_20250811_121744/test_no_vlm_no_critique_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Assuming 'adata' is defined somewhere before this snippet\n\n# Subset lymphocy..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "# Differential expression analysis on cluster 11\nimport scanpy as sc\nimport pandas as pd\n\n# Perform ..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Log transform the data to stabilize variance and make it ..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Pseudotime analysis setup: Select a root cell from ident..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Subsetting data for lymphocytes and m..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Pseudotime analysis setup: Select a root cell from ident..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scvi\n\n# Setup SCVI model\nscvi.model.SCVI.setup_anndata(adata, batch_key='donor')\n\n# Train the..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Ensure that the latent representation from SCVI is used\ndata = adata.copy()\nd..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

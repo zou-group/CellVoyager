@@ -2,13 +2,24 @@ import ast
 import inspect
 import importlib
 import sys
+import textwrap
 
 def extract_call_names(source: str):
     """
     Parse `source` and return a sorted, deduplicated list of all
     function‐call names as dotted strings.
     """
-    tree = ast.parse(source)
+    try:
+        tree = ast.parse(source)
+    except (IndentationError, SyntaxError):
+        # Try to fix indentation issues
+        try:
+            fixed_source = textwrap.dedent(source)
+            tree = ast.parse(fixed_source)
+        except (IndentationError, SyntaxError):
+            # If still fails, return empty list
+            return []
+    
     calls = set()
 
     def get_full_name(node):
@@ -50,20 +61,51 @@ def load_namespace(source: str, filename="<string>"):
     fall back to only executing the import statements.
     """
     namespace = {}
+    
+    # First try with original source
     try:
         exec(compile(source, filename, 'exec'), namespace)
+        return namespace
+    except (IndentationError, SyntaxError):
+        # Try to fix indentation issues
+        try:
+            fixed_source = textwrap.dedent(source)
+            exec(compile(fixed_source, filename, 'exec'), namespace)
+            return namespace
+        except (IndentationError, SyntaxError):
+            # If still syntax issues, try import-only fallback with original source
+            pass
     except Exception:
-        # Collect only import and from‑import nodes
-        tree    = ast.parse(source)
+        # Other execution errors, try import-only fallback
+        pass
+    
+    # Fallback: extract and execute only import statements
+    try:
+        # Try to parse original source first
+        try:
+            tree = ast.parse(source)
+        except (IndentationError, SyntaxError):
+            # Try with dedented source
+            fixed_source = textwrap.dedent(source)
+            tree = ast.parse(fixed_source)
+        
         imports = [node for node in tree.body 
                    if isinstance(node, (ast.Import, ast.ImportFrom))]
         import_mod = ast.Module(body=imports, type_ignores=[])
         exec(compile(import_mod, filename, 'exec'), namespace)
+    except Exception:
+        # If all fails, return empty namespace
+        pass
+    
     return namespace
 
-def get_documentation(code: str) -> str:
-    call_names = extract_call_names(code)
-    ns         = load_namespace(code)
+def get_documentation(code: str, max_characters: int = 10000) -> str:
+    try:
+        call_names = extract_call_names(code)
+        ns         = load_namespace(code)
+    except Exception as e:
+        # If extraction completely fails, return empty documentation
+        return f"<documentation extraction failed: {str(e)}>"
 
     docs = []
     for name in sorted(set(call_names)):
@@ -78,7 +120,9 @@ def get_documentation(code: str) -> str:
         except Exception as e:
             doc = f"<could not resolve: {e}>"
         docs.append(f"{name}:\n{doc}")
-    return "\n\n".join(docs)
+    
+    full_docs = "\n\n".join(docs)
+    return full_docs[:max_characters]
 
 
 # --- Usage Example ---

@@ -108,8 +108,18 @@ class AgentTester:
             self._analyze_notebooks_and_logs(agent.output_dir)
             
         except Exception as e:
-            print(f"❌ Error during agent execution: {e}")
-            self.results['errors'].append(str(e))
+            import traceback
+            error_traceback = traceback.format_exc()
+            print(f"❌ Error during agent execution:")
+            print(f"   Exception type: {type(e).__name__}")
+            print(f"   Exception message: {str(e)}")
+            print(f"   Full traceback:")
+            print(error_traceback)
+            self.results['errors'].append({
+                'exception_type': type(e).__name__,
+                'message': str(e),
+                'traceback': error_traceback
+            })
         
         return self.results
     
@@ -184,7 +194,11 @@ class AgentTester:
                 print(f"📓 Notebook analysis complete: {final_successful}/{unique_code_cells} cells successful")
                 
         except Exception as e:
-            print(f"⚠️ Notebook analysis failed: {e}")
+            import traceback
+            print(f"⚠️ Notebook analysis failed:")
+            print(f"   Exception type: {type(e).__name__}")
+            print(f"   Exception message: {str(e)}")
+            print(f"   Traceback: {traceback.format_exc()}")
             print("📊 Using log-based estimates for final statistics...")
             
             # Fall back to log-based estimates
