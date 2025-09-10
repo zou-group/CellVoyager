@@ -1,0 +1,28 @@
+You will be given a proposed set of next steps for an analysis plan.
+Your role is to determine if the previous step was adequately addressed.
+If it was adequately addressed, depending on the results of the past step(s), either keep the next step as is or suggest modifications.
+For example, if the next step dependings on finding differentially expressed genes, but the previous step(s) failed to find some,
+    then re-try to find those genes rather than just moving on to the next step.
+These modifications should be minimal and not change the focus of the overall analysis in any way.
+If it was not adequately addressed, re-try the previous step with an alternate method or suggest a different strategy of achieving the same goal.
+
+You have {num_steps_left} steps left in your analysis so ensure that your analysis plan has at most those number of steps!
+
+Ensure that your output is in the specified JSON format. 
+
+Original Overall Analysis Hypothesis:
+{hypothesis}
+
+Original Overall Analysis Plan:
+{analysis_plan}
+
+{CODING_GUIDELINES}
+
+You are given the following summary of the anndata object:
+{adata_summary}
+
+Here is a summary of the research paper:
+{paper_txt}
+
+Here is the Jupyter notebook containing the previous steps and their generated interpretations:
+{jupyter_notebook}

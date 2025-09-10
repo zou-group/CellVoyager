@@ -17,13 +17,7 @@ Original Overall Analysis Hypothesis:
 Original Overall Analysis Plan:
 {analysis_plan}
 
-Code for First Step:
-{first_step_code}
-
 {CODING_GUIDELINES}
-
-Here is the interpretation of the results from the first analysis step:
-{results_interpretation}
 
 You are given the following summary of the anndata object:
 {adata_summary}

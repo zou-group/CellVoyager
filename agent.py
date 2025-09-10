@@ -278,11 +278,18 @@ class AnalysisAgent:
         # Use the code memory for generating the next step
         recent_code = "\n\n# Next Cell\n".join(reversed(self.code_memory))
 
-        prompt = open(os.path.join(self.prompt_dir, "next_step.txt")).read()
-        prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
-                               CODING_GUIDELINES=self.coding_guidelines, results_interpretation=results_interpretation,
-                               jupyter_notebook=jupyter_summary, adata_summary=self.adata_summary, past_analyses=attempted_analyses,
-                               paper_txt=self.paper_summary, num_steps_left=num_steps_left)
+        if seeded:
+            prompt = open(os.path.join(self.prompt_dir, "next_step_seeded.txt")).read()
+            prompt = prompt.format(hypothesis=hypothesis, analysis_plan = analysis_plan, num_steps_left=num_steps_left,
+                                 CODING_GUIDELINES=self.coding_guidelines, jupyter_notebook=jupyter_summary,
+                                 jupyter_notebook=jupyter_summary, adata_summary=self.adata_summary, past_analyses=attempted_analyses,
+                                 paper_txt=self.paper_summary)
+        else:
+            prompt = open(os.path.join(self.prompt_dir, "next_step.txt")).read()
+            prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan,
+                                CODING_GUIDELINES=self.coding_guidelines, jupyter_notebook=jupyter_summary,
+                                adata_summary=self.adata_summary, past_analyses=attempted_analyses,
+                                paper_txt=self.paper_summary, num_steps_left=num_steps_left)
         
         
         response = self.client.chat.completions.create(
@@ -939,7 +946,7 @@ Consider these alternatives for the next analysis step:
                 
             return analysis
 
-    def execute_idea(self, analysis, past_analyses, analysis_idx):
+    def execute_idea(self, analysis, past_analyses, analysis_idx, seeded = False):
         """
         Phase 2: Idea Execution
         
@@ -947,7 +954,8 @@ Consider these alternatives for the next analysis step:
             analysis: Analysis dict from generate_idea phase
             past_analyses: String of past analysis summaries  
             analysis_idx: Analysis index for logging
-            
+            seeded: Boolean indicating if the analysis is seeded
+
         Returns:
             tuple: (hypotheses_analysis list, updated past_analyses string)
         """
@@ -1091,7 +1099,7 @@ Consider these alternatives for the next analysis step:
                 num_steps_left = self.max_iterations - iteration - 1
                 
                 try:
-                    next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
+                    next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left, seeded = seeded)
                 except ValueError as e:
                     if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
                         print(f"🚫 API refusal/error for next step. Skipping remaining iterations for this analysis.")
@@ -1175,17 +1183,18 @@ Consider these alternatives for the next analysis step:
 
         for analysis_idx in range(self.num_analyses):
             # Phase 1: Idea Generation
-            seeded_hypothesis = None
+            seeded_hypothesis, seeded = None, False
             
             if seeded_hypotheses and analysis_idx < len(seeded_hypotheses):
                 seeded_hypothesis = seeded_hypotheses[analysis_idx]
+                seeded = True
             
             try:
                 analysis = self.generate_idea(past_analyses, analysis_idx, seeded_hypothesis)
                 print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
                 
                 # Phase 2: Idea Execution  
-                past_analyses = self.execute_idea(analysis, past_analyses, analysis_idx)
+                past_analyses = self.execute_idea(analysis, past_analyses, analysis_idx, seeded = seeded)
                 
             except ValueError as e:
                 if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
