@@ -127,6 +127,18 @@ class AnalysisAgent:
             summarization_str += f"Column {col} contains the unique values {vals_str} \n"
         return summarization_str
 
+    def generate_jupyter_summary(self, notebook_cells):
+        """Generate a comprehensive summary of notebook code cells, markdown, and errors"""
+        if notebook_cells is None:
+            return ""
+            
+        jupyter_summary = ""
+        for cell in notebook_cells:
+            if cell['cell_type'] == 'code' or cell['cell_type'] == 'markdown' or cell['cell_type'] == 'error':
+                jupyter_summary += f"{cell['source']}\n"
+        
+        return jupyter_summary
+
     def load_h5ad_obs(self, h5ad_path):
         """Load just the .obs data from an h5ad file while preserving data types"""
         with h5py.File(h5ad_path, 'r') as f:
@@ -226,7 +238,12 @@ class AnalysisAgent:
             print(f"⚠️ API returned None response in generate_initial_analysis")
             print(f"   Model: {self.model_name}")
             print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for initial analysis")
+            # Check if this is a refusal
+            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
+                print(f"   Refusal reason: {response.choices[0].message.refusal}")
+                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
+            else:
+                raise ValueError("OpenAI API returned None response for initial analysis")
         
         try:
             analysis = json.loads(result)
@@ -255,6 +272,8 @@ class AnalysisAgent:
         
         # Update code memory with latest notebook cells
         self.update_code_memory(notebook_cells)
+
+        jupyter_summary = self.generate_jupyter_summary(notebook_cells)
         
         # Use the code memory for generating the next step
         recent_code = "\n\n# Next Cell\n".join(reversed(self.code_memory))
@@ -262,7 +281,7 @@ class AnalysisAgent:
         prompt = open(os.path.join(self.prompt_dir, "next_step.txt")).read()
         prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                CODING_GUIDELINES=self.coding_guidelines, results_interpretation=results_interpretation,
-                               previous_code=recent_code, adata_summary=self.adata_summary, past_analyses=attempted_analyses,
+                               jupyter_notebook=jupyter_summary, adata_summary=self.adata_summary, past_analyses=attempted_analyses,
                                paper_txt=self.paper_summary, num_steps_left=num_steps_left)
         
         
@@ -281,7 +300,12 @@ class AnalysisAgent:
             print(f"⚠️ API returned None response in generate_next_step")
             print(f"   Model: {self.model_name}")
             print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for next step")
+            # Check if this is a refusal
+            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
+                print(f"   Refusal reason: {response.choices[0].message.refusal}")
+                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
+            else:
+                raise ValueError("OpenAI API returned None response for next step")
         
         try:
             analysis = json.loads(result)
@@ -296,6 +320,8 @@ class AnalysisAgent:
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
         first_step_code = analysis["first_step_code"]
+
+        jupyter_summary = self.generate_jupyter_summary(notebook_cells)
 
         if notebook_cells is None:
             recent_code = ""
@@ -316,12 +342,12 @@ class AnalysisAgent:
                 documentation = ""
             prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                 CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
-                                paper_txt=self.paper_summary, previous_code=recent_code, documentation=documentation)
+                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary, documentation=documentation)
         else:
             prompt = open(os.path.join(self.prompt_dir, "ablations", "critic_NO_DOCUMENTATION.txt")).read()
             prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                 CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
-                                paper_txt=self.paper_summary, previous_code=recent_code)
+                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary)
 
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -345,12 +371,13 @@ class AnalysisAgent:
             # Update code memory with latest notebook cells
             self.update_code_memory(notebook_cells)
 
-        recent_code = "\n\n# Next Cell\n".join(reversed(self.code_memory))
+        #recent_code = "\n\n# Next Cell\n".join(reversed(self.code_memory))
+        jupyter_summary = self.generate_jupyter_summary(notebook_cells)
 
         prompt = open(os.path.join(self.prompt_dir, "incorporate_critque.txt")).read()
         prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary,
-                               feedback=feedback, previous_code=recent_code)
+                               feedback=feedback, jupyter_notebook=jupyter_summary)
         
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -367,7 +394,12 @@ class AnalysisAgent:
             print(f"⚠️ API returned None response in incorporate_critique")
             print(f"   Model: {self.model_name}")
             print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for critique incorporation")
+            # Check if this is a refusal
+            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
+                print(f"   Refusal reason: {response.choices[0].message.refusal}")
+                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
+            else:
+                raise ValueError("OpenAI API returned None response for critique incorporation")
         
         try:
             modified_analysis = json.loads(result)
@@ -479,9 +511,6 @@ class AnalysisAgent:
         return response.choices[0].message.content.strip()
 
     def interpret_results(self, notebook, past_analyses, hypothesis, analysis_plan, code):
-        # Debug: Check if variables are properly passed
-        print(f"DEBUG: interpret_results called with hypothesis={type(hypothesis)}, analysis_plan={type(analysis_plan)}, code={type(code)}")
-        
         # Get the last cell
         last_cell = notebook.cells[-1]
         no_interpretation = "No results found"
@@ -686,11 +715,34 @@ class AnalysisAgent:
         msg_id = self.kernel_client.execute(code)
         outputs = []
 
+        # Set up strict timeout mechanism
+        import time
+        start_time = time.time()
+        max_execution_time = 600  # 10 minutes maximum (600 seconds)
+        message_timeout = 30  # 30 seconds timeout for individual messages
+        timed_out = False
+        
         while True:
-            try:
-                msg = self.kernel_client.get_iopub_msg(timeout=300)
-            except Exception:
+            # Check if we've exceeded the overall maximum execution time
+            elapsed_time = time.time() - start_time
+            if elapsed_time > max_execution_time:
+                print(f"⏰ Maximum execution time exceeded ({max_execution_time/60:.1f} minutes)")
+                timed_out = True
                 break
+            
+            # Calculate remaining time for this message
+            remaining_time = max_execution_time - elapsed_time
+            current_timeout = min(message_timeout, remaining_time)
+            
+            try:
+                msg = self.kernel_client.get_iopub_msg(timeout=current_timeout)
+            except Exception as e:
+                # Check if we still have time left
+                if time.time() - start_time >= max_execution_time:
+                    print(f"⏰ Timeout reached during message wait ({elapsed_time/60:.1f} minutes)")
+                    timed_out = True
+                    break
+                continue
 
             msg_type = msg['msg_type']
             content = msg['content']
@@ -719,6 +771,30 @@ class AnalysisAgent:
                                         evalue=content['evalue'],
                                         traceback=content['traceback']))
 
+        # Add timeout message to outputs if execution timed out
+        if timed_out:
+            timeout_message = f"""
+⏰ EXECUTION TIMEOUT OCCURRED
+
+This code cell took longer than expected to complete (>{max_execution_time/60:.0f} minutes).
+The execution may still be running in the background.
+
+Consider these alternatives for the next analysis step:
+1. Use faster algorithms or smaller parameter values
+2. Subsample the data for computational efficiency  
+3. Use simpler analysis methods
+4. For model training: reduce max_epochs, enable early_stopping
+5. Try a completely different analytical approach
+"""
+            
+            # Add timeout message as stream output
+            timeout_output = new_output(
+                output_type='stream',
+                name='stderr', 
+                text=timeout_message
+            )
+            outputs.append(timeout_output)
+
         # Update outputs in the last code cell by finding its index
         #last_code_cell.outputs = outputs
         code_cell_index = nb.cells.index(last_code_cell)
@@ -730,6 +806,17 @@ class AnalysisAgent:
                 error_msg = f"{output.ename}: {output.evalue}"
                 return False, error_msg, nb
 
+        # Final check: ensure kernel is actually idle before declaring success
+        try:
+            # Wait a bit and check if kernel is truly idle
+            final_msg = self.kernel_client.get_iopub_msg(timeout=5)
+            if final_msg['msg_type'] == 'status' and final_msg['content'].get('execution_state') == 'busy':
+                print("⚠️ Warning: Kernel still appears busy after supposed completion")
+        except:
+            # Timeout is expected if kernel is truly idle
+            pass
+
+        # Return success even if timed out - the timeout message in outputs will guide the agent
         return True, None, nb
 
     def generate_idea(self, past_analyses, analysis_idx=None, seeded_hypothesis=None):
@@ -824,7 +911,12 @@ class AnalysisAgent:
             print(f"⚠️ API returned None response in generate_analysis_from_hypothesis")
             print(f"   Model: {self.model_name}")
             print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for hypothesis analysis")
+            # Check if this is a refusal
+            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
+                print(f"   Refusal reason: {response.choices[0].message.refusal}")
+                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
+            else:
+                raise ValueError("OpenAI API returned None response for hypothesis analysis")
         
         try:
             analysis = json.loads(result)
@@ -997,20 +1089,40 @@ class AnalysisAgent:
             if iteration < self.max_iterations - 1:
                 analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
                 num_steps_left = self.max_iterations - iteration - 1
-                next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
+                
+                try:
+                    next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left)
+                except ValueError as e:
+                    if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
+                        print(f"🚫 API refusal/error for next step. Skipping remaining iterations for this analysis.")
+                        self.logger.log_response(f"API REFUSAL/ERROR - Ending Analysis {analysis_idx+1} early at step {iteration + 1}: {str(e)}", f"api_refusal_{step_name}")
+                        # Add a note to the notebook about the early termination
+                        termination_note = f"### Analysis Terminated Early\n\nAPI refusal/error occurred when generating next step: {str(e)}\n\nCompleted {iteration + 1} of {self.max_iterations} planned iterations."
+                        notebook.cells.append(nbf.v4.new_markdown_cell(termination_note))
+                        break  # Exit the iteration loop early
+                    else:
+                        # Re-raise other ValueErrors
+                        raise
 
                 self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {next_step_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{next_step_analysis['first_step_code']}\n```", f"initial_analysis_{step_name}")
 
                 
                 if self.use_self_critique:
-                    modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
-                    self.logger.log_response(f"APPLIED SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", f"self_critique_{step_name}")
+                    try:
+                        modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
+                        self.logger.log_response(f"APPLIED SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", f"self_critique_{step_name}")
+                    except ValueError as e:
+                        if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
+                            print(f"🚫 API refusal/error during self-critique. Using analysis without critique.")
+                            self.logger.log_response(f"API REFUSAL DURING CRITIQUE - Using original analysis: {str(e)}", f"critique_refusal_{step_name}")
+                            modified_analysis = next_step_analysis
+                        else:
+                            # Re-raise other ValueErrors
+                            raise
 
                     hypothesis = modified_analysis["hypothesis"]                
                     analysis_plan = modified_analysis["analysis_plan"]
                     current_code = modified_analysis["first_step_code"]
-
-                    print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
                     # Log revised analysis plan
                     self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", f"revised_analysis_{step_name}")
                 else:
@@ -1068,10 +1180,23 @@ class AnalysisAgent:
             if seeded_hypotheses and analysis_idx < len(seeded_hypotheses):
                 seeded_hypothesis = seeded_hypotheses[analysis_idx]
             
-            analysis = self.generate_idea(past_analyses, analysis_idx, seeded_hypothesis)
-            
-            # Phase 2: Idea Execution  
-            past_analyses = self.execute_idea(analysis, past_analyses, analysis_idx)
+            try:
+                analysis = self.generate_idea(past_analyses, analysis_idx, seeded_hypothesis)
+                print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
+                
+                # Phase 2: Idea Execution  
+                past_analyses = self.execute_idea(analysis, past_analyses, analysis_idx)
+                
+            except ValueError as e:
+                if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
+                    print(f"🚫 API refusal/error for Analysis {analysis_idx+1}. Skipping to next analysis.")
+                    print(f"   Error: {str(e)}")
+                    # Add this analysis as a skipped entry to past_analyses
+                    past_analyses += f"Analysis {analysis_idx+1}: Skipped due to API refusal/error.\n\n"
+                    continue  # Skip to next analysis
+                else:
+                    # Re-raise other ValueErrors
+                    raise
         # Clean up resources
         self.cleanup()
         import gc

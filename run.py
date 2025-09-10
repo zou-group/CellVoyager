@@ -71,10 +71,6 @@ def main():
                        action="store_true",
                        help="Enable prompt logging")
     
-    parser.add_argument("--skip-notebook-generation", 
-                       action="store_true",
-                       help="Skip Jupyter notebook generation after analysis")
-    
     args = parser.parse_args()
     
     # Check if OpenAI API key is available
@@ -129,14 +125,6 @@ def main():
         print("🔬 Running analyses...")
         agent.run()
         print("✅ Analysis complete!")
-        
-        # Generate Jupyter notebook after analysis is complete
-        if not args.skip_notebook_generation:
-            print("📓 Generating Jupyter notebook...")
-            generate_notebook(agent.completed_analyses, agent.output_dir)
-            print("✅ Notebook generation complete!")
-        else:
-            print("⏭️ Skipping notebook generation")
             
         return 0
         

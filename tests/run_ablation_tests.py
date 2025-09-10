@@ -224,7 +224,7 @@ def submit_batch_jobs(h5ad_path, manuscript_path, num_analyses=2, max_iterations
         {"test_name": "baseline", "use_self_critique": True, "use_VLM": True, "use_documentation": True},
         {"test_name": "no_vlm", "use_self_critique": True, "use_VLM": False, "use_documentation": True},
         {"test_name": "no_critique", "use_self_critique": False, "use_VLM": True, "use_documentation": True},
-        {"test_name": "no_vlm_no_critique", "use_self_critique": False, "use_VLM": False, "use_documentation": True},
+        #{"test_name": "no_vlm_no_critique", "use_self_critique": False, "use_VLM": False, "use_documentation": True},
         {"test_name": "no_documentation", "use_self_critique": True, "use_VLM": True, "use_documentation": False},
     ]
     

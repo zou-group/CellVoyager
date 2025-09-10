@@ -34,5 +34,5 @@ Here are the previous analyses attempted:
 Here is a summary of the research paper:
 {paper_txt}
 
-Here is the code from the last 3 steps. Make sure the modified code builds on the past analyses and doesn't repeat any of them:
-{previous_code}
+Here is the Jupyter notebook containing the previous steps and their generated interpretations:
+{jupyter_notebook}

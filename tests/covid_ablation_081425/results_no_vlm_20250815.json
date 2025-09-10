@@ -1,0 +1,148 @@
+{
+  "test_name": "no_vlm_20250815",
+  "total_code_cells_attempted": 29,
+  "total_failures": 12,
+  "final_successful_cells": 10,
+  "final_failed_cells": 8,
+  "failure_rate": 0.41379310344827586,
+  "final_success_rate": 0.5555555555555556,
+  "failed_fix_attempts_per_step": {
+    "covid_ablation_081425/test_results_no_vlm_20250815_002440/logs/test_no_vlm_log_20250815_002502.log": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 3,
+        "7": 0,
+        "8": 0
+      },
+      "3": {
+        "1": 0,
+        "2": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "covid_ablation_081425/test_results_no_vlm_20250815_002440/outputs/test_no_vlm_20250815_002502/test_no_vlm_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 2,
+      "failed_cells": 7,
+      "success_rate": 0.2222222222222222,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "# Subset the `adata` object to focus on specific immune cell types\ncell_types_of_interest = ['CD14 M..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "# Subset the `adata` object to focus on CD14 Monocyte and CD8 T cell types based on stress response ..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\n# Use corrected gene names for critical HLA and interferon-related genes\ncorrected_critical_genes =..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\n# Step 1: Filter the anndata object to include only CD14 Monocytes and CD8 T cells and ensure stres..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport warnings\n\nwarnings.filterwarnings('ignore')\n\ndef filter_and_subset_adata..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Calculate and add mitochondrial genes QC metrics\nadata.va..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Ensure data is correctly subsetted based on quality criteria\ncell_types_of_in..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Calculate and add mitochondrial genes QC metrics\nadata.var..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "covid_ablation_081425/test_results_no_vlm_20250815_002440/outputs/test_no_vlm_20250815_002502/test_no_vlm_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Subset data to include only monocytes and granulocytes\nce..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport scvi\n\n# Expected to use in-memory loaded adata\n# Subs..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport pandas as pd\nimport scvi\nfrom scipy.stats import mannwhitneyu\nfrom statsmodels.stats.multite..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport pandas as pd\nimport numpy as np\nfrom scipy.stats import spearmanr\nfrom statsmodels.stats.mul..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport scvi\n\n# Use SCVI to get latent representation for granulocytes\ngranulocyt..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport pandas as pd\nimport scvi\nimport scanpy as sc\n\n# Preprocessing steps before filtering granulo..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Set up AnnData object for granulocytes\nsc.pp.filter_cells(adata,..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nfrom scipy.stats import chi2_contingency\n\n# We assume that ..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

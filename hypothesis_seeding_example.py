@@ -8,17 +8,6 @@ from agent import AnalysisAgent
 
 def simple_example():
     """Basic hypothesis seeding usage"""
-    
-    agent = AnalysisAgent(
-        h5ad_path="example/covid19.h5ad",
-        paper_summary_path="example/covid19_summary.txt",
-        openai_api_key=os.getenv('OPENAI_API_KEY'),
-        model_name="o3-mini",
-        analysis_name="hypothesis_test",
-        num_analyses=1,
-        max_iterations=3,
-        use_deepresearch_background=False
-    )
 
     hypotheses = [
         """
@@ -32,8 +21,26 @@ def simple_example():
         Ensure that you execute this plot exactly as specified. Do not perform any other analyses.
         Use the highest resolution for the celltype labels.
         The steps in the analysis plan should be solely focused on correctly any bugs/errors in the plot. Each step should output the plot described.
+        """, # Figure 1d
+        """Boxplot showing the mean HLA class II module score of CD14+ monocytes from each sample, colored by healthy donors (blue),
+        non-ventilated patients with COVID-19 (orange) or ventilated patients with COVID-19 (red). Shown are exact P values by two-sided
+        Wilcoxon rank-sum test. n = 6, n = 4 and n = 4 biologically independent samples for Healthy, NonVent and ARDS, respectively
+        """, # Figure 2e
         """
+        Dot plot depicting percent expression and average expression of all detected HLA genes in CD14+ monocytes by donor. 
+        """ # Figure 2f
     ]
+    
+    agent = AnalysisAgent(
+        h5ad_path="example/covid19.h5ad",
+        paper_summary_path="example/covid19_summary.txt",
+        openai_api_key=os.getenv('OPENAI_API_KEY'),
+        model_name="o3-mini",
+        analysis_name="hypothesis_test",
+        num_analyses=len(hypotheses),
+        max_iterations=3,
+        use_deepresearch_background=False
+    )
     
     
     print("🌱 Running with seeded hypotheses:")
