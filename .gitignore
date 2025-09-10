@@ -6,5 +6,6 @@ logs/
 jobs_files/
 CellBench_2/
 caseStudies_paperSummaries/
+tests/
 
 ._*
