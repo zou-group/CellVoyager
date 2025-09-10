@@ -23,9 +23,9 @@ python run.py --h5ad-path PATH_TO_H5AD_DATASET \
               --analysis-name RUN_NAME
 ```
 where
-* `h5ad_path` is the absolute path of the anndata `.h5ad` file
-* `paper_summary_path` is the absolute path of a `.txt` file containing the LLM or human generated summary of the paper
-* `analysis_name` is the name you want your analysis files to be saved under
+* `h5ad-path` is the absolute path of the anndata `.h5ad` file
+* `paper-path` is the absolute path of a `.txt` file containing the LLM or human generated summary of the paper
+* `analysis-name` is the name you want your analysis files to be saved under
 
 
 The current implementation of the model only support OpenAI models. As a result, it assumes you have `.env` file that contains
