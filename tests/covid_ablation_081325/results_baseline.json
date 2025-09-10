@@ -1,0 +1,18 @@
+{
+  "test_name": "baseline",
+  "total_code_cells_attempted": 0,
+  "total_failures": 0,
+  "final_successful_cells": 0,
+  "final_failed_cells": 0,
+  "failure_rate": 0.0,
+  "final_success_rate": 0.0,
+  "failed_fix_attempts_per_step": {},
+  "analyses": [],
+  "errors": [
+    {
+      "exception_type": "KeyError",
+      "message": "'code_description'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/groups/jamesz/salber/CellVoyager/tests/base_tester.py\", line 105, in test_agent\n    agent.run()\n  File \"/home/groups/jamesz/salber/CellVoyager/agent.py\", line 1066, in run\n    past_analyses = self.execute_idea(analysis, past_analyses, analysis_idx)\n  File \"/home/groups/jamesz/salber/CellVoyager/agent.py\", line 1020, in execute_idea\n    code_description = modified_analysis[\"code_description\"]\nKeyError: 'code_description'\n"
+    }
+  ]
+}

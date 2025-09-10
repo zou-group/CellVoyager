@@ -1,0 +1,1457 @@
+🚀 Running ablation test: no_vlm
+   Self-critique: ✅
+   VLM: ❌
+   Analyses: 25
+   Max iterations: 8
+
+🧪 Testing no_vlm...
+   Self-critique: ✅
+   VLM: ❌
+Loading anndata .obs for summarization...
+Loaded obs data: 73180 rows × 5 columns
+ADATA SUMMARY:  Below is a description of the columns in adata.obs: 
+Column cell_name contains the unique values ['14_AAACCCAAGTAATACG' '14_AAACCCAGTCCTTAAG' '14_AAACGAAAGGCGATAC'
+ '14_AAACGCTAGACTGTTC' '14_AAACGCTAGAGTGTTA' '14_AAACGCTAGTCTAGCT'
+ '14_AAACGCTGTTGTGGCC' '14_AAACGCTTCTTGCAGA' '14_AAAGAACAGCTCCGAC'
+ '14_AAAGAACAGGTACTGG' '14_AAAGAACAGTTGGGAC' '14_AAAGAACCATCGAGCC'
+ '14_AAAGGATAGGTTGCCC' '14_AAAGGATCAGCTTTGA' '14_AAAGGATGTTTAAGGA'
+ '14_AAAGGATTCCATTGTT' '14_AAAGGATTCGCGTTTC' '14_AAAGGGCCACTTGTCC'
+ '14_AAAGGGCGTGTAGTGG' '14_AAAGGGCGTTTCTATC' '14_AAAGGTATCAGACAAA'
+ '14_AAAGGTATCCAAACCA' '14_AAAGTCCGTTAGAGTA' '14_AAAGTCCTCATGGATC'
+ '14_AAAGTCCTCATTTCCA']and 73155 other unique values... 
+Column cell_type contains the unique values ['Stromal fibroblasts' 'Unciliated epithelia 1' 'Unciliated epithelia 2'
+ 'Endothelia' 'Lymphocytes' 'Ciliated' 'Smooth muscle cells' 'Macrophages'
+ 'Unciliated epithelia'] 
+Column dataset contains the unique values ['10x' 'C1'] 
+Column day contains the unique values [17 22 20 23 19 26 16 10  4 21 11  7 25 15 24  9 27] 
+Column donor contains the unique values [14 19 20 29 39 41 57 58 60 63 13  7 12  6  4 26 15  8 30 38 40 11  5 33
+ 59]and 2 other unique values... 
+
+✅ Loaded /scratch/groups/jamesz/scAgent/endo_data.h5ad
+
+🚀 Starting Analysis 1
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 3...
+⚠️ Code errored with: NameError: name 'check_marker_genes' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 4...
+⚠️ Code errored with: NameError: name 'data' is not defined
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: You need to run `pp.neighbors` first to compute a neighborhood graph.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 6...
+⚠️ Code errored with: ValueError: Found array with 0 sample(s) (shape=(0, 0)) while a minimum of 1 is required.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: No unciliated epithelial cells found in 'adata.obs'. Please check the 'cell_type' labels.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 1
+🚀 Beginning step 8...
+⚠️ Code errored with: SyntaxError: EOL while scanning string literal (4059219312.py, line 34)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_1.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 1
+
+🚀 Starting Analysis 2
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 1...
+⚠️ Code errored with: KeyError: "['Other_Pathway_score'] not in index"
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 4...
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 6...
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 7...
+🚀 Generated Initial Analysis Plan for Analysis 2
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_2.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 2
+
+🚀 Starting Analysis 3
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 4...
+⚠️ Code errored with: KeyError: 'pct_counts_mt'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 6...
+⚠️ Code errored with: KeyError: 'pct_counts_mt'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 7...
+⚠️ Code errored with: AssertionError: scVI latent representation not found.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 3
+🚀 Beginning step 8...
+⚠️ Code errored with: SyntaxError: EOL while scanning string literal (3887021646.py, line 21)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_3.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 3
+
+🚀 Starting Analysis 4
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 2...
+⚠️ Code errored with: AttributeError: 'AnnData' object has no attribute 'to_sparse'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 5...
+⚠️ Code errored with: KeyError: 'subtype'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 7...
+⚠️ Code errored with: KeyError: 'No "neighbors" in .uns'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 4
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: SCVI latent space 'X_scVI' is missing from adata_unknown.obsm
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_4.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 4
+
+🚀 Starting Analysis 5
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 4...
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: You need to run `pp.neighbors` first to compute a neighborhood graph.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 6...
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 7...
+🚀 Generated Initial Analysis Plan for Analysis 5
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: cannot specify integer `bins` when input data contains infinity
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_5.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 5
+
+🚀 Starting Analysis 6
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 2...
+⚠️ Code errored with: KeyError: 'day'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 3...
+⚠️ Code errored with: AttributeError: 'DataFrame' object has no attribute 'raw'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 4...
+⚠️ Code errored with: AttributeError: module 'celltypist.models' has no attribute 'download_model'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 6...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 6
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_6.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 6
+
+🚀 Starting Analysis 7
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 2...
+⚠️ Code errored with: NameError: name 'threshold' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 4...
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: Did not find X_pca in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 7...
+⚠️ Code errored with: TypeError: set_categories() got an unexpected keyword argument 'inplace'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 7
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_7.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 7
+
+🚀 Starting Analysis 8
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 3...
+⚠️ Code errored with: IndexError: index 0 is out of bounds for axis 0 with size 0
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 6...
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 7...
+🚀 Generated Initial Analysis Plan for Analysis 8
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_8.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 8
+
+🚀 Starting Analysis 9
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 2...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 3...
+⚠️ Code errored with: SyntaxError: f-string: unmatched '[' (217783083.py, line 22)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 4...
+⚠️ Code errored with: AttributeError: 'ellipsis' object has no attribute 'obs'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 5...
+⚠️ Code errored with: AttributeError: 'ellipsis' object has no attribute 'obs'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 6...
+⚠️ Code errored with: AttributeError: 'ellipsis' object has no attribute 'obs'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 7...
+⚠️ Code errored with: AttributeError: 'ellipsis' object has no attribute 'obs'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 9
+🚀 Beginning step 8...
+⚠️ Code errored with: AttributeError: 'ellipsis' object has no attribute 'obs'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_9.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 9
+
+🚀 Starting Analysis 10
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 1...
+⚠️ Code errored with: KeyError: 'gene_name'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 2...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 6...
+⚠️ Code errored with: NotImplementedError:  >= and <= don't work with 0.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 10
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_10.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 10
+
+🚀 Starting Analysis 11
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 4...
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 5...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: No valid genes were passed for scoring.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 11
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_11.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 11
+
+🚀 Starting Analysis 12
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 4...
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 6...
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 7...
+🚀 Generated Initial Analysis Plan for Analysis 12
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_12.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 12
+
+🚀 Starting Analysis 13
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 4...
+⚠️ Code errored with: SyntaxError: f-string: unmatched '[' (3157870622.py, line 12)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 5...
+⚠️ Code errored with: KeyError: 'leiden'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 6...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 7...
+⚠️ Code errored with: TypeError: sequence item 0: expected str instance, int found
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 13
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_13.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 13
+
+🚀 Starting Analysis 14
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 2...
+⚠️ Code errored with: KeyError: 'phase'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 4...
+⚠️ Code errored with: KeyError: 'S_score'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 6...
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 14
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_14.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 14
+
+🚀 Starting Analysis 15
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 3...
+⚠️ Code errored with: SyntaxError: invalid syntax (3235737173.py, line 18)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 4...
+⚠️ Code errored with: NameError: name 'data' is not defined
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 6...
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 15
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_15.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 15
+
+🚀 Starting Analysis 16
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: 🛑 Invalid expression matrix in `.X`, expect log1p normalized expression to 10000 counts per cell
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 7...
+⚠️ Code errored with: KeyError: 'X_scVI'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 16
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_16.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 16
+
+🚀 Starting Analysis 17
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: No valid genes were passed for scoring.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 6...
+⚠️ Code errored with: SyntaxError: f-string: unmatched '[' (4079373503.py, line 25)
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 7...
+⚠️ Code errored with: KeyError: 'dpt_pseudotime'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 17
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_17.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 17
+
+🚀 Starting Analysis 18
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 1...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 4...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 5...
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 6...
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 7...
+⚠️ Code errored with: SyntaxError: f-string: invalid syntax (528768842.py, line 22)
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 18
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_18.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 18
+
+🚀 Starting Analysis 19
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 2...
+⚠️ Code errored with: TypeError: scanorama_integrate() missing 1 required positional argument: 'key'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 3...
+⚠️ Code errored with: SyntaxError: f-string: unmatched '[' (2525717090.py, line 15)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: Bin edges must be unique: Index([nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan, nan,
+       nan, nan, nan, nan, nan, nan, nan],
+      dtype='float64').
+You can drop duplicate edges by setting the 'duplicates' kwarg
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 19
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_19.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 19
+
+🚀 Starting Analysis 20
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 1...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 2...
+⚠️ Code errored with: ModuleNotFoundError: No module named 'harmony'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 3...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: SCVI latent representation must be calculated first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 20
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_20.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 20
+
+🚀 Starting Analysis 21
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 1...
+⚠️ Code errored with: ImportError: cannot import name 'fdr_bh' from 'scipy.stats' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/scipy/stats/__init__.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 2...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 3...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 7...
+⚠️ Code errored with: KeyError: 'X_scVI'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 21
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_21.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 21
+
+🚀 Starting Analysis 22
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 1...
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 2...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 3...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: Bin edges must be unique: Index([                 -inf,                 1e-12,                 1e-12,
+                       1e-12, 0.0004854368932038835,  0.001941747572815534,
+        0.004368932038834952,  0.009708737864077669,  0.021844660194174758,
+          0.0441747572815534,   0.07864077669902912,   0.12689320388349495,
+         0.19029126213592232,   0.27490291262135885,   0.39478155339805826,
+          0.5718446601941748,    0.8504854368932039,    1.3563592233009718,
+          2.5767475728155333,      613.773786407767,                   inf],
+      dtype='float64').
+You can drop duplicate edges by setting the 'duplicates' kwarg
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 22
+🚀 Beginning step 8...
+⚠️ Code errored with: NameError: name 'adata_filtered' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_22.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 22
+
+🚀 Starting Analysis 23
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: reference = mean needs to be one of groupby = [16, 17, 19, 20, 22, 23, 26].
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 3...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 7...
+🚀 Generated Initial Analysis Plan for Analysis 23
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_23.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 23
+
+🚀 Starting Analysis 24
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: Data must be 1-dimensional, got ndarray of shape (1, 22480) instead
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: Received `use_raw=True`, but `adata.raw` is empty.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 4...
+⚠️ Code errored with: UFuncTypeError: ufunc 'less' did not contain a loop with signature matching types (<class 'numpy.dtypes.VoidDType'>, <class 'numpy.dtypes._PyFloatDType'>) -> None
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 24
+🚀 Beginning step 8...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_24.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 24
+
+🚀 Starting Analysis 25
+✅ Persistent kernel started
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 1...
+⚠️ Code errored with: KeyError: 'gene_biotype'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 2...
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 3...
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 4...
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: cannot specify integer `bins` when input data contains infinity
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 6...
+⚠️ Code errored with: ValueError: cannot specify integer `bins` when input data contains infinity
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 7...
+⚠️ Code errored with: KeyError: 'counts'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚀 Generated Initial Analysis Plan for Analysis 25
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_vlm_20250807_122806/outputs/test_no_vlm_20250807_122829/test_no_vlm_analysis_25.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 25
+❌ Error during agent execution: Operation not supported
+💾 Results saved to: endo_ablation_080725/results_no_vlm.json
+📊 NO_VLM Results:
+   Final Success Rate: 0.00%
+   Total Failure Rate: 0.00%
+   Final Successful Cells: 0
+   Total Failures: 0
+   Total Attempts: 0
+✅ Ablation test no_vlm completed!

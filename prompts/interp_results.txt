@@ -9,6 +9,15 @@ Just return your feedback, do not return anything else.
 It is important to note that the purpose of these analyses is to be both biologically meaningful but also to be distinct
 from the analyses conducted in the research paper below as well as distinct from previous analyses attempted.
 
+Hypothesis:
+{hypothesis}
+
+Analysis Plan:
+{analysis_plan}
+
+Code:
+{code}
+
 Textual Results:
 {text_output}
 

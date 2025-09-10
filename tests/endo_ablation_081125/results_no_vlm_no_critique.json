@@ -1,0 +1,14 @@
+{
+  "test_name": "no_vlm_no_critique",
+  "total_code_cells_attempted": 0,
+  "total_failures": 0,
+  "final_successful_cells": 0,
+  "final_failed_cells": 0,
+  "failure_rate": 0.0,
+  "final_success_rate": 0.0,
+  "failed_fix_attempts_per_step": {},
+  "analyses": [],
+  "errors": [
+    "f-string: unmatched '[' (<unknown>, line 25)"
+  ]
+}

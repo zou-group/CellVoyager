@@ -1,0 +1,823 @@
+{
+  "test_name": "no_critique",
+  "total_code_cells_attempted": 0,
+  "total_failures": 0,
+  "final_successful_cells": 103,
+  "final_failed_cells": 32,
+  "failure_rate": 0.0,
+  "final_success_rate": 0.762962962962963,
+  "failed_fix_attempts_per_step": {},
+  "analyses": [
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_5.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Quality control and filtering\nsc.pp.filter_cells(adata, mi..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Filtered and normalized version of ad..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Create a curated list of non-mitochond..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Revise the metabolic genes list\nmetabo..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Compile ECM and Cell Adhesion Genes\n# ..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Filter for relevant mitochondrial and ..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Verify genes are present in the datas..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Ensure data quality\nmito_genes = [gene..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_3.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 9,
+      "failed_cells": 0,
+      "success_rate": 1.0,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Calculate proportions of e..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport pandas as pd\n\n# Perform regression analysis to assess trends in cell type proportions\nfor ce..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Compute the neighborhood graph\nsc.pp.neighbo..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport pandas as pd\nfrom scipy import stats\nimport matplotlib.pyplot as plt\n\n# Perform ANOVA to ass..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Calculate proportions of ..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Ensure 'adata' is defined and contains valid genes\nif 'ad..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Expand the list of inflammation genes\nadditional_genes = [..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Verify if essential inflammation-related gene names are valid entries in the ..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_8.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "# Subclustering of microglia and astrocytes to identify distinct states\nimport scanpy as sc\nimport m..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport scanpy as sc\n\n# Annotate clusters based ..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Log-normalize and perform PCA for variance stabilization\nsc.pp.log1p(microgli..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform Leiden clustering on PCA-reduced data\nsc.pp.neighbors(microglia_astro..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Conduct differential expression analysis for older subclusters\nsc.tl.rank_ge..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Log-normalize the dataset for variance stabilization\nsc.pp.log1p(adata)"
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Ensure gene names are present in adata.var_names\nvalid_m..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Assuming previous steps have split the data into microglia and astrocyte subc..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_9.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Load or define 'adata' before using it in th..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scvi\n\n# Load data\nadata = sc.read_h5ad('/scratch/users/salber/aging_final.h5ad')\n\n# Basic pre..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scvi\n\n# Load data\nadata = sc.read_h5ad('/scratch/users/salber/aging_final.h5ad')\n\n# Basic pre..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scvi\nimport scanpy as sc\nfrom sklearn.model_selection import train_test_split\n\n# Subsample th..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "# Age-based cell type proportions visualization\nimport matplotlib.pyplot as plt\nimport seaborn as sn..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scvi\nimport scanpy as sc\n\n# Subsample the data stratified by age and cell type\nfrom sklearn.m..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scvi\nimport scanpy as sc\n\n# Load data\nadata = sc.read_h5ad('/scratch/users/salber/aging_final..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scvi\n\n# Subsample the data stratified by age and cell type\nfrom sklearn.model_selection impor..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_15.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 8,
+      "failed_cells": 1,
+      "success_rate": 0.8888888888888888,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Add the check for 'cell_types' column and set the root ce..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import numpy as np\nimport scanpy as sc\n\n# Assigning root cell based on alternative markers, since 'S..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Compute Leiden clustering to use for PAGA\nsc..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Check if 'GeneX' and 'GeneY' are present in ..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Identify and visualize the expression of mito..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Compute Leiden Clustering to identify distinct cellular populations based on ..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Set the root cell based on the specific cluster associated..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n# Differential pseudotime v..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_10.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Preprocess the data if needed (e.g., normalization and scaling)\nad = adata.c..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Preprocess data\nadata = adata.copy()\nsc.pp.normalize_total(adata, target_sum..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Root cell selection\nquiescent_cells = ns_progenitors[(ns_progenitors.obs['Ce..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Normalize and scale data for metabolic gene analysis\nadata = adata.copy()\nsc...."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nfrom scvi.model import SCVI\n\n# Preprocess data\nadata = adata.copy()\nsc.pp.norma..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Normalize and scale data\nadata = adata.copy()\nsc.pp.norma..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nfrom scipy.cluster.hierarchy import linkage, dendrogram\nimpo..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Normalize and scale data\nadata = adata.copy()\nsc.pp.norma..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_13.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 9,
+      "failed_cells": 0,
+      "success_rate": 1.0,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset to astrocytes\nastrocytes = adata[adata.obs['Celltype'] == 'Astrocyte_q..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset to astrocytes\nastrocytes = adata[adata.obs['Celltype'] == 'Astrocyte_q..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure astrocytes are properly subset and analyzed\nastrocytes = adata[adata...."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Proceed with subsetting astrocyte clusters to identify potentially reactive ..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Load expanded gene lists from pathway databases\nexpanded_..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Perform pathway enrichment analysis and update the gene l..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Use an updated list of high confidence genes involved in ..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Use metabolic gene sets f..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_7.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Calculate the proportion of each cell type ac..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Calculate the proportion of each cell type ac..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\nsc.settings.verbosity = 3\n\n# Ensure 'Ag..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\nsc.settings.verbosity = 3\n\n# Logarithmize data for normalization\nsc.pp.log1p(ad..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\nsc.settings.verbosity = 3\n\n# Ensure 'Ag..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nfrom scvi.data import setup_anndata\nfrom scvi.model import SCVI\n\nsc.settings.ve..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\nfrom scipy.stats import zscore\n\n# Conver..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\nsc.settings.verbosity = 3\n\n# Subset data for microglia and..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_12.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Perform PCA\nsc.tl.pca(adata, svd_solver='arpa..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Ensure gene names are present in adata.var_names\noxidativ..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Score hallmark metabolic pathways\nmetabolic_genes = {'OxidativePhosphorylatio..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scvi\n\n# Use SCVI for data normalization and latent space calculation\nscvi.model.SCVI.setup_an..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scvi\n\n# Optimize SCVI model training and UMAP for performance improvements\nscvi.model.SCVI.se..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform PCA for dimensionality reduction\nsc.tl.pca(adata, svd_solver='arpack'..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Plot UMAP colored by metab..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform differential expression analysis using logistic regression\nsc.tl.rank..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_14.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Assuming 'adata' is already loaded with necessary pre-processing\n\n# Step 1: ..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform differential expression analysis\nsc.tl.rank_genes_groups(adata, grou..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Normalize and logarithmize the data\nsc.pp.normalize_total(adata, target_sum=..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "\n# Re-normalize and re-transform the data to address previous warnings\nimport scanpy as sc\n\n# Re-nor..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Compute the neighborhood graph\nsc.pp.neighbors(adata, n_neighbors=20, n_pcs=..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Assuming the neighborhood graph has been computed already\n\n# Run Diffusion M..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Normalize and scale the data for focused analysis\nsc.pp.normalize_total(adat..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\nimport pandas as pd\n\n# Normalize and scale the data\nsc.pp.no..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 9,
+      "failed_cells": 0,
+      "success_rate": 1.0,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import numpy as np\nimport pandas as pd\nimport scanpy as sc\n\n# Subset the dataset for oligodendrocyte..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Define young and old samples based on median age\nmedian_..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset the dataset for oligodendrocyte cells\nologodendrocytes_adata = adata[a..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Perform Differential Expression Analysis\n# Here, we identify differences in g..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Exploratory Data Analysis to find the most variable genes\nsc.pp.highly_varia..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset the dataset for oligodendrocyte cells\nologodendrocytes_adata = adata[a..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Subset the dataset for oligodendrocyte cells\nologodendrocytes_adata = adata[a..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nfrom scipy.stats import spearmanr\n\n# Subset DE genes for telomere maintenance a..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\n# Import necessary libraries\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Subset the data to include only neural stem cells across d..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Calculate summary statist..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Subset the data to include only neural stem cells\nnsc_data = adata[adata.obs[..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Compute the neighborhood graph for young neural stem cells\nsc.pp.neighbors(ns..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport pandas as pd\n\n# Calculate variance-to-mean ratio for each gene in young a..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scipy.stats as stats\nimport numpy as np\n\n# Perform Wilcoxon rank-sum test to compare variance..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib...."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_11.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 3,
+      "failed_cells": 6,
+      "success_rate": 0.3333333333333333,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Assume adata is already defined; if not, it needs to be l..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nimport numpy as np\nimport scanpy as sc\n\n# Check existence of 'Age' metadata\nif 'Age' not in adata.o..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Calculate expression variability of mitochondrial and oxi..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Expanding gene selection\nexpanded_genes = adata.var_names..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Define gene sets for inflammation and senescence\ninflamm..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Collect genes associated with metabolic and energy regulat..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport pandas as pd\n\n# Define gene sets for inflammation and senescence\ninflamm..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\nimport numpy as np\n\n# Define ribosomal and protein synthesis genes\nribosome_gen..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_6.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# UMAP visualization to identify major cell ty..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\n# Perform trajectory analysis using PAGA and diffusion map\ndata_selected = adata[adata.obs['Celltyp..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Gene names converted to lowercase for matching\ns_genes = ['mcm5', 'pcna', 't..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Starting from the loaded dataset\nsc.pp.neighbors(adata, n_neighbors=15, n_pcs..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Annotate clusters using known marker genes\nmarker_genes = {'Astrocyte_qNSC':..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Perform clustering at various resolutions to identify subpopulations within ..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Differential expression analysis on oligodendrocyte clusters\nsc.tl.rank_genes..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport scanpy as sc\nimport pandas as pd\nfrom scipy.stats import fisher_exact\n\n# ..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "aging_ablation_082425/test_results_no_critique_20250824_161516/outputs/test_no_critique_20250824_161536/test_no_critique_analysis_4.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 5,
+      "failed_cells": 4,
+      "success_rate": 0.5555555555555556,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": false,
+          "code_preview": "\nsubset_cells = adata[adata.obs['Celltype.LowRes'].isin(['Microglia', 'Astrocyte_qNSC'])]\n"
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "\nsubset_cells = adata[adata.obs['Celltype.LowRes'].isin(['Microglia', 'Astrocyte_qNSC'])]"
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nadata_filtered = adata[(adata.obs['percent.mt'] < 5) & (adata.obs['nFeature_RNA'] > 500)]\n"
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "subset_cells = adata[adata.obs['Celltype.LowRes'].isin(['Microglia', 'Astrocyte_qNSC'])]"
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scvi\n\nadata_corrected = adata.copy()  # Assuming the preprocessing step is just a placeholde..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Assuming adata_corrected is already filtered for quality\n# Filter to focus on..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Subsample data by taking 70% of all Microglia and Astrocyt..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Normalizing and log-transforming gene expression\nsc.pp.nor..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,12 @@
+Lmod Warning:
+-------------------------------------------------------------------------------
+The following dependent module(s) are not currently loaded: gcc/12.4.0
+(required by: R/4.4.2), gcc/14.2.0 (required by: openblas/0.3.28)
+-------------------------------------------------------------------------------
+
+
+
+
+The following have been reloaded with a version change:
+  1) python/3.12.1 => python/3.9.0
+

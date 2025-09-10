@@ -1,0 +1,1303 @@
+🚀 Running ablation test: no_critique
+   Self-critique: ❌
+   VLM: ✅
+   Analyses: 25
+   Max iterations: 8
+
+🧪 Testing no_critique...
+   Self-critique: ❌
+   VLM: ✅
+Loading anndata .obs for summarization...
+Loaded obs data: 73180 rows × 5 columns
+ADATA SUMMARY:  Below is a description of the columns in adata.obs: 
+Column cell_name contains the unique values ['14_AAACCCAAGTAATACG' '14_AAACCCAGTCCTTAAG' '14_AAACGAAAGGCGATAC'
+ '14_AAACGCTAGACTGTTC' '14_AAACGCTAGAGTGTTA' '14_AAACGCTAGTCTAGCT'
+ '14_AAACGCTGTTGTGGCC' '14_AAACGCTTCTTGCAGA' '14_AAAGAACAGCTCCGAC'
+ '14_AAAGAACAGGTACTGG' '14_AAAGAACAGTTGGGAC' '14_AAAGAACCATCGAGCC'
+ '14_AAAGGATAGGTTGCCC' '14_AAAGGATCAGCTTTGA' '14_AAAGGATGTTTAAGGA'
+ '14_AAAGGATTCCATTGTT' '14_AAAGGATTCGCGTTTC' '14_AAAGGGCCACTTGTCC'
+ '14_AAAGGGCGTGTAGTGG' '14_AAAGGGCGTTTCTATC' '14_AAAGGTATCAGACAAA'
+ '14_AAAGGTATCCAAACCA' '14_AAAGTCCGTTAGAGTA' '14_AAAGTCCTCATGGATC'
+ '14_AAAGTCCTCATTTCCA']and 73155 other unique values... 
+Column cell_type contains the unique values ['Stromal fibroblasts' 'Unciliated epithelia 1' 'Unciliated epithelia 2'
+ 'Endothelia' 'Lymphocytes' 'Ciliated' 'Smooth muscle cells' 'Macrophages'
+ 'Unciliated epithelia'] 
+Column dataset contains the unique values ['10x' 'C1'] 
+Column day contains the unique values [17 22 20 23 19 26 16 10  4 21 11  7 25 15 24  9 27] 
+Column donor contains the unique values [14 19 20 29 39 41 57 58 60 63 13  7 12  6  4 26 15  8 30 38 40 11  5 33
+ 59]and 2 other unique values... 
+
+✅ Loaded /scratch/groups/jamesz/scAgent/endo_data.h5ad
+
+🚀 Starting Analysis 1
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: NameError: name 'ad' is not defined
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: KeyError: 'dpt_groups'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_1.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 1
+
+🚀 Starting Analysis 2
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: KeyError: "None of [Index(['Endothelia'], dtype='object')] are in the [columns]"
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: The column `adata.obs['day']` needs to be categorical, but is of dtype int64.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: KeyError: "Could not find 'umap' or 'X_umap' in .obsm"
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: KeyError: 'Could not find key dpt_pseudotime in .var_names or .obs.columns.'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: NameError: name 'data' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: TypeError: rank_genes_groups_df() missing 1 required positional argument: 'group'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_2.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 2
+
+🚀 Starting Analysis 3
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: KeyError: "Could not find keys '[np.str_('pct_counts_mt')]' in columns of `adata.obs` or in adata.var_names."
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: KeyError: 'Could not find key dpt_pseudotime in .var_names or .obs.columns.'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: You need to run `pp.neighbors` and `tl.diffmap` first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_3.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 3
+
+🚀 Starting Analysis 4
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: TypeError: score_genes() got an unexpected keyword argument 'recompute'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: Could not calculate statistics for groups 27, 7, 24, 4 since they only contain one sample.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: NameError: name 'data_endothelia' is not defined
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: KeyError: 'leiden'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: AttributeError: module 'scanpy.plotting' has no attribute 'dpt_groups_pseudotime_scatter'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_4.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 4
+
+🚀 Starting Analysis 5
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: The column `adata.obs['day']` needs to be categorical, but is of dtype int64.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: KeyError: "None of [Index(['gene_names'], dtype='object')] are in the [columns]"
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: KeyError: 'dpt_pseudotime'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_5.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 5
+
+🚀 Starting Analysis 6
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: KeyError: 'rank_genes_groups'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ModuleNotFoundError: No module named 'gprofiler'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: KeyError: 'leiden'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_6.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 6
+
+🚀 Starting Analysis 7
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: ValueError: You need to run `pp.neighbors` first to compute a neighborhood graph.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: KeyError: "Could not find 'umap' or 'X_umap' in .obsm"
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_7.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 7
+
+🚀 Starting Analysis 8
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: AttributeError: 'SparseCSRView' object has no attribute 'flatten'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: You need to run `pp.neighbors` first to compute a neighborhood graph.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_8.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 8
+
+🚀 Starting Analysis 9
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: KeyError: 'leiden'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: TypeError: pca() got an unexpected keyword argument 'use_rep'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: `method` needs to be one of {'umap', 'gauss'}.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_9.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 9
+
+🚀 Starting Analysis 10
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: Please install skmisc package via `pip install --user scikit-misc
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: ValueError: You need to run `pp.neighbors` first to compute a neighborhood graph.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: cannot specify integer `bins` when input data contains infinity
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: NameError: name 'macrophage_hvg' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_10.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 10
+
+🚀 Starting Analysis 11
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: ModuleNotFoundError: No module named 'scvelo'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: Did not find X_pca in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: KeyError: "Could not find keys '[np.str_('TCA_cycle'), np.str_('glycolysis'), np.str_('oxidative_phosphorylation')]' in columns of `adata.obs` or in adata.var_names."
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_11.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 11
+
+🚀 Starting Analysis 12
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: ModuleNotFoundError: No module named 'gseapy'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_12.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 12
+
+🚀 Starting Analysis 13
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: NameError: name 'scvi' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: KeyError: 'No "neighbors" in .uns'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: reference = 17 needs to be one of groupby = [4, 7, 9, 10, 11, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27].
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_13.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 13
+
+🚀 Starting Analysis 14
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: The column `adata.obs['day']` needs to be categorical, but is of dtype int64.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: FileNotFoundError: [Errno 2] No such file or directory: '/path/to/ranked_genes_list.csv'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: KeyError: "Could not find 'umap' or 'X_umap' in .obsm"
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: AttributeError: enrich
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_14.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 14
+
+🚀 Starting Analysis 15
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: KeyError: "Could not find 'umap' or 'X_umap' in .obsm"
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ModuleNotFoundError: No module named 'gprofiler'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: no field of name Stromal fibroblasts
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ✅ Fix successful on attempt 3
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: KeyError: 'Could not find key dpt_pseudotime in .var_names or .obs.columns.'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_15.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 15
+
+🚀 Starting Analysis 16
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: KeyError: "None of [Index(['n_genes_by_counts'], dtype='object')] are in the [columns]"
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: The first guess on the deviance function returned a nan.  This could be a boundary  problem and should be reported.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: Found array with 0 sample(s) (shape=(0, 0)) while a minimum of 1 is required by PCA.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_16.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 16
+
+🚀 Starting Analysis 17
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: TypeError: dpt() got an unexpected keyword argument 'root_key'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: NameError: name 'scvi' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_17.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 17
+
+🚀 Starting Analysis 18
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: Did not find X_pca in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: TypeError: dpt() got an unexpected keyword argument 'use_rep'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: AttributeError: 'float' object has no attribute 'shape'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_18.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 18
+
+🚀 Starting Analysis 19
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: ValueError: The column `adata.obs['donor']` needs to be categorical, but is of dtype int64.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: The column `adata.obs['day']` needs to be categorical, but is of dtype int64.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ValueError: Did not find X_pca in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: KeyError: 'rank_genes_groups'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_19.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 19
+
+🚀 Starting Analysis 20
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ValueError: The column `adata.obs['day']` needs to be categorical, but is of dtype int64.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: Did not find X_scVI in `.obsm.keys()`. You need to compute it first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_20.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 20
+
+🚀 Starting Analysis 21
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: Found array with 0 feature(s) (shape=(996, 0)) while a minimum of 1 is required.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: ImportError: cannot import name 'get_num_classes' from 'torchmetrics.utilities.data' (/scratch/users/salber/packages/miniconda3/envs/CellVoyager/lib/python3.9/site-packages/torchmetrics/utilities/data.py)
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ValueError: You need to run `pp.neighbors` and `tl.diffmap` first.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_21.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 21
+
+🚀 Starting Analysis 22
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: KeyError: 'dpt_groups'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: KeyError: 'leiden'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: ModuleNotFoundError: No module named 'louvain'
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: KeyError: 'Column not found: metabolic_score'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_22.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 22
+
+🚀 Starting Analysis 23
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: AxisError: axis 0 is out of bounds for array of dimension 0
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+⚠️ Code errored with: ZeroDivisionError: float division by zero
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: NameError: name 'variable_genes' is not defined
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+⚠️ Code errored with: ZeroDivisionError: float division by zero
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+⚠️ Code errored with: ValueError: No valid genes were passed for scoring.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_23.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 23
+
+🚀 Starting Analysis 24
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ✅ Fix successful on attempt 2
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+⚠️ Code errored with: TypeError: dpt_groups_pseudotime() got an unexpected keyword argument 'color'
+  🔧 Fix attempt 1/3
+  ❌ Fix attempt 1 failed
+  🔧 Fix attempt 2/3
+  ❌ Fix attempt 2 failed
+  🔧 Fix attempt 3/3
+  ❌ Fix attempt 3 failed
+  ⚠️ Failed to fix after 3 attempts. Moving to next iteration.
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+⚠️ Code errored with: AttributeError: Can only use .cat accessor with a 'category' dtype
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_24.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 24
+
+🚀 Starting Analysis 25
+✅ Persistent kernel started
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 1...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 2...
+⚠️ Code errored with: ValueError: `A` must be of floating or complex floating data type.
+  🔧 Fix attempt 1/3
+  ✅ Fix successful on attempt 1
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 3...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 4...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 5...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 6...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 7...
+🚫 Skipping feedback on next step (no self-critique)
+🚀 Beginning step 8...
+💾 Saved notebook to: endo_ablation_080725/test_results_no_critique_20250807_122802/outputs/test_no_critique_20250807_122821/test_no_critique_analysis_25.ipynb
+✅ Persistent kernel stopped
+✅ Completed Analysis 25
+❌ Error during agent execution: Operation not supported
+💾 Results saved to: endo_ablation_080725/results_no_critique.json
+📊 NO_CRITIQUE Results:
+   Final Success Rate: 0.00%
+   Total Failure Rate: 0.00%
+   Final Successful Cells: 0
+   Total Failures: 0
+   Total Attempts: 0
+✅ Ablation test no_critique completed!

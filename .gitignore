@@ -1,0 +1,11 @@
+.env
+example/covid19.h5ad
+run_agent.sh
+outputs/
+logs/
+jobs_files/
+CellBench_2/
+caseStudies_paperSummaries/
+tests/
+
+._*

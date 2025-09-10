@@ -14,5 +14,5 @@ Guidelines for constructing the analyses:
     13. The analyses should be standard and should be analyses you think the paper missed.
 
 Here is a summary of core single-cell analyses commonly done with the python libraries available to you:
-{deepresearch_summary}
+{analyses_overview}
 

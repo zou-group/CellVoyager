@@ -1,0 +1,150 @@
+{
+  "test_name": "no_critique_20250813",
+  "total_code_cells_attempted": 31,
+  "total_failures": 14,
+  "final_successful_cells": 10,
+  "final_failed_cells": 8,
+  "failure_rate": 0.45161290322580644,
+  "final_success_rate": 0.5555555555555556,
+  "failed_fix_attempts_per_step": {
+    "covid_ablation_081325/test_results_no_critique_20250813_151643/logs/test_no_critique_log_20250813_151646.log": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 3,
+        "6": 0,
+        "7": 3,
+        "8": 3
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "3": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "covid_ablation_081325/test_results_no_critique_20250813_151643/outputs/test_no_critique_20250813_151646/test_no_critique_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 4,
+      "failed_cells": 5,
+      "success_rate": 0.4444444444444444,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Initial quality control and preprocessing\nsc.pp.calculate_qc_metrics(adata, i..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "import scvi\ndata = adata.copy()\nscvi.model.SCVI.setup_anndata(data)\nmodel = scvi.model.SCVI(data)\nmo..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Load data and preprocess\nadata = sc.read_h5ad(\"../example/covid1..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Perform quality control\nadata = adata[adata.obs['percent_mt'] < 10, :]\nadata ..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Isolate neutrophil data\nadata_neutrophils = adata[adata.obs['cell_type_coarse..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Re-isolate neutrophil data with adjusted QC parameters\nadata_neutrophils = ad..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "import scvi\n\n# Set up SCVI model specifically for neutrophils\nadata_neutrophils = adata[adata.obs['c..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport seaborn as sns\nfrom matplotlib import pyplot as plt\nimport scvi\n\n# Isolat..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "covid_ablation_081325/test_results_no_critique_20250813_151643/outputs/test_no_critique_20250813_151646/test_no_critique_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 6,
+      "failed_cells": 3,
+      "success_rate": 0.6666666666666666,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport pandas as pd\n\n# Define known ligand-receptor pairs\nligands = ['IL1B', 'TN..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport pandas as pd\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nfrom scipy.stats import tte..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Identify highly variable genes\nsc.pp.highly_variable_genes(adata, subset=True..."
+        },
+        {
+          "cell_index": 13,
+          "success": true,
+          "code_preview": "import scvi; import scanpy as sc\n\n# Prepare the AnnData object for scVI\nscvi.data.setup_anndata(adat..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport scanpy as sc\n\n# Ensure that you have set up the AnnData object correctly for scV..."
+        },
+        {
+          "cell_index": 19,
+          "success": true,
+          "code_preview": "import scanpy as sc\n\n# Compute neighbors and PAGA graph\nsc.pp.neighbors(adata_monocytes, n_neighbors..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Subset Monocytes and perform PCA\nadata_sub = adata[adata.obs['cell_type_coar..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "\nimport scvi\nimport scanpy as sc\n\n# Ensure that you have set up the AnnData object correctly for scV..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

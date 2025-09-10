@@ -1,0 +1,153 @@
+{
+  "test_name": "baseline_20250808",
+  "total_code_cells_attempted": 46,
+  "total_failures": 28,
+  "final_successful_cells": 9,
+  "final_failed_cells": 9,
+  "failure_rate": 0.6086956521739131,
+  "final_success_rate": 0.5,
+  "failed_fix_attempts_per_step": {
+    "endo_ablation_080825/test_results_baseline_20250808_094536/logs/test_baseline_log_20250808_094556.log": {
+      "1": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 3,
+        "5": 0,
+        "6": 3,
+        "7": 1,
+        "8": 0
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "3": {
+        "1": 3,
+        "2": 0,
+        "3": 3,
+        "4": 0,
+        "5": 0,
+        "6": 3,
+        "7": 0
+      }
+    }
+  },
+  "analyses": [
+    {
+      "notebook_path": "endo_ablation_080825/test_results_baseline_20250808_094536/outputs/test_baseline_20250808_094556/test_baseline_analysis_1.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 7,
+      "failed_cells": 2,
+      "success_rate": 0.7777777777777778,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "\n# Compute the comprehensive metabolic scores.\ngene_set_dict = {\n    'glycolysis': [ 'HK1', 'PKM', '..."
+        },
+        {
+          "cell_index": 7,
+          "success": true,
+          "code_preview": "\nimport pandas as pd\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# List of metabolic scor..."
+        },
+        {
+          "cell_index": 10,
+          "success": true,
+          "code_preview": "\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nimport..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Select data based on significant days\nadata_filtered = adata[adata.obs['cell..."
+        },
+        {
+          "cell_index": 16,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Filter data to include unciliated epithelial cells and macrophages for analy..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "\nimport scanpy as sc\n\n# Define hypothetical marker genes distinguishing progenitor states\nmarker_gen..."
+        },
+        {
+          "cell_index": 22,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\n\n# Ensure 'Unciliated epithelia 1' exists in adata.obs['cell_type'] and fix the..."
+        },
+        {
+          "cell_index": 25,
+          "success": true,
+          "code_preview": "\nimport scanpy as sc\nimport scvi\n\n# Set up the scVI model for batch correction\nscvi.model.SCVI.setup..."
+        }
+      ]
+    },
+    {
+      "notebook_path": "endo_ablation_080825/test_results_baseline_20250808_094536/outputs/test_baseline_20250808_094556/test_baseline_analysis_2.ipynb",
+      "total_code_cells": 9,
+      "successful_cells": 2,
+      "failed_cells": 7,
+      "success_rate": 0.2222222222222222,
+      "cell_details": [
+        {
+          "cell_index": 1,
+          "success": true,
+          "code_preview": "import scanpy as sc\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport se..."
+        },
+        {
+          "cell_index": 4,
+          "success": true,
+          "code_preview": "import scvi\n\n# Assuming adata is loaded in memory\nscvi.model.SCVI.setup_anndata(adata, batch_key='do..."
+        },
+        {
+          "cell_index": 7,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport harmonypy as hm\n\n# Ensure SCVI model has been trained and latent space cr..."
+        },
+        {
+          "cell_index": 10,
+          "success": false,
+          "code_preview": "\nimport scvi\n\n# Set up anndata for SCVI and train the model\nscvi.model.SCVI.setup_anndata(adata, bat..."
+        },
+        {
+          "cell_index": 13,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport harmonypy as hm\n\n# Ensure SCVI model has been trained and latent space cr..."
+        },
+        {
+          "cell_index": 16,
+          "success": false,
+          "code_preview": "import scanpy as sc\n\n# Perform Leiden clustering on the SCVI-Harmonized latent embeddings\nsc.pp.neig..."
+        },
+        {
+          "cell_index": 19,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport numpy as np\n\n# Subset data to ciliated epithelial cells and prepare for d..."
+        },
+        {
+          "cell_index": 22,
+          "success": false,
+          "code_preview": "import scanpy as sc\nimport scvi\n\n# Subset data to ciliated epithelial cells\nciliated_cells = adata[a..."
+        },
+        {
+          "cell_index": 25,
+          "success": false,
+          "code_preview": "import scvi\n\n# Subset data to ciliated epithelial cells\nciliated_cells = adata[adata.obs['cell_type'..."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
