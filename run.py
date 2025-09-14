@@ -2,8 +2,12 @@ import os
 import json
 import argparse
 import openai
+from dotenv import load_dotenv
 from agent import AnalysisAgent
 from notebook_generator import generate_notebook
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def main():

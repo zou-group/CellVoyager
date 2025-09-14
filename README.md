@@ -15,6 +15,12 @@ To create the necessary environment, run
 conda env create -f CellVoyager_env.yaml
 conda activate CellVoyager
 ```
+or 
+```
+/path/to/python3.11 -m venv .venv 
+source .venv/bin/activate 
+pip install scanpy scvi-tools anndata matplotlib numpy seaborn pandas scipy nbformat nbconvert h5py pillow python-dotenv tqdm ipykernel openai celltypist
+```
 
 To run the agent, use the following command:
 ```
