@@ -3,7 +3,6 @@ import json
 import argparse
 import openai
 from agent import AnalysisAgent
-from notebook_generator import generate_notebook
 
 
 def main():
