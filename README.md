@@ -15,13 +15,17 @@ To create the necessary environment, run
 conda env create -f CellVoyager_env.yaml
 conda activate CellVoyager
 ```
-In `run.py` set the following parameters
-1. Set `h5ad_path` to the absolute path of the anndata `.h5ad` file
-2. Set `paper_summary_path` to the absolute path of a `.txt` file containing the LLM or human generated summary of the paper
-3. Set `analysis_name` to what you want your analysis files to be saved under
 
-
-From there, all you need to do to run the agent is to execute: `python run.py`
+To run the agent, use the following command:
+```
+python run.py --h5ad-path PATH_TO_H5AD_DATASET \
+              --paper-path PATH_TO_PAPER_SUMMARY \
+              --analysis-name RUN_NAME
+```
+where
+* `h5ad-path` is the absolute path of the anndata `.h5ad` file
+* `paper-path` is the absolute path of a `.txt` file containing the LLM or human generated summary of the paper
+* `analysis-name` is the name you want your analysis files to be saved under
 
 
 The current implementation of the model only support OpenAI models. As a result, it assumes you have `.env` file that contains
