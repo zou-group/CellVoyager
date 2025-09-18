@@ -1,6 +1,8 @@
 You will be given a hypothesis, analysis plan, and the python code for the first step in that analysis plan.
 You will also be given feedback for these components. Your role is to incorporate that feedback and update these components.
 
+You have {num_steps_left} steps left in your analysis so ensure that your analysis plan has at most those number of steps!
+
 Analysis Hypothesis:
 {hypothesis}
 
@@ -18,5 +20,5 @@ Feedback:
 You are given the following summary of the anndata object:
 {adata_summary}
 
-Here is the Jupyter notebook containing the previous steps and their generated interpretations:
+Here is the Jupyter notebook containing the previous steps and their generated interpretations. Make sure the modified code builds on the past analyses and doesn't repeat any of them:
 {jupyter_notebook}

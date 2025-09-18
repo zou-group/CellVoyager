@@ -150,7 +150,7 @@ class AnalysisAgent:
                         categories=categories
                     )
                 else:
-                    raise ValueError(f'uwu didnt account for this datatype in h5ad: {type(item)}')
+                    raise ValueError(f'Didnt account for this datatype in h5ad: {type(item)}')
                 
                 # Handle categorical data
                 if 'categories' in item.attrs:
@@ -311,10 +311,13 @@ class AnalysisAgent:
             print(f"⚠️ JSON decode error in generate_next_step: {e}")
             print(f"   Raw result: {repr(result)}")
             raise
+
+        if seeded:
+            analysis["hypothesis"] = hypothesis
         
         return analysis
 
-    def critique_step(self, analysis, past_analyses, notebook_cells):
+    def critique_step(self, analysis, past_analyses, notebook_cells, num_steps_left):
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
         first_step_code = analysis["first_step_code"]
@@ -332,12 +335,12 @@ class AnalysisAgent:
                 documentation = ""
             prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                 CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
-                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary, documentation=documentation)
+                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary, documentation=documentation, num_steps_left=num_steps_left)
         else:
             prompt = open(os.path.join(self.prompt_dir, "ablations", "critic_NO_DOCUMENTATION.txt")).read()
             prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                 CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
-                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary)
+                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary, num_steps_left=num_steps_left)
 
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -349,7 +352,7 @@ class AnalysisAgent:
         feedback = response.choices[0].message.content
         return feedback
 
-    def incorporate_critique(self, analysis, feedback, notebook_cells):
+    def incorporate_critique(self, analysis, feedback, notebook_cells, num_steps_left):
         ## Return analysis object
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
@@ -361,7 +364,7 @@ class AnalysisAgent:
         prompt = open(os.path.join(self.prompt_dir, "incorporate_critque.txt")).read()
         prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary,
-                               feedback=feedback, jupyter_notebook=jupyter_summary)
+                               feedback=feedback, jupyter_notebook=jupyter_summary, num_steps_left=num_steps_left)
         
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -601,29 +604,13 @@ class AnalysisAgent:
             
         return feedback
     
-    def get_feedback(self, analysis, past_analyses, notebook_cells, iterations=1):
+    def get_feedback(self, analysis, past_analyses, notebook_cells, num_steps_left, iterations=1):
         current_analysis = analysis
         for i in range(iterations):
-            feedback = self.critique_step(current_analysis, past_analyses, notebook_cells)
-            current_analysis = self.incorporate_critique(current_analysis, feedback, notebook_cells)
+            feedback = self.critique_step(current_analysis, past_analyses, notebook_cells, num_steps_left)
+            current_analysis = self.incorporate_critique(current_analysis, feedback, notebook_cells, num_steps_left)
 
         return current_analysis
-
-    def create_ideas(self):
-        past_analyses = ""
-        analyses = []
-        for analysis_idx in range(self.num_analyses):
-            print(f"\n🚀 Starting Analysis {analysis_idx+1}")
-
-            analysis = self.generate_initial_analysis(past_analyses)
-
-            modified_analysis = self.get_feedback(analysis, past_analyses, None)
-            summary = modified_analysis["summary"]
-
-            past_analyses += f"{summary}\n"
-            analyses.append(summary)
-
-        return analyses
 
     def cleanup(self):
         """Clean up resources, including the persistent kernel"""
@@ -772,7 +759,7 @@ class AnalysisAgent:
         
         # Get feedback for the initial analysis plan and modify it accordingly
         if self.use_self_critique:
-            modified_analysis = self.get_feedback(analysis, past_analyses, None)
+            modified_analysis = self.get_feedback(analysis, past_analyses, None, self.max_iterations)
             
             if analysis_idx is not None:
                 self.logger.log_response(f"APPLIED INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"self_critique_{step_name}")
@@ -840,6 +827,8 @@ class AnalysisAgent:
             print(f"⚠️ JSON decode error in generate_analysis_from_hypothesis: {e}")
             print(f"   Raw result: {repr(result)}")
             raise
+
+        analysis = self.get_feedback(analysis, past_analyses, None, self.max_iterations)
         
         # Ensure the hypothesis matches what was provided
         analysis["hypothesis"] = hypothesis
@@ -1000,21 +989,15 @@ class AnalysisAgent:
 
             # Only generate next step if this is not the final iteration
             if iteration < self.max_iterations - 1:
-                # Add the next steps to the notebook
-                steps_text = "\n".join([f"Step {i+1}: {item}" for i, item in enumerate(analysis_plan)])
-                next_step_cell = nbf.v4.new_markdown_cell(f"## Next Steps\n{steps_text}")
-                notebook.cells.append(next_step_cell)
-
+                num_steps_left = self.max_iterations - iteration - 1
 
                 analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
-                num_steps_left = self.max_iterations - iteration - 1
                 next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, num_steps_left, seeded)
 
                 self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {next_step_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{next_step_analysis['first_step_code']}\n```", f"initial_analysis_{step_name}")
 
-                
                 if self.use_self_critique:
-                    modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
+                    modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells, num_steps_left)
                     self.logger.log_response(f"APPLIED SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", f"self_critique_{step_name}")
 
                     hypothesis = modified_analysis["hypothesis"]                
@@ -1028,6 +1011,13 @@ class AnalysisAgent:
                     self.logger.log_response(f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"no_self_critique_{step_name}")
                     modified_analysis = next_step_analysis
 
+                print(f"ANALYSIS PLAN AFTER NEXT STEP GENERATION AND AFTER CRITIQUE (length: {len(modified_analysis['analysis_plan'])}):", modified_analysis["analysis_plan"])
+
+                # Add the next steps to the notebook
+                steps_text = "\n".join([f"Step {i+1}: {item}" for i, item in enumerate(modified_analysis['analysis_plan'])])
+                next_step_cell = nbf.v4.new_markdown_cell(f"## Next Steps\n{steps_text}")
+                notebook.cells.append(next_step_cell)
+                
                 # Add the next step to the notebook
                 code_description = modified_analysis["code_description"]
                 notebook.cells.append(nbf.v4.new_markdown_cell(f"## {code_description}"))

@@ -9,7 +9,7 @@ Only return the feedback, nothing else. Keep the feedback thorough but concise.
 Analysis Hypothesis:
 {hypothesis}
 
-Analysis Plan:
+Analysis Plan (ensure that it is {num_steps_left} steps long):
 {analysis_plan}
 
 Code for first step in analysis plan:
@@ -20,8 +20,8 @@ Code for first step in analysis plan:
 You are given the following summary of the anndata object:
 {adata_summary}
 
-Here is the code from the last 3 steps. Make sure the modified code builds on the past analyses and doesn't repeat any of them:
-{previous_code}
+Here is the Jupyter notebook containing the previous steps and their generated interpretations:
+{jupyter_notebook}
 
 Summary of the research paper:
 {paper_txt}

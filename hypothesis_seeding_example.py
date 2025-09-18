@@ -11,7 +11,8 @@ def simple_example():
 
     hypotheses = [
         """
-        Plot the proportion of each cell type in each sample colored by the donor of origin in a grid (4 columns)
+        Plot the proportion of each cell type described below in each sample colored by the donor of origin in a grid (4 columns)
+        Celltypes: IgA PB, IgG PB, CD4 T, and RBC (plot these in a 2 x 2 grid)
         The x axes should correspond to the ventliation or ARDS status of each patients.
         Between each of these statuses, do a two-sided Wilcoxon rank-sum test and report the p-value on the plot.
         Use n = 6, n = 4, and n = 4 biologically independent samples for Healthy, NonVent and ARDS, respectively.
@@ -37,7 +38,8 @@ def simple_example():
         openai_api_key=os.getenv('OPENAI_API_KEY'),
         model_name="o3-mini",
         analysis_name="hypothesis_test",
-        num_analyses=len(hypotheses),
+        #num_analyses=len(hypotheses),
+        num_analyses=1,
         max_iterations=3,
         use_deepresearch_background=False
     )
