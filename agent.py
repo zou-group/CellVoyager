@@ -288,29 +288,75 @@ class AnalysisAgent:
                                 paper_txt=self.paper_summary, num_steps_left=num_steps_left)
         
         
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {"role": "system", "content": self.coding_system_prompt},
-                {"role": "user", "content": prompt}
-            ],
-            response_format={"type": "json_object"}
-        )
-        result = response.choices[0].message.content
+        # Retry logic for generating valid analysis plan
+        max_retries = 2
+        for attempt in range(max_retries + 1):
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[
+                        {"role": "system", "content": self.coding_system_prompt},
+                        {"role": "user", "content": prompt}
+                    ],
+                    response_format={"type": "json_object"}
+                )
+                result = response.choices[0].message.content
 
-        # Debug logging for API response issues
-        if result is None:
-            print(f"⚠️ API returned None response in generate_next_step")
-            print(f"   Model: {self.model_name}")
-            print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for next step")
-        
-        try:
-            analysis = json.loads(result)
-        except json.JSONDecodeError as e:
-            print(f"⚠️ JSON decode error in generate_next_step: {e}")
-            print(f"   Raw result: {repr(result)}")
-            raise
+                # Debug logging for API response issues
+                if result is None:
+                    print(f"⚠️ API returned None response in generate_next_step (attempt {attempt + 1})")
+                    print(f"   Model: {self.model_name}")
+                    print(f"   Response object: {response}")
+                    if attempt == max_retries:
+                        raise ValueError("OpenAI API returned None response for next step after all retries")
+                    continue
+                
+                try:
+                    analysis = json.loads(result)
+                except json.JSONDecodeError as e:
+                    print(f"⚠️ JSON decode error in generate_next_step (attempt {attempt + 1}): {e}")
+                    print(f"   Raw result: {repr(result)}")
+                    if attempt == max_retries:
+                        raise
+                    continue
+
+                # Validate that analysis_plan exists and is not empty
+                if 'analysis_plan' not in analysis:
+                    print(f"⚠️ Missing 'analysis_plan' key in response (attempt {attempt + 1})")
+                    if attempt == max_retries:
+                        raise ValueError("Generated analysis missing 'analysis_plan' key after all retries")
+                    continue
+                
+                if not isinstance(analysis['analysis_plan'], list):
+                    print(f"⚠️ 'analysis_plan' is not a list (attempt {attempt + 1}): {type(analysis['analysis_plan'])}")
+                    if attempt == max_retries:
+                        raise ValueError("Generated analysis 'analysis_plan' is not a list after all retries")
+                    continue
+                
+                if len(analysis['analysis_plan']) == 0:
+                    print(f"⚠️ Empty analysis_plan returned (attempt {attempt + 1})")
+                    if attempt == max_retries:
+                        raise ValueError("Generated analysis has empty 'analysis_plan' after all retries")
+                    continue
+                
+                # Validate expected number of steps (should be <= num_steps_left)
+                if len(analysis['analysis_plan']) > num_steps_left:
+                    print(f"⚠️ Analysis plan too long (attempt {attempt + 1}): {len(analysis['analysis_plan'])} steps > {num_steps_left} allowed")
+                    if attempt == max_retries:
+                        # Truncate instead of failing completely
+                        print(f"   Truncating analysis plan to {num_steps_left} steps")
+                        analysis['analysis_plan'] = analysis['analysis_plan'][:num_steps_left]
+                
+                # Success! Valid analysis_plan found
+                print(f"✅ Valid analysis plan generated (attempt {attempt + 1}): {len(analysis['analysis_plan'])} steps")
+                break
+                
+            except Exception as e:
+                if attempt == max_retries:
+                    print(f"❌ All retry attempts failed for generate_next_step_analysis")
+                    raise
+                print(f"⚠️ Attempt {attempt + 1} failed: {e}. Retrying...")
+                continue
 
         if seeded:
             analysis["hypothesis"] = hypothesis
@@ -994,7 +1040,9 @@ class AnalysisAgent:
                 analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
                 next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, num_steps_left, seeded)
 
-                self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {next_step_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{next_step_analysis['first_step_code']}\n```", f"initial_analysis_{step_name}")
+                # Safety check for analysis_plan to prevent IndexError
+                first_step_description = next_step_analysis['analysis_plan'][0] if next_step_analysis['analysis_plan'] else "No additional analysis steps generated"
+                self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {first_step_description}\n\nCode:\n```python\n{next_step_analysis['first_step_code']}\n```", f"initial_analysis_{step_name}")
 
                 if self.use_self_critique:
                     modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells, num_steps_left)

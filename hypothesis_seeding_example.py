@@ -15,14 +15,13 @@ def simple_example():
         Celltypes: IgA PB, IgG PB, CD4 T, and RBC (plot these in a 2 x 2 grid)
         The x axes should correspond to the ventliation or ARDS status of each patients.
         Between each of these statuses, do a two-sided Wilcoxon rank-sum test and report the p-value on the plot.
-        Use n = 6, n = 4, and n = 4 biologically independent samples for Healthy, NonVent and ARDS, respectively.
+        Put the p-values on the plot with a horizontal line denoting which comparisons are being made.
         Boxplot features: minimum whisker, 25th percentile − 1.5 × inter-quartile range (IQR) or the lowest value within;
          minimum box, 25th percentile; center, median; maximum box, 75th percentile; maximum whisker, 75th percentile + 1.5 × IQR 
          or greatest value within.
         Ensure that you execute this plot exactly as specified. Do not perform any other analyses.
         Use the highest resolution for the celltype labels.
-        The steps in the analysis plan should be solely focused on correctly any bugs/errors in the plot. Each step should output the plot described.
-        """, # Figure 1d
+        """,
         """Boxplot showing the mean HLA class II module score of CD14+ monocytes from each sample, colored by healthy donors (blue),
         non-ventilated patients with COVID-19 (orange) or ventilated patients with COVID-19 (red). Shown are exact P values by two-sided
         Wilcoxon rank-sum test. n = 6, n = 4 and n = 4 biologically independent samples for Healthy, NonVent and ARDS, respectively
