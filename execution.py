@@ -418,9 +418,31 @@ def run_mcp_server() -> None:
         _GUI_MODE = os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1"
         _INTERVENE_EVERY = max(1, int(os.environ.get("CELLVOYAGER_INTERVENE_EVERY", "1")))
 
+        _SUMMARY_MAX_BULLETS = 5
+
         def _extract_agent_summary(nb: Any) -> str:
-            """Build a summary of what the agent has done from step summaries and interpretation cells."""
-            parts: list[str] = []
+            """Build a concise bullet-point summary of what the agent has done so far."""
+
+            def _first_bullets(block: str, n: int = _SUMMARY_MAX_BULLETS) -> list[str]:
+                """Extract first n bullet items, stripped of markdown."""
+                bullets = []
+                for line in block.split("\n"):
+                    m = re.match(r"^\s*[-*]\s+(.+)|^\s*\d+[.)]\s+(.+)", line)
+                    if m:
+                        item = (m.group(1) or m.group(2) or "").strip().rstrip(".:")
+                        item = re.sub(r"\*\*([^*]+)\*\*", r"\1", item)
+                        if len(item) > 8:
+                            bullets.append(item)
+                            if len(bullets) >= n:
+                                break
+                return bullets
+
+            def _to_bullets(items: list[str]) -> str:
+                """Format as '- item\\n' for display."""
+                return "\n".join(f"- {it}" for it in items)
+
+            last_interpretation = None
+            last_step_summary = None
             for cell in nb.cells:
                 if cell.cell_type != "markdown":
                     continue
@@ -429,9 +451,31 @@ def run_mcp_server() -> None:
                 text = text.strip()
                 if not text or text.startswith(_FEEDBACK_CELL_MARKER):
                     continue
-                if text.startswith("## Step") or text.startswith("### Step"):
-                    parts.append(text[:2000])
-            return "\n\n---\n\n".join(parts) if parts else "(No steps completed yet.)"
+                first_line = text.split("\n")[0].lower()
+                if "— Interpretation" in text or "Interpretation:" in text:
+                    last_interpretation = text
+                elif "step" in first_line or "steps" in first_line:
+                    if "interpretation" not in first_line:
+                        last_step_summary = text
+            candidate = last_interpretation or last_step_summary
+            if not candidate:
+                return "No steps completed yet."
+            for pattern in (r"\*\*Plan going forward[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)", r"\*\*What the output shows[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)", r"\*\*Output summary[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)"):
+                m = re.search(pattern, candidate, re.DOTALL)
+                if m:
+                    block = m.group(1).strip()
+                    bullets = _first_bullets(block)
+                    if bullets:
+                        return _to_bullets(bullets)
+            no_header = re.sub(r"^#+\s+[^\n]+\n*", "", candidate)
+            no_header = re.sub(r"\*\*[^*]+\*\*[:\s]*", "", no_header)
+            bullets = _first_bullets(no_header)
+            if bullets:
+                return _to_bullets(bullets)
+            first_line = no_header.split("\n")[0].strip()
+            if len(first_line) > 10 and not first_line.endswith(":"):
+                return f"- {first_line[:300]}"
+            return "No steps completed yet."
 
         @mcp.tool()
         def pause_for_user_review() -> dict[str, Any]:
@@ -666,7 +710,8 @@ print(f"Loaded: {{adata.n_obs}} cells x {{adata.n_vars}} genes")
         )
         nb.cells.append(new_markdown_cell(plan_md))
 
-        nb.cells.append(new_markdown_cell("## Step 1 summary"))
+        step1_summary = plan[0] if plan else "Execute the first analysis step."
+        nb.cells.append(new_markdown_cell(f"## Step 1 summary\n\n{step1_summary}"))
         nb.cells.append(new_code_cell(first_step_code))
 
         notebook_path = self.output_dir / f"{self.analysis_name}_analysis_{analysis_idx + 1}.ipynb"
@@ -720,14 +765,14 @@ Required workflow:
 2. Execute the setup cell at index 1
 3. Execute the first analysis code cell at index 4, inspect with read_cell, then add a markdown interpretation cell (output summary + whether changing next steps + why)
 4. For every remaining step in the analysis plan:
-   - add a markdown summary cell
+   - add a markdown summary cell with header "## Step N summary" (use the word "summary"—e.g. "## Step 2 summary", "## Steps 3 & 4 summary")
    - add a code cell implementing that step
    - execute it
    - inspect outputs with read_cell
    - if it fails, fix that same code cell with overwrite_cell_source and re-run
    - you may try at most 3 fixes for the same step
    - if still failing after 3 fixes, abandon that step and move to a different useful step
-   - after every successful code execution, add a markdown interpretation cell that:
+   - after every successful code execution, add a markdown interpretation cell (header like "## Step N — Interpretation: ...") that:
      (a) interprets the output (figures and printed text): what do the results show?
      (b) states whether you are changing the next steps or keeping the original plan
      (c) explains why: if changing, why the results justify a different approach; if keeping, why the current plan still holds

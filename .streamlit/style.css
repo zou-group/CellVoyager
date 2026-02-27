@@ -58,7 +58,7 @@ div:has(.feedback-box-header) + div {
     box-shadow: 0 2px 8px rgba(13, 115, 119, 0.15);
 }
 
-/* Chat box on the side */
+/* Chat box on the side — box around entire chat */
 .chat-box-header {
     font-size: 1.1rem;
     font-weight: 600;
@@ -70,12 +70,8 @@ div:has(.feedback-box-header) + div {
     color: #6c757d;
     margin: 0 0 0.75rem 0 !important;
 }
-div:has(.chat-box-header) {
-    border: 2px solid #0d7377;
-    border-radius: 12px;
-    padding: 1rem;
-    background: linear-gradient(135deg, #f8fafb 0%, #eef7f8 100%);
-    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.12);
+.chat-box-outer {
+    margin-bottom: 0.5rem;
 }
 
 /* Agent summary box (below notebook during pause) */
@@ -87,17 +83,81 @@ div:has(.chat-box-header) {
     font-size: 0.95rem;
     line-height: 1.5;
 }
-
-/* Sticky chat: stays visible when user scrolls down */
-div[data-testid="stHorizontalBlock"]:has(.chat-box-header) {
-    align-items: flex-start; /* prevent stretch so sticky works */
+.agent-summary-content {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    list-style: none;
+    padding-left: 0;
 }
-div[data-testid="stHorizontalBlock"]:has(.chat-box-header) > div:last-child {
+.agent-summary-content ul,
+.agent-summary-content ol {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Chat box: sticky so it stays visible when scrolling */
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) {
+    align-items: flex-start;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:first-child {
+    flex: 1;
+    min-width: 0;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child {
     position: sticky;
     top: 1.5rem;
     align-self: flex-start;
+    flex-shrink: 0;
+    width: 360px;
     max-height: calc(100vh - 3rem);
     overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.75rem;
+    border: 2px solid #0d7377;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f8fafb 0%, #eef7f8 100%);
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.12);
+    z-index: 999;
+}
+/* Ensure scrollbar is visible when chat overflows */
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child::-webkit-scrollbar {
+    width: 8px;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child::-webkit-scrollbar-track {
+    background: #eef7f8;
+    border-radius: 4px;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child::-webkit-scrollbar-thumb {
+    background: #0d7377;
+    border-radius: 4px;
+}
+
+/* Analysis running — status box with loading spinner */
+.analysis-status-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border: 3px solid #0d7377;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e8f6f7 0%, #d4efef 100%);
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0d7377;
+    box-shadow: 0 4px 12px rgba(13, 115, 119, 0.25), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.status-spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(13, 115, 119, 0.3);
+    border-top-color: #0d7377;
+    border-radius: 50%;
+    animation: status-spin 0.8s linear infinite;
+}
+@keyframes status-spin {
+    to { transform: rotate(360deg); }
 }
 
 /* Primary button polish */

@@ -3,6 +3,7 @@ CellVoyager GUI — Upload dataset, enter paper summary, run analysis, view note
 Run with: streamlit run gui.py
 """
 import base64
+import html
 import json
 import datetime
 import re
@@ -21,6 +22,7 @@ import streamlit as st
 ROOT = Path(__file__).resolve().parent
 UPLOADS_DIR = ROOT / "gui_uploads"
 OUTPUTS_BASE = ROOT / "outputs"
+_LAST_RUN_FILE = OUTPUTS_BASE / ".last_run"
 
 # Session state for live run
 if "run_proc" not in st.session_state:
@@ -37,6 +39,8 @@ if "run_output_dir" not in st.session_state:
     st.session_state.run_output_dir = None
 if "run_interactive_mode" not in st.session_state:
     st.session_state.run_interactive_mode = False
+if "run_pid" not in st.session_state:
+    st.session_state.run_pid = None
 
 _PAUSE_REQUEST_FILE = ".cellvoyager_pause_request"
 _PAUSE_RESPONSE_FILE = ".cellvoyager_pause_response"
@@ -44,18 +48,104 @@ _EXECUTE_REQUEST_FILE = ".cellvoyager_execute_request"
 _AGENT_SUMMARY_FILE = ".cellvoyager_agent_summary"
 _CHAT_REQUEST_FILE = ".cellvoyager_chat_request"
 _CHAT_RESPONSE_FILE = ".cellvoyager_chat_response"
+_RUN_PID_FILE = ".run_pid"
+_RUN_LOG_FILE = ".run_log"
+_RUN_INTERACTIVE_FILE = ".run_interactive"
 
-def _read_output(proc, output_list):
+
+def _process_alive(pid: int) -> bool:
+    """Check if process with given PID is still running."""
+    try:
+        os.kill(pid, 0)
+        return True
+    except (OSError, ProcessLookupError):
+        return False
+
+
+def _get_run_log() -> str:
+    """Get run output log: from memory if live, else from .run_log file."""
+    if st.session_state.run_proc is not None and st.session_state.run_output:
+        return "".join(st.session_state.run_output)
+    out_dir = st.session_state.run_output_dir
+    if not out_dir:
+        return ""
+    log_path = Path(out_dir) / _RUN_LOG_FILE
+    if log_path.exists():
+        try:
+            return log_path.read_text(encoding="utf-8")
+        except Exception:
+            pass
+    return ""
+
+
+def _has_live_run() -> bool:
+    """True if a run is in progress (live proc or recovered PID)."""
+    proc = st.session_state.run_proc
+    if proc is not None and proc.poll() is None:
+        return True
+    pid = st.session_state.get("run_pid")
+    if pid is not None and _process_alive(pid):
+        return True
+    return False
+
+
+def _restore_last_run():
+    """Restore last run from disk when session is fresh (e.g. after page reload)."""
+    if st.session_state.run_output_dir:
+        return
+    if not _LAST_RUN_FILE.exists():
+        return
+    try:
+        saved = _LAST_RUN_FILE.read_text(encoding="utf-8").strip()
+        if not saved or not Path(saved).exists():
+            return
+        st.session_state.run_output_dir = saved
+        out_dir = Path(saved)
+        pid_file = out_dir / _RUN_PID_FILE
+        if pid_file.exists():
+            try:
+                pid = int(pid_file.read_text().strip())
+                if _process_alive(pid):
+                    st.session_state.run_started = True
+                    st.session_state.run_pid = pid
+                    inter_file = out_dir / _RUN_INTERACTIVE_FILE
+                    st.session_state.run_interactive_mode = (
+                        inter_file.exists() and inter_file.read_text().strip() == "1"
+                    )
+            except (ValueError, OSError):
+                pid_file.unlink(missing_ok=True)
+    except Exception:
+        pass
+
+
+_restore_last_run()
+
+
+def _read_output(proc, output_list, log_path=None):
     for line in proc.stdout:
         output_list.append(line)
+        if log_path:
+            try:
+                with open(log_path, "a", encoding="utf-8") as f:
+                    f.write(line)
+            except Exception:
+                pass
     proc.stdout.close()
 
+LOGO_PATH = ROOT / "images" / "symbol.jpeg"
 st.set_page_config(
     page_title="CellVoyager",
-    page_icon="🔬",
+    page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "📊",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# Pin tab title to avoid flickering between "CellVoyager" and "Streamlit" on reruns
+if hasattr(st, "html"):
+    st.html('<div style="display:none"><script>document.title="CellVoyager";</script></div>', unsafe_allow_javascript=True)
+else:
+    import streamlit.components.v1 as components
+    components.html('<script>try{window.parent.document.title="CellVoyager"}catch(e){}</script>', height=0)
 
 # Inject custom styles for polish
 st.markdown("""
@@ -73,10 +163,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Hero header
-col_logo, col_title = st.columns([0.08, 1])
-with col_logo:
-    st.markdown("### 🔬")
-with col_title:
+if LOGO_PATH.exists():
+    col_logo, col_title = st.columns([0.15, 1])
+    with col_logo:
+        st.image(str(LOGO_PATH), width='stretch')
+    with col_title:
+        st.title("CellVoyager")
+        st.caption("Single-cell transcriptomics analysis with AI — hypothesis generation, live notebooks, interactive feedback")
+else:
     st.title("CellVoyager")
     st.caption("Single-cell transcriptomics analysis with AI — hypothesis generation, live notebooks, interactive feedback")
 
@@ -109,15 +203,14 @@ with st.sidebar:
     max_iterations = st.number_input("Max iterations", min_value=1, max_value=50, value=8)
     execution_mode = st.selectbox("Execution", ["claude", "legacy"], help="claude = Agent + Jupyter")
     interactive_mode = st.checkbox("Interactive mode", value=False, help="Pause for feedback and edits (claude)")
-    intervene_every = 1
-    if interactive_mode:
-        intervene_every = st.number_input(
-            "Intervene every N steps",
-            min_value=1,
-            max_value=20,
-            value=1,
-            help="Show edit screen every N interpretation steps (1 = after each step)",
-        )
+    intervene_every = st.number_input(
+        "Intervene every N steps",
+        min_value=1,
+        max_value=20,
+        value=1,
+        disabled=not interactive_mode,
+        help="Show edit screen every N interpretation steps when interactive (1 = after each step)",
+    )
     use_deepresearch = st.checkbox("DeepResearch", value=True, help="Paper-based background")
     model_name = st.text_input("Model", value="o3-mini")
 
@@ -131,6 +224,32 @@ with st.sidebar:
         api_keys_ok = False
 
     run_clicked = st.button("▶ Run analysis", type="primary", use_container_width=True)
+
+    # Run selector: pick which run's notebooks to view (persists across reloads)
+    if not st.session_state.run_started:
+        st.divider()
+        st.markdown("### 📂 View run")
+        available_runs = []
+        if OUTPUTS_BASE.exists():
+            for d in sorted(OUTPUTS_BASE.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+                if d.is_dir() and not d.name.startswith(".") and list(d.glob("*.ipynb")):
+                    available_runs.append((d.name, str(d)))
+        if available_runs:
+            all_paths = [None] + [path for _, path in available_runs]
+            current = st.session_state.run_output_dir
+            idx = all_paths.index(current) if current in all_paths else 0
+            choice = st.selectbox(
+                "Show notebooks from",
+                all_paths,
+                format_func=lambda x: "(none)" if x is None else Path(x).name,
+                index=idx,
+                key="run_selector",
+            )
+            if choice != st.session_state.run_output_dir:
+                st.session_state.run_output_dir = choice
+                st.rerun()
+        else:
+            st.caption("No completed runs yet. Run an analysis to see notebooks here.")
 
 # Main area: paper text (when typing)
 if paper_source == "Type or paste":
@@ -160,18 +279,13 @@ def _cell_source_str(cell):
 
 
 def _is_step_summary(cell):
-    """True if markdown cell starts with ## Step or ### Step."""
+    """True if markdown cell is a step summary (e.g. ## Step 1 summary).
+    Step headers are placed ONLY before these cells."""
     if cell.cell_type != "markdown":
         return False
     src = _cell_source_str(cell).strip()
-    return src.startswith("## Step") or src.startswith("### Step")
-
-
-def _extract_step_label(cell):
-    """Extract step number/label from step summary cell, e.g. '1' or '2 & 3'."""
-    src = _cell_source_str(cell).strip()
-    m = re.search(r"Steps?\s+(\d+(?:\s*&\s*\d+)?)", src, re.IGNORECASE)
-    return m.group(1).strip() if m else "?"
+    first_line = src.split("\n")[0].strip() if src else ""
+    return "summary" in first_line.lower()
 
 
 def _step_separator(step_label):
@@ -299,13 +413,11 @@ def _render_notebook_jupyter_style(nb_path, editable=False, pause_id=None):
     run_clicked = None
     insert_after_idx = -1
     insert_type = None
-    seen_step_labels = set()
+    step_display_counter = 0
     for i, cell in enumerate(nb.cells):
         if _is_step_summary(cell):
-            step_label = _extract_step_label(cell)
-            if step_label not in seen_step_labels:
-                seen_step_labels.add(step_label)
-                _step_separator(step_label)
+            step_display_counter += 1
+            _step_separator(str(step_display_counter))
         with st.container():
             st.markdown(f"**Cell {i}** ({cell.cell_type})")
             if editable and pause_id is not None:
@@ -414,6 +526,9 @@ if run_clicked and not st.session_state.run_started:
         run_output_dir = OUTPUTS_BASE / f"{analysis_name}_gui_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
         run_output_dir.mkdir(parents=True, exist_ok=True)
         st.session_state.run_output_dir = str(run_output_dir)
+        OUTPUTS_BASE.mkdir(parents=True, exist_ok=True)
+        _LAST_RUN_FILE.write_text(st.session_state.run_output_dir, encoding="utf-8")
+        (run_output_dir / _RUN_INTERACTIVE_FILE).write_text("1" if interactive_mode else "0", encoding="utf-8")
 
         cmd = [
             sys.executable,
@@ -448,12 +563,14 @@ if run_clicked and not st.session_state.run_started:
             bufsize=1,
             env=env,
         )
+        (run_output_dir / _RUN_PID_FILE).write_text(str(proc.pid), encoding="utf-8")
         st.session_state.run_proc = proc
         st.session_state.run_output = []
         st.session_state.run_cmd = cmd
         st.session_state.run_started = True
         st.session_state.run_interactive_mode = interactive_mode
-        t = threading.Thread(target=_read_output, args=(proc, st.session_state.run_output))
+        log_path = run_output_dir / _RUN_LOG_FILE
+        t = threading.Thread(target=_read_output, args=(proc, st.session_state.run_output, log_path))
         t.daemon = True
         t.start()
         st.session_state.run_thread_started = True
@@ -557,16 +674,21 @@ def _render_chat_box(output_dir: str | None):
         return
     key = f"agent_chat_{output_dir}"
     pending_key = f"agent_chat_pending_{output_dir}"
+    pending_reply_key = f"agent_chat_pending_reply_{output_dir}"
     if key not in st.session_state:
         st.session_state[key] = []
 
     messages = st.session_state[key]
     pending_prompt = st.session_state.pop(pending_key, None)
+    if pending_prompt:
+        messages.append({"role": "user", "content": pending_prompt})
+        st.session_state[pending_reply_key] = True
 
     with st.container():
         st.markdown(
+            '<div class="chat-box-outer">'
             '<div class="chat-box-header">💬 <strong>Chat with agent</strong></div>'
-            '<p class="chat-box-caption">Ask about the analysis results (separate from feedback)</p>',
+            '<p class="chat-box-caption">Ask about the analysis results (separate from feedback)</p></div>',
             unsafe_allow_html=True,
         )
 
@@ -574,8 +696,8 @@ def _render_chat_box(output_dir: str | None):
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    if pending_prompt:
-        messages.append({"role": "user", "content": pending_prompt})
+    # Handle "waiting for reply" BEFORE chat_input so spinner appears in message flow, not below input
+    if st.session_state.pop(pending_reply_key, False):
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 reply = None
@@ -585,7 +707,7 @@ def _render_chat_box(output_dir: str | None):
                     try:
                         resp_path.unlink(missing_ok=True)
                         req_path.write_text(
-                            json.dumps({"message": pending_prompt, "conversation": messages[:-1]}),
+                            json.dumps({"message": messages[-1]["content"], "conversation": messages[:-1]}),
                             encoding="utf-8",
                         )
                         for _ in range(120):
@@ -605,6 +727,7 @@ def _render_chat_box(output_dir: str | None):
                 })
         st.rerun()
 
+    # Chat input at end — stays visible
     prompt = st.chat_input("Ask about the results...")
     if prompt:
         st.session_state[pending_key] = prompt
@@ -613,20 +736,22 @@ def _render_chat_box(output_dir: str | None):
 
 def _should_show_chat():
     """Chat appears during interactive pause, when run completes, or when viewing last run's notebooks."""
-    if st.session_state.run_started and st.session_state.run_proc is not None:
+    if st.session_state.run_started and _has_live_run():
         proc = st.session_state.run_proc
         in_pause = (
             st.session_state.run_interactive_mode
             and _pause_request_path()
             and _pause_request_path().exists()
         )
-        return in_pause or proc.poll() is not None
+        if proc is not None:
+            return in_pause or proc.poll() is not None
+        return in_pause or True  # recovered run: show chat
     return bool(st.session_state.run_output_dir)
 
 
-if st.session_state.run_started and st.session_state.run_proc is not None:
+if st.session_state.run_started and _has_live_run():
     proc = st.session_state.run_proc
-    output_text = "".join(st.session_state.run_output)
+    output_text = _get_run_log()
     request_path = _pause_request_path()
     response_path = _pause_response_path()
     in_pause_ui = (
@@ -669,8 +794,11 @@ if st.session_state.run_started and st.session_state.run_proc is not None:
                         if summary_text:
                             st.markdown("---")
                             st.markdown("#### 🤖 What the agent has done so far")
-                            with st.container():
-                                st.markdown(summary_text)
+                            escaped = html.escape(summary_text).replace("\n", "<br>")
+                            st.markdown(
+                                f'<div class="agent-summary-box"><div class="agent-summary-content">{escaped}</div></div>',
+                                unsafe_allow_html=True,
+                            )
                     except Exception:
                         pass
         if show_chat and chat_col is not None:
@@ -723,8 +851,20 @@ if st.session_state.run_started and st.session_state.run_proc is not None:
 
         with main_col:
             st.markdown("---")
-            st.markdown("### ▶ Analysis running")
-            st.metric("Status", "Running")
+            run_col_title, run_col_status = st.columns([1, 0.4])
+            with run_col_title:
+                st.markdown("### ▶ Analysis running")
+            with run_col_status:
+                st.markdown(
+                    """
+                    <div style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.65rem 1.25rem;border:3px solid #0d7377;border-radius:12px;background:linear-gradient(135deg,#e8f6f7,#d4efef);font-weight:700;font-size:1rem;color:#0d7377;box-shadow:0 4px 12px rgba(13,115,119,0.25);">
+                        <span style="display:inline-block;width:1rem;height:1rem;border:2px solid rgba(13,115,119,0.3);border-top-color:#0d7377;border-radius:50%;animation:status-spin 0.8s linear infinite;"></span>
+                        <span>Status: Running</span>
+                    </div>
+                    <style>@keyframes status-spin{to{transform:rotate(360deg);}}</style>
+                    """,
+                    unsafe_allow_html=True,
+                )
             with st.expander("📋 Output log", expanded=False):
                 st.text_area("Log", value=output_text, height=200, disabled=True, label_visibility="collapsed")
             st.markdown("#### Notebook")
@@ -741,14 +881,26 @@ if st.session_state.run_started and st.session_state.run_proc is not None:
             with chat_col:
                 _render_chat_box(st.session_state.run_output_dir)
 
-        if proc.poll() is not None:
+        proc_done = proc is not None and proc.poll() is not None
+        pid_done = (
+            st.session_state.run_pid is not None
+            and not _process_alive(st.session_state.run_pid)
+        )
+        if proc_done or pid_done:
+            out_dir = Path(st.session_state.run_output_dir) if st.session_state.run_output_dir else None
+            if out_dir:
+                (out_dir / _RUN_PID_FILE).unlink(missing_ok=True)
             st.session_state.run_proc = None
+            st.session_state.run_pid = None
             st.session_state.run_started = False
             st.session_state.run_thread_started = False
-            if proc.returncode == 0:
-                st.success("✅ Analysis complete!")
+            if proc_done:
+                if proc.returncode == 0:
+                    st.success("✅ Analysis complete!")
+                else:
+                    st.error(f"Analysis exited with code {proc.returncode}")
             else:
-                st.error(f"Analysis exited with code {proc.returncode}")
+                st.success("✅ Analysis complete!")
         else:
             time.sleep(2)
             st.rerun()
@@ -775,6 +927,10 @@ if not st.session_state.run_started:
                 nb_label = Path(nb_path).name
                 with st.expander(f"📓 {run_name} / {nb_label}"):
                     _render_notebook(nb_path)
+        if st.session_state.run_output_dir:
+            if st.button("Finish", type="primary", help="Return to home"):
+                st.session_state.run_output_dir = None
+                st.rerun()
 
     if show_chat and chat_col is not None and st.session_state.run_output_dir:
         with chat_col:
