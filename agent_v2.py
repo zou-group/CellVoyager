@@ -11,6 +11,8 @@ import openai
 import h5py
 from h5py import Dataset, Group
 
+import anndata
+
 from hypothesis import HypothesisGenerator
 from execution_old import IdeaExecutor
 from logger import Logger
@@ -31,6 +33,7 @@ class AnalysisAgentV2:
         max_iterations=6,
         prompt_dir="prompts",
         output_home=".",
+        output_dir=None,
         log_home=".",
         use_self_critique=True,
         use_VLM=True,
@@ -62,8 +65,11 @@ class AnalysisAgentV2:
         self.max_fix_attempts = max_fix_attempts
         self.use_deepresearch_background = use_deepresearch_background
 
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
+        if output_dir is not None:
+            self.output_dir = os.path.abspath(output_dir)
+        else:
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
 
         self.client = openai.OpenAI(api_key=openai_api_key)
 
@@ -101,10 +107,8 @@ class AnalysisAgentV2:
         if self.h5ad_path == "":
             self.adata_summary = ""
         else:
-            print("Loading anndata .obs for summarization...")
-            self.adata_obs = self._load_h5ad_obs(self.h5ad_path)
-            self.adata_summary = self._summarize_adata_metadata()
-            print("ADATA SUMMARY: ", self.adata_summary)
+            print("Loading anndata for summarization...")
+            self.adata_summary = self._summarize_adata_full(self.h5ad_path)
             print(f"✅ Loaded {self.h5ad_path}")
 
         # DeepResearch for idea generation
@@ -170,17 +174,110 @@ class AnalysisAgentV2:
         else:
             self.executor = IdeaExecutor(**shared_executor_kwargs)
 
-    def _summarize_adata_metadata(self, length_cutoff=25):
-        summarization_str = "Below is a description of the columns in adata.obs: \n"
-        columns = self.adata_obs.columns
-        for col in columns:
-            unique_vals = self.adata_obs[col].unique()
-            if len(unique_vals) > length_cutoff:
-                vals_str = str(unique_vals[:length_cutoff]) + f"and {len(unique_vals) - length_cutoff} other unique values..."
-            else:
-                vals_str = str(unique_vals)
-            summarization_str += f"Column {col} contains the unique values {vals_str} \n"
-        return summarization_str
+    def _summarize_adata_full(self, h5ad_path, length_cutoff=25):
+        """Summarize all AnnData attributes: .obs, .var, .obsm, .layers, .uns, .obsp, .varp."""
+        try:
+            adata = anndata.read_h5ad(h5ad_path, backed="r")
+        except Exception as e:
+            try:
+                fallback = self._summarize_adata_obs_only(h5ad_path, length_cutoff)
+                return f"Could not load full adata ({e}). Falling back to .obs only.\n\n" + fallback
+            except Exception as e2:
+                return f"Could not load adata: {e}. Fallback also failed: {e2}"
+
+        parts = []
+
+        # adata shape
+        parts.append(f"adata shape: {adata.n_obs} cells × {adata.n_vars} genes\n")
+
+        # .obs
+        parts.append("--- adata.obs ---")
+        if adata.obs is not None and len(adata.obs) > 0:
+            parts.append(self._summarize_df(adata.obs, length_cutoff))
+        else:
+            parts.append("  (empty)")
+
+        # .var
+        if adata.var is not None and len(adata.var.columns) > 0:
+            parts.append("\n--- adata.var ---")
+            parts.append(self._summarize_df(adata.var, length_cutoff))
+
+        # .obsm
+        if adata.obsm is not None and len(adata.obsm) > 0:
+            parts.append("\n--- adata.obsm ---")
+            for k, v in adata.obsm.items():
+                sh = getattr(v, "shape", "?")
+                parts.append(f"  {k}: shape {sh}")
+
+        # .varm
+        if adata.varm is not None and len(adata.varm) > 0:
+            parts.append("\n--- adata.varm ---")
+            for k, v in adata.varm.items():
+                sh = getattr(v, "shape", "?")
+                parts.append(f"  {k}: shape {sh}")
+
+        # .layers
+        if adata.layers is not None and len(adata.layers) > 0:
+            parts.append("\n--- adata.layers ---")
+            for k, v in adata.layers.items():
+                sh = getattr(v, "shape", "?")
+                parts.append(f"  {k}: shape {sh}")
+
+        # .obsp
+        if adata.obsp is not None and len(adata.obsp) > 0:
+            parts.append("\n--- adata.obsp ---")
+            for k, v in adata.obsp.items():
+                sh = getattr(v, "shape", "?")
+                parts.append(f"  {k}: shape {sh}")
+
+        # .varp
+        if adata.varp is not None and len(adata.varp) > 0:
+            parts.append("\n--- adata.varp ---")
+            for k, v in adata.varp.items():
+                sh = getattr(v, "shape", "?")
+                parts.append(f"  {k}: shape {sh}")
+
+        # .uns
+        if adata.uns is not None and len(adata.uns) > 0:
+            parts.append("\n--- adata.uns ---")
+            for k, v in adata.uns.items():
+                t = type(v).__name__
+                if isinstance(v, (list, np.ndarray)):
+                    extras = f" len={len(v)}"
+                elif isinstance(v, dict):
+                    extras = f" keys={list(v.keys())[:5]}..."
+                else:
+                    extras = ""
+                parts.append(f"  {k}: {t}{extras}")
+
+        if hasattr(adata, "file") and adata.file is not None:
+            try:
+                adata.file.close()
+            except Exception:
+                pass
+
+        return "\n".join(parts)
+
+    def _summarize_df(self, df, length_cutoff):
+        if df is None or len(df) == 0:
+            return "  (empty)"
+        lines = []
+        for col in df.columns:
+            try:
+                unique_vals = df[col].dropna().unique()
+                if len(unique_vals) > length_cutoff:
+                    vals_str = str(list(unique_vals[:length_cutoff])) + f" ... and {len(unique_vals) - length_cutoff} more"
+                else:
+                    vals_str = str(list(unique_vals))
+                lines.append(f"  {col}: {vals_str}")
+            except Exception:
+                lines.append(f"  {col}: (could not summarize)")
+        return "\n".join(lines)
+
+    def _summarize_adata_obs_only(self, h5ad_path, length_cutoff):
+        """Fallback: summarize only .obs when full load fails."""
+        self.adata_obs = self._load_h5ad_obs(h5ad_path)
+        return "Below is a description of the columns in adata.obs:\n" + self._summarize_df(self.adata_obs, length_cutoff)
 
     def _load_h5ad_obs(self, h5ad_path):
         """Load just the .obs data from an h5ad file while preserving data types"""

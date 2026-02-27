@@ -191,7 +191,10 @@ class NotebookSession:
         if cell.cell_type != "code":
             raise ValueError(f"Cell {index} is not a code cell")
 
-        result = self._execute_source(cell.source)
+        source = cell.source
+        if isinstance(source, list):
+            source = "\n".join(source)
+        result = self._execute_source(source)
 
         cell["outputs"] = result["outputs"]
         cell["execution_count"] = result["execution_count"]
@@ -373,6 +376,9 @@ def run_mcp_server() -> None:
 
     @mcp.tool()
     def insert_cell(index: int | None, cell_type: str, source: str) -> dict[str, Any]:
+        # In GUI interactive mode, always append to preserve user-inserted cell positions
+        if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1":
+            index = None
         return REGISTRY.require_current().insert_cell(index=index, cell_type=cell_type, source=source)
 
     @mcp.tool()
@@ -389,6 +395,8 @@ def run_mcp_server() -> None:
 
     @mcp.tool()
     def insert_execute_code_cell(index: int | None, source: str) -> dict[str, Any]:
+        if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1":
+            index = None
         return REGISTRY.require_current().insert_execute_code_cell(index=index, source=source)
 
     @mcp.tool()
@@ -401,22 +409,102 @@ def run_mcp_server() -> None:
         output_dir = Path(os.environ.get("CELLVOYAGER_INTERACTIVE_OUTPUT_DIR", "."))
         request_path = output_dir / _PAUSE_REQUEST_FILE
         response_path = output_dir / _PAUSE_RESPONSE_FILE
+        execute_request_path = output_dir / _EXECUTE_REQUEST_FILE
+        step_count_path = output_dir / _STEP_COUNT_FILE
+        agent_summary_path = output_dir / _AGENT_SUMMARY_FILE
+
+        _FEEDBACK_CELL_MARKER = "## 📝 Your feedback"
+        _FEEDBACK_INSTRUCTION = "*Type your message below. You can also edit any cells above. Save, then press Enter in the terminal.*"
+        _GUI_MODE = os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1"
+        _INTERVENE_EVERY = max(1, int(os.environ.get("CELLVOYAGER_INTERVENE_EVERY", "1")))
+
+        def _extract_agent_summary(nb: Any) -> str:
+            """Build a summary of what the agent has done from step summaries and interpretation cells."""
+            parts: list[str] = []
+            for cell in nb.cells:
+                if cell.cell_type != "markdown":
+                    continue
+                src = cell.source
+                text = "\n".join(src) if isinstance(src, list) else (src or "")
+                text = text.strip()
+                if not text or text.startswith(_FEEDBACK_CELL_MARKER):
+                    continue
+                if text.startswith("## Step") or text.startswith("### Step"):
+                    parts.append(text[:2000])
+            return "\n\n---\n\n".join(parts) if parts else "(No steps completed yet.)"
 
         @mcp.tool()
         def pause_for_user_review() -> dict[str, Any]:
-            """Pause so the user can edit the notebook and optionally provide feedback.
-            Blocks until the user presses Enter in the main process terminal."""
+            """Pause so the user can edit the notebook and/or add feedback.
+            In terminal mode: adds a feedback cell. In GUI mode: uses the GUI feedback box only."""
             session = REGISTRY.current
-            nb_path = str(session.path) if session else "(no notebook open)"
+            if not session:
+                return {"ready": True, "user_feedback": ""}
+            nb_path = str(session.path)
+
+            # Step counting: skip pause if not at an "intervene" step
+            step_count = 0
+            try:
+                if step_count_path.exists():
+                    step_count = int(step_count_path.read_text(encoding="utf-8").strip() or "0")
+            except (ValueError, OSError):
+                pass
+            step_count += 1
+            step_count_path.write_text(str(step_count), encoding="utf-8")
+
+            if step_count % _INTERVENE_EVERY != 0:
+                return {"ready": True, "user_feedback": ""}
+
+            if not _GUI_MODE:
+                # Add feedback cell so the notebook serves as the UI in terminal mode
+                feedback_cell_source = f"""{_FEEDBACK_CELL_MARKER}
+
+{_FEEDBACK_INSTRUCTION}
+
+
+"""
+                session.insert_cell(index=None, cell_type="markdown", source=feedback_cell_source)
             response_path.unlink(missing_ok=True)
             request_path.write_text(nb_path, encoding="utf-8")
-            for _ in range(300):
+            agent_summary_path.write_text(_extract_agent_summary(session.nb), encoding="utf-8")
+            _poll_interval = 0.05  # 50ms for responsive execute handling
+            _iter_limit = None if _GUI_MODE else 1200  # GUI: wait indefinitely; terminal: 60 sec
+            _iter = 0
+            while _iter_limit is None or _iter < _iter_limit:
+                _iter += 1
+                # GUI mode: process execute requests (run a cell, save, continue waiting)
+                if _GUI_MODE and execute_request_path.exists():
+                    try:
+                        req = json.loads(execute_request_path.read_text(encoding="utf-8"))
+                        execute_request_path.unlink(missing_ok=True)
+                        idx = int(req.get("cell_index", -1))
+                        session.nb = nbf.read(session.path, as_version=4)  # Reload user edits from disk
+                        if 0 <= idx < len(session.nb.cells) and session.nb.cells[idx].cell_type == "code":
+                            session.execute_cell(idx)
+                    except Exception as e:
+                        sys.stderr.write(f"[CellVoyager] Execute request failed: {e}\n")
                 if response_path.exists():
-                    feedback = response_path.read_text(encoding="utf-8").strip()
+                    response_feedback = response_path.read_text(encoding="utf-8").strip()
                     response_path.unlink(missing_ok=True)
-                    return {"ready": True, "user_feedback": feedback}
-                time.sleep(0.2)
-            return {"ready": True, "user_feedback": "(timeout)"}
+                    if _GUI_MODE:
+                        # GUI mode: reload notebook from disk so agent gets user edits
+                        if session.path.exists():
+                            session.nb = nbf.read(session.path, as_version=4)
+                        return {"ready": True, "user_feedback": response_feedback}
+                    # Terminal mode: reload notebook, prefer feedback from the cell
+                    if session.path.exists():
+                        nb = nbf.read(session.path, as_version=4)
+                        session.nb = nb
+                    for cell in session.nb.cells:
+                        if cell.cell_type == "markdown" and cell.source.strip().startswith(_FEEDBACK_CELL_MARKER):
+                            raw = cell.source.replace(_FEEDBACK_CELL_MARKER, "").replace(_FEEDBACK_INSTRUCTION, "").strip()
+                            content = "\n".join(l for l in raw.split("\n") if l.strip()).strip()
+                            if content or response_feedback:
+                                return {"ready": True, "user_feedback": content or response_feedback}
+                            break
+                    return {"ready": True, "user_feedback": response_feedback}
+                time.sleep(_poll_interval)
+            return {"ready": True, "user_feedback": "(timeout)" if not _GUI_MODE else ""}
 
     mcp.run(transport="stdio")
 
@@ -429,6 +517,9 @@ import threading
 
 _PAUSE_REQUEST_FILE = ".cellvoyager_pause_request"
 _PAUSE_RESPONSE_FILE = ".cellvoyager_pause_response"
+_EXECUTE_REQUEST_FILE = ".cellvoyager_execute_request"
+_STEP_COUNT_FILE = ".cellvoyager_step_count"
+_AGENT_SUMMARY_FILE = ".cellvoyager_agent_summary"
 
 
 class _InteractiveWatcher:
@@ -459,9 +550,9 @@ class _InteractiveWatcher:
                     nb_path = "(unknown)"
                 self.request_path.unlink(missing_ok=True)
                 try:
-                    print("\n=== PAUSE: Edit the notebook in Jupyter. ===", flush=True)
+                    print("\n=== PAUSE: The notebook is your UI ===", flush=True)
                     print(f"Notebook: {nb_path}", flush=True)
-                    print("Press Enter when done editing... ", end="", flush=True)
+                    print("Edit cells and/or type feedback in the '📝 Your feedback' cell. Save, then press Enter here to continue.", flush=True)
                     if Path("/dev/tty").exists():
                         tty = open("/dev/tty", "r")
                         tty.readline()
@@ -528,6 +619,7 @@ class CellVoyagerClaudeRunner:
         max_turns: int = 40,
         analysis_name: str = "cellvoyager",
         interactive_mode: bool = False,
+        intervene_every: int = 1,
     ):
         self.output_dir = Path(output_dir).resolve()
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -540,6 +632,7 @@ class CellVoyagerClaudeRunner:
         self.max_turns = max_turns
         self.analysis_name = analysis_name
         self.interactive_mode = interactive_mode
+        self.intervene_every = max(1, int(intervene_every))
 
         self.anthropic_api_key = anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not self.anthropic_api_key:
@@ -591,13 +684,27 @@ print(f"Loaded: {{adata.n_obs}} cells x {{adata.n_vars}} genes")
 
         interactive_block = ""
         if self.interactive_mode:
-            interactive_block = """
-INTERACTIVE MODE: The user can edit the notebook and give you feedback at each step.
+            gui_mode = os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1"
+            if gui_mode:
+                interactive_block = """
+INTERACTIVE MODE (GUI): The user gives feedback via the GUI. The user can also edit the notebook in the GUI.
 - After EVERY interpretation cell (including after step 1), you MUST call pause_for_user_review.
-- The tool blocks until the user presses Enter. The user may have edited the notebook and/or typed feedback.
-- When it returns, call read_notebook FIRST to see the current state. The user may have added markdown or code cells.
-- CRITICAL: Preserve all existing cells. Use insert_cell with index=None (append) so your new cells go at the end. Do NOT use delete_cell. Do NOT use overwrite_cell_source except to fix a code cell that YOU added and that failed to run — never overwrite cells the user may have added.
-- Incorporate user_feedback (if any) into your next steps.
+- The tool blocks. The user edits the notebook and/or types feedback in the GUI, then clicks Continue.
+- When it returns, the tool provides user_feedback. You also get the updated notebook state (read_notebook to see changes).
+- CRITICAL: Preserve all existing cells. The insert_cell tool in GUI mode ONLY appends — never pass a numeric index. Your new cells will always go at the end. This preserves user-inserted cells in their positions.
+- Do NOT use delete_cell. Do NOT use overwrite_cell_source except to fix a code cell that YOU added and that failed to run — never overwrite cells the user may have added.
+- Incorporate user_feedback and any user edits into your next steps.
+- Do NOT add interpretation cells that merely summarize or repeat user-added code. User-added cells stay as-is; proceed with your next analysis step.
+- Proceed with the next step only after pause_for_user_review returns.
+
+"""
+            else:
+                interactive_block = """
+INTERACTIVE MODE (TERMINAL): The notebook is the user's UI. The user edits the notebook and types feedback in the feedback cell.
+- After EVERY interpretation cell (including after step 1), you MUST call pause_for_user_review.
+- The tool adds a "## 📝 Your feedback" cell and blocks. The user edits the notebook, types in that cell, saves, then presses Enter in the terminal to continue.
+- When it returns, the tool provides user_feedback (extracted from the feedback cell). You also get the updated notebook state.
+- CRITICAL: Preserve all existing cells. Use insert_cell with index=None (append) so your new cells go at the end. Do NOT use delete_cell. Do NOT use overwrite_cell_source except to fix a code cell that YOU added and that failed to run — never overwrite cells the user may have added. Incorporate user_feedback and any user edits (new cells, modified code) into your next steps. Do NOT add interpretation cells that merely summarize or repeat user-added code.
 - Proceed with the next step only after pause_for_user_review returns.
 
 """
@@ -739,6 +846,9 @@ coding guidelines: {self.coding_guidelines[:3000]}
         if self.interactive_mode:
             mcp_env["CELLVOYAGER_INTERACTIVE_MODE"] = "1"
             mcp_env["CELLVOYAGER_INTERACTIVE_OUTPUT_DIR"] = str(self.output_dir)
+            mcp_env["CELLVOYAGER_INTERVENE_EVERY"] = str(self.intervene_every)
+            if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1":
+                mcp_env["CELLVOYAGER_GUI_INTERACTIVE"] = "1"
         mcp_config = {
             "command": self._server_command()[0],
             "args": self._server_command()[1:],
@@ -769,7 +879,8 @@ coding guidelines: {self.coding_guidelines[:3000]}
         )
 
         interactive_watcher = None
-        if self.interactive_mode:
+        if self.interactive_mode and os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") != "1":
+            # Terminal-based watcher only when not running from GUI
             interactive_watcher = _start_interactive_watcher(self.output_dir)
 
         async def _run() -> None:
@@ -803,7 +914,7 @@ class ClaudeJupyterExecutor(CellVoyagerClaudeRunner):
 
     def __init__(self, *, logger, output_dir, h5ad_path, adata_summary, paper_summary,
                  coding_guidelines, analysis_name, anthropic_api_key,
-                 max_iterations=40, max_turns=60, interactive_mode=False, **kwargs):
+                 max_iterations=40, max_turns=60, interactive_mode=False, intervene_every=1, **kwargs):
         log_file = getattr(logger, "log_file", str(Path(output_dir) / "claude_execution.log"))
         super().__init__(
             output_dir=output_dir,
@@ -816,6 +927,7 @@ class ClaudeJupyterExecutor(CellVoyagerClaudeRunner):
             max_turns=max_turns,
             analysis_name=analysis_name,
             interactive_mode=interactive_mode,
+            intervene_every=intervene_every,
         )
 
     def execute_idea(self, analysis: dict[str, Any], past_analyses: str = "",

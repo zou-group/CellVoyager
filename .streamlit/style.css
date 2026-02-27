@@ -1,0 +1,112 @@
+/* CellVoyager — refined scientific UI */
+.stApp {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+.stApp header[data-testid="stHeader"] {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.stSidebar {
+    background: linear-gradient(180deg, #ffffff 0%, #f1f3f5 100%);
+    border-right: 1px solid #e9ecef;
+}
+div[data-testid="stHorizontalBlock"] > div {
+    padding: 0.25rem 0;
+}
+/* Card-like sections */
+div[data-testid="stExpander"] {
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+/* Notebook cell styling */
+.stCodeBlock {
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+/* Softer dividers */
+hr {
+    border-color: #e9ecef !important;
+    opacity: 0.8;
+}
+/* Feedback box — prominent and noticeable */
+.feedback-box-header {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #0d7377;
+    margin: 0.25rem 0;
+}
+/* Header block: top part of the box */
+div:has(.feedback-box-header) {
+    padding: 0.75rem 1.25rem 0.25rem;
+    border: 2px solid #0d7377;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(135deg, #f0fafb 0%, #e6f7f8 100%);
+    margin: 1rem 0 0;
+    box-shadow: 0 -2px 8px rgba(13, 115, 119, 0.08);
+}
+/* Text area block: bottom part of the box (visually connected) */
+div:has(.feedback-box-header) + div {
+    padding: 0.5rem 1.25rem 1rem;
+    border: 2px solid #0d7377;
+    border-radius: 0 0 12px 12px;
+    background: linear-gradient(135deg, #f0fafb 0%, #e6f7f8 100%);
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.15);
+}
+
+/* Chat box on the side */
+.chat-box-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0d7377;
+    margin: 0 0 0.25rem 0;
+}
+.chat-box-caption {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0 0 0.75rem 0 !important;
+}
+div:has(.chat-box-header) {
+    border: 2px solid #0d7377;
+    border-radius: 12px;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f8fafb 0%, #eef7f8 100%);
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.12);
+}
+
+/* Agent summary box (below notebook during pause) */
+.agent-summary-box {
+    padding: 1rem 1.25rem;
+    border: 2px solid #0d7377;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f8fafb 0%, #eef7f8 100%);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Sticky chat: stays visible when user scrolls down */
+div[data-testid="stHorizontalBlock"]:has(.chat-box-header) {
+    align-items: flex-start; /* prevent stretch so sticky works */
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-header) > div:last-child {
+    position: sticky;
+    top: 1.5rem;
+    align-self: flex-start;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+}
+
+/* Primary button polish */
+.stButton > button[kind="primary"] {
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(13, 115, 119, 0.2);
+}
+.stButton > button[kind="primary"]:hover {
+    box-shadow: 0 4px 8px rgba(13, 115, 119, 0.25);
+}
+

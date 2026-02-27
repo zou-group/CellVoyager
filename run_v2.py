@@ -93,6 +93,11 @@ def main():
         help="Home directory for outputs (default: current directory)",
     )
     parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Exact output directory (overrides output-home + timestamp). Used by GUI to track a specific run.",
+    )
+    parser.add_argument(
         "--log-home",
         default=".",
         help="Home directory for logs (default: current directory)",
@@ -133,6 +138,13 @@ def main():
         "--interactive",
         action="store_true",
         help="Interactive mode: agent pauses after each interpretation step. Edit the notebook in Jupyter, then press Enter and optionally type feedback for the agent.",
+    )
+    parser.add_argument(
+        "--intervene-every",
+        type=int,
+        default=1,
+        metavar="N",
+        help="When interactive: show edit screen every N steps (default 1 = every step).",
     )
 
     args = parser.parse_args()
@@ -187,6 +199,7 @@ def main():
             "auto_start_jupyter": not args.no_auto_start_jupyter,
             "stop_jupyter_on_complete": args.stop_jupyter_on_complete,
             "interactive_mode": args.interactive,
+            "intervene_every": args.intervene_every,
         }
 
     agent = AnalysisAgentV2(
@@ -199,6 +212,7 @@ def main():
         max_iterations=args.max_iterations,
         prompt_dir=args.prompt_dir,
         output_home=args.output_home,
+        output_dir=args.output_dir,
         log_home=args.log_home,
         use_self_critique=not args.no_self_critique,
         use_VLM=not args.no_vlm,
