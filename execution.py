@@ -710,8 +710,15 @@ print(f"Loaded: {{adata.n_obs}} cells x {{adata.n_vars}} genes")
         )
         nb.cells.append(new_markdown_cell(plan_md))
 
-        step1_summary = plan[0] if plan else "Execute the first analysis step."
-        nb.cells.append(new_markdown_cell(f"## Step 1 summary\n\n{step1_summary}"))
+        step1_text = plan[0] if plan else "Execute the first analysis step."
+        # Format: "Step N summary - short summary" in header, then 1-2 sentences on motivation
+        step1_text = re.sub(r"^\d+[.)]\s*", "", step1_text)  # strip "1. " or "1) " prefix
+        parts = step1_text.split(". ", 1)
+        short_summary = parts[0].strip().rstrip(".")
+        motivation = parts[1].strip() if len(parts) > 1 else "This step establishes the foundation for the analysis."
+        nb.cells.append(new_markdown_cell(
+            f"## Step 1 summary - {short_summary}\n\n{motivation}"
+        ))
         nb.cells.append(new_code_cell(first_step_code))
 
         notebook_path = self.output_dir / f"{self.analysis_name}_analysis_{analysis_idx + 1}.ipynb"
@@ -765,7 +772,11 @@ Required workflow:
 2. Execute the setup cell at index 1
 3. Execute the first analysis code cell at index 4, inspect with read_cell, then add a markdown interpretation cell (output summary + whether changing next steps + why)
 4. For every remaining step in the analysis plan:
-   - add a markdown summary cell with header "## Step N summary" (use the word "summary"—e.g. "## Step 2 summary", "## Steps 3 & 4 summary")
+   - add a markdown summary cell in this format:
+     ## Step N summary - Short summary in header
+     
+     A more detailed 1-2 sentences explaining the motivation behind this step.
+     (Use the word "summary" in the header, e.g. "## Step 2 summary - Load and QC data")
    - add a code cell implementing that step
    - execute it
    - inspect outputs with read_cell

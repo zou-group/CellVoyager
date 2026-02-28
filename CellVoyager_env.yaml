@@ -34,3 +34,4 @@ dependencies:
       - anthropic
       - celltypist
       - streamlit
+      - streamlit-extras

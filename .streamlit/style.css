@@ -169,4 +169,3 @@ div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child::-web
 .stButton > button[kind="primary"]:hover {
     box-shadow: 0 4px 8px rgba(13, 115, 119, 0.25);
 }
-
