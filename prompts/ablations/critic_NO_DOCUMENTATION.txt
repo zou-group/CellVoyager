@@ -9,7 +9,7 @@ Only return the feedback, nothing else. Keep the feedback thorough but concise.
 Analysis Hypothesis:
 {hypothesis}
 
-Analysis Plan (ensure that it is {num_steps_left} steps long):
+Analysis Plan (MUST NOT exceed {num_steps_left} steps):
 {analysis_plan}
 
 Code for first step in analysis plan:

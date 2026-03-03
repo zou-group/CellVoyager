@@ -4,6 +4,7 @@ Run with: streamlit run gui.py
 Analysis runs on pages/analysis.py (separate page, no home content).
 """
 import datetime
+import json
 import os
 import subprocess
 import sys
@@ -59,95 +60,19 @@ if LOGO_PATH.exists():
         st.image(str(LOGO_PATH), width='stretch')
     with col_title:
         st.title("CellVoyager")
-        st.caption("Single-cell transcriptomics analysis with AI — hypothesis generation, live notebooks, interactive feedback")
 else:
     st.title("CellVoyager")
-    st.caption("Single-cell transcriptomics analysis with AI — hypothesis generation, live notebooks, interactive feedback")
 
 st.divider()
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 # If a run is active, go straight to analysis page (home content never renders)
-if st.session_state.run_output_dir:
+if st.session_state.get("run_output_dir"):
     st.switch_page("pages/analysis.py")
 
 # ========== HOME MODE ==========
-# --- Run button at top ---
 _run_validation_error = None
-_run_clicked_top = st.button("▶ Run analysis", type="primary", key="run_btn_top", use_container_width=True)
-
-if _run_clicked_top and not st.session_state.run_started:
-    _paper = st.session_state.home_paper_text or ""
-    _paper_file_path = st.session_state.get("home_paper_file_path")
-    if not _paper.strip() and _paper_file_path and Path(_paper_file_path).exists():
-        try:
-            _paper = Path(_paper_file_path).read_text(encoding="utf-8")
-        except Exception:
-            pass
-    _analysis_name = st.session_state.home_analysis_name
-    _num_analyses = st.session_state.home_num_analyses
-    _max_iterations = st.session_state.home_max_iterations
-    _execution_mode = st.session_state.home_execution_mode
-    _interactive_mode = st.session_state.home_interactive_mode
-    _intervene_every = st.session_state.home_intervene_every
-    _use_deepresearch = st.session_state.home_use_deepresearch
-    _model_name = st.session_state.home_model_name
-    _h5ad_path = st.session_state.get("home_h5ad_path")
-    _api_ok = bool(os.getenv("OPENAI_API_KEY")) and (
-        _execution_mode != "claude" or bool(os.getenv("ANTHROPIC_API_KEY"))
-    )
-    _has_h5ad = (_h5ad_path and Path(_h5ad_path).exists()) or (ROOT / "example" / "covid19.h5ad").exists()
-    _has_paper = bool(_paper.strip()) or (_paper_file_path and Path(_paper_file_path).exists())
-    if not _api_ok:
-        _run_validation_error = "Set API keys in your environment and restart."
-    elif not _has_h5ad and not (ROOT / "example" / "covid19.h5ad").exists():
-        _run_validation_error = "Upload an .h5ad file or ensure example/covid19.h5ad exists."
-    elif not _has_paper:
-        _run_validation_error = "Provide paper summary: type it above or upload a file."
-    else:
-        h5ad_path = Path(_h5ad_path) if _h5ad_path and Path(_h5ad_path).exists() else ROOT / "example" / "covid19.h5ad"
-        paper_path = UPLOADS_DIR / f"{_analysis_name}_paper.txt"
-        paper_path.write_text(_paper, encoding="utf-8")
-        run_output_dir = OUTPUTS_BASE / f"{_analysis_name}_gui_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        run_output_dir.mkdir(parents=True, exist_ok=True)
-        st.session_state.run_output_dir = str(run_output_dir)
-        OUTPUTS_BASE.mkdir(parents=True, exist_ok=True)
-        _LAST_RUN_FILE.write_text(st.session_state.run_output_dir, encoding="utf-8")
-        (run_output_dir / _RUN_INTERACTIVE_FILE).write_text("1" if _interactive_mode else "0", encoding="utf-8")
-        cmd = [
-            sys.executable, str(ROOT / "run_v2.py"),
-            "--h5ad-path", str(h5ad_path),
-            "--paper-path", str(paper_path),
-            "--analysis-name", _analysis_name,
-            "--num-analyses", str(_num_analyses),
-            "--max-iterations", str(int(_max_iterations)),
-            "--execution-mode", _execution_mode,
-            "--model-name", _model_name,
-            "--output-home", str(ROOT),
-            "--log-home", str(ROOT / "logs"),
-            "--output-dir", st.session_state.run_output_dir,
-        ]
-        if _interactive_mode:
-            cmd.extend(["--interactive", "--intervene-every", str(int(_intervene_every))])
-        if not _use_deepresearch:
-            cmd.append("--no-deepresearch")
-        env = os.environ.copy()
-        env["PYTHONUNBUFFERED"] = "1"
-        if _interactive_mode and _execution_mode == "claude":
-            env["CELLVOYAGER_GUI_INTERACTIVE"] = "1"
-        proc = subprocess.Popen(cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, env=env)
-        (run_output_dir / _RUN_PID_FILE).write_text(str(proc.pid), encoding="utf-8")
-        st.session_state.run_proc = proc
-        st.session_state.run_output = []
-        st.session_state.run_cmd = cmd
-        st.session_state.run_started = True
-        st.session_state.run_interactive_mode = _interactive_mode
-        st.session_state.run_thread_started = True
-        log_path = run_output_dir / _RUN_LOG_FILE
-        t = threading.Thread(target=g._read_output, args=(proc, st.session_state.run_output, log_path))
-        t.daemon = True
-        t.start()
-        st.switch_page("pages/analysis.py")
+_run_clicked = False  # Set in sidebar below
 
 # Sidebar: home inputs only
 with st.sidebar:
@@ -176,11 +101,13 @@ with st.sidebar:
             paper_text = txt
         else:
             st.session_state.home_paper_file_path = None
-            paper_text = st.session_state.home_paper_text
+            paper_text = st.session_state.get("home_paper_text", "")
         st.session_state.home_paper_text = paper_text
     else:
         paper_file = None
-        paper_text = st.session_state.home_paper_text
+        paper_text = st.session_state.get("home_paper_text", "")
+
+    _run_clicked = st.button("▶ Run analysis", type="primary", key="run_btn_sidebar", use_container_width=True)
 
     st.divider()
     st.markdown("### ⚙️ Settings")
@@ -210,10 +137,98 @@ with st.sidebar:
         st.error("ANTHROPIC_API_KEY not set (needed for claude)")
         api_keys_ok = False
 
-    st.caption("Click **Run analysis** above to start.")
+    st.caption("Click **Run analysis** to start.")
+
+if _run_clicked and not st.session_state.get("run_started"):
+    _paper = st.session_state.home_paper_text or ""
+    _paper_file_path = st.session_state.get("home_paper_file_path")
+    if not _paper.strip() and _paper_file_path and Path(_paper_file_path).exists():
+        try:
+            _paper = Path(_paper_file_path).read_text(encoding="utf-8")
+        except Exception:
+            pass
+    _analysis_name = st.session_state.home_analysis_name
+    _num_analyses = st.session_state.home_num_analyses
+    _max_iterations = st.session_state.home_max_iterations
+    _execution_mode = st.session_state.home_execution_mode
+    _interactive_mode = st.session_state.home_interactive_mode
+    _intervene_every = st.session_state.home_intervene_every
+    _use_deepresearch = st.session_state.home_use_deepresearch
+    _model_name = st.session_state.home_model_name
+    _h5ad_path = st.session_state.get("home_h5ad_path")
+    _api_ok = bool(os.getenv("OPENAI_API_KEY")) and (
+        _execution_mode != "claude" or bool(os.getenv("ANTHROPIC_API_KEY"))
+    )
+    _has_h5ad = _h5ad_path and Path(_h5ad_path).exists()
+    _has_paper = bool(_paper.strip()) or (_paper_file_path and Path(_paper_file_path).exists())
+    if not _api_ok:
+        _run_validation_error = "Set API keys in your environment and restart."
+    elif not _has_h5ad:
+        _run_validation_error = "Upload a dataset (.h5ad file) to run the analysis."
+    elif not _has_paper:
+        _run_validation_error = "Provide paper summary: type it above or upload a file."
+    else:
+        h5ad_path = Path(_h5ad_path)
+        paper_path = UPLOADS_DIR / f"{_analysis_name}_paper.txt"
+        paper_path.write_text(_paper, encoding="utf-8")
+        run_output_dir = OUTPUTS_BASE / f"{_analysis_name}_gui_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        run_output_dir.mkdir(parents=True, exist_ok=True)
+        st.session_state.run_output_dir = str(run_output_dir)
+        st.session_state.run_num_analyses = int(_num_analyses)
+        OUTPUTS_BASE.mkdir(parents=True, exist_ok=True)
+        _LAST_RUN_FILE.write_text(st.session_state.run_output_dir, encoding="utf-8")
+        (run_output_dir / _RUN_INTERACTIVE_FILE).write_text("1" if _interactive_mode else "0", encoding="utf-8")
+        run_config = {
+            "h5ad_path": str(h5ad_path),
+            "paper_path": str(paper_path),
+            "analysis_name": _analysis_name,
+            "execution_mode": _execution_mode,
+            "max_iterations": int(_max_iterations),
+            "model_name": _model_name,
+            "use_deepresearch": _use_deepresearch,
+            "intervene_every": int(_intervene_every),
+        }
+        (run_output_dir / g._RUN_CONFIG_FILE).write_text(json.dumps(run_config), encoding="utf-8")
+        cmd = [
+            sys.executable, str(ROOT / "run_v2.py"),
+            "--h5ad-path", str(h5ad_path),
+            "--paper-path", str(paper_path),
+            "--analysis-name", _analysis_name,
+            "--num-analyses", str(_num_analyses),
+            "--max-iterations", str(int(_max_iterations)),
+            "--execution-mode", _execution_mode,
+            "--model-name", _model_name,
+            "--output-home", str(ROOT),
+            "--log-home", str(ROOT / "logs"),
+            "--output-dir", st.session_state.run_output_dir,
+        ]
+        if _interactive_mode:
+            cmd.extend(["--interactive", "--intervene-every", str(int(_intervene_every))])
+        if _use_deepresearch:
+            cmd.append("--deepresearch")
+        env = os.environ.copy()
+        env["PYTHONUNBUFFERED"] = "1"
+        if _interactive_mode and _execution_mode == "claude":
+            env["CELLVOYAGER_GUI_INTERACTIVE"] = "1"
+        proc = subprocess.Popen(
+            cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, bufsize=1, env=env, start_new_session=True,
+        )
+        (run_output_dir / _RUN_PID_FILE).write_text(str(proc.pid), encoding="utf-8")
+        st.session_state.run_proc = proc
+        st.session_state.run_output = []
+        st.session_state.run_cmd = cmd
+        st.session_state.run_started = True
+        st.session_state.run_interactive_mode = _interactive_mode
+        st.session_state.run_thread_started = True
+        log_path = run_output_dir / _RUN_LOG_FILE
+        t = threading.Thread(target=g._read_output, args=(proc, st.session_state.run_output, log_path))
+        t.daemon = True
+        t.start()
+        st.switch_page("pages/analysis.py")
 
 # Main area: paper input
-if paper_source == "Type or paste":
+if st.session_state.get("home_paper_source") == "Type or paste":
     st.markdown("#### 📄 Paper summary")
     st.text_area(
         "Paste the paper summary or biological context below",

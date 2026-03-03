@@ -7,7 +7,7 @@ If the interpretation is that the analysis step wasn't run successfully, think a
 Otherwise, continue to the next analysis step. Incorporate the results intepretation to tweak the analysis plan. For example, if a particular celltype was shown to be promising, focus the analysis plan on it.
 You should alter the analysis plan ONLY if you see significant evidence that you should pivot your analysis direction.
 
-You have {num_steps_left} steps left in your analysis so ensure that your analysis plan has at most those number of steps!
+CRITICAL: You have at most {num_steps_left} steps remaining. Your analysis plan MUST NOT exceed {num_steps_left} steps. Do not suggest more.
 
 Ensure that your output is in the specified JSON format. 
 

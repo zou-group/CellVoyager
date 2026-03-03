@@ -103,13 +103,19 @@ class AnalysisAgentV2:
 
         self.logger = Logger(self.analysis_name, log_dir=os.path.join(log_home, "logs"))
 
-        # Load adata and build summary
+        # Load adata metadata and build summary for planning.
+        # In Claude mode, avoid a full anndata load here because the notebook setup cell
+        # loads adata into memory for execution.
         if self.h5ad_path == "":
             self.adata_summary = ""
         else:
-            print("Loading anndata for summarization...")
-            self.adata_summary = self._summarize_adata_full(self.h5ad_path)
-            print(f"✅ Loaded {self.h5ad_path}")
+            if execution_mode == "claude":
+                print("Loading h5ad metadata for summarization (no full AnnData load)...")
+                self.adata_summary = self._summarize_adata_obs_only(self.h5ad_path, length_cutoff=25)
+            else:
+                print("Loading anndata for summarization...")
+                self.adata_summary = self._summarize_adata_full(self.h5ad_path)
+            print(f"✅ Loaded summary from {self.h5ad_path}")
 
         # DeepResearch for idea generation
         self.deepresearch_background = ""
@@ -388,6 +394,7 @@ class AnalysisAgentV2:
                 past_analyses = self.executor.execute_idea(
                     analysis, past_analyses, analysis_idx, seeded=seeded
                 )
+                print(f"✅ Completed Analysis {analysis_idx+1}")
 
             except ValueError as e:
                 if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
@@ -403,3 +410,14 @@ class AnalysisAgentV2:
             self.executor.stop_persistent_kernel()
         import gc
         gc.collect()
+
+    def run_resume(self, notebook_path: str, analysis_idx: int = 0):
+        """
+        Resume a completed analysis: re-run the notebook to restore kernel state,
+        then enter interactive mode for the user to run, edit, and give feedback.
+        Only supported with ClaudeJupyterExecutor.
+        """
+        if hasattr(self.executor, "resume_from_notebook"):
+            self.executor.resume_from_notebook(notebook_path, analysis_idx)
+        else:
+            raise ValueError("Resume requires execution_mode=claude (ClaudeJupyterExecutor)")

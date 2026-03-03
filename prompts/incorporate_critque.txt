@@ -1,7 +1,7 @@
 You will be given a hypothesis, analysis plan, and the python code for the first step in that analysis plan.
 You will also be given feedback for these components. Your role is to incorporate that feedback and update these components.
 
-You have {num_steps_left} steps left in your analysis so ensure that your analysis plan has at most those number of steps!
+CRITICAL: You have at most {num_steps_left} steps remaining. Your analysis plan MUST NOT exceed {num_steps_left} steps. Do not suggest more.
 
 Analysis Hypothesis:
 {hypothesis}

@@ -63,6 +63,7 @@ class HypothesisGenerator:
             past_analyses=attempted_analyses,
             paper_txt=self.paper_summary,
             deepresearch_background=self.deepresearch_background,
+            max_iterations=self.max_iterations,
         )
 
         if self.log_prompts:

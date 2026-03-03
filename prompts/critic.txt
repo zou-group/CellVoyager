@@ -8,7 +8,7 @@ Finally, ensure that the functions used being used properly with appropriate par
 from the functions used in the code to judge this. 
 Only return the feedback, nothing else. Keep the feedback thorough but concise. 
 
-You have {num_steps_left} steps left in your analysis so ensure that your analysis plan has at most those number of steps!
+CRITICAL: You have at most {num_steps_left} steps remaining. Your analysis plan MUST NOT exceed {num_steps_left} steps. Do not suggest more.
 
 Analysis Hypothesis:
 {hypothesis}
