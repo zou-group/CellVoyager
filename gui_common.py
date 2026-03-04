@@ -200,36 +200,27 @@ def _extract_agent_summary_from_notebook(nb_path: Path) -> str:
 
 
 def _request_pause() -> bool:
-    """Request the agent to pause (Stop button). Creates STOP file (agent checks before each tool call)
-    and pause request file (for GUI). Agent will call pause_for_user_review at next check. Does NOT kill.
-    Returns True if pause files were created, False otherwise (caller may fall back to kill)."""
+    """Request the agent to pause (Stop button).
+
+    This is a *pause request only*. It writes STOP so the backend pauses at the next
+    safe boundary. The backend then writes the pause-request file when it is actually
+    blocked and ready for user feedback.
+    """
     out_dir_str = st.session_state.get("run_output_dir")
     if not out_dir_str:
         return False
     out_dir = Path(out_dir_str).resolve()
     if not out_dir.exists():
         return False
+    # Agent sees this and pauses at next tool boundary.
+    (out_dir / _STOP_REQUEST_FILE).write_text("1", encoding="utf-8")
+    # Clear stale response from prior pause so backend waits for a fresh Continue/Finish.
+    (out_dir / _PAUSE_RESPONSE_FILE).unlink(missing_ok=True)
+    # Optional precomputed summary if a notebook already exists.
     notebooks = sorted(out_dir.glob("*.ipynb"), key=lambda p: p.stat().st_mtime, reverse=True)
-    if not notebooks:
-        # Try config to get expected notebook path (e.g. before agent creates it)
-        try:
-            cfg_path = out_dir / _RUN_CONFIG_FILE
-            if cfg_path.exists():
-                cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-                name = cfg.get("analysis_name", "analysis")
-                nb_path = out_dir / f"{name}_analysis_1.ipynb"
-                if nb_path.exists():
-                    notebooks = [nb_path]
-        except Exception:
-            pass
-    if not notebooks:
-        return False
-    nb_path = notebooks[0]
-    (out_dir / _STOP_REQUEST_FILE).write_text("1", encoding="utf-8")  # Agent sees this, returns pause_requested
-    (out_dir / _PAUSE_REQUEST_FILE).write_text(str(nb_path.resolve()), encoding="utf-8")
-    (out_dir / _PAUSE_RESPONSE_FILE).unlink(missing_ok=True)  # Clear stale response
-    summary = _extract_agent_summary_from_notebook(nb_path)
-    (out_dir / _AGENT_SUMMARY_FILE).write_text(summary, encoding="utf-8")
+    if notebooks:
+        summary = _extract_agent_summary_from_notebook(notebooks[0])
+        (out_dir / _AGENT_SUMMARY_FILE).write_text(summary, encoding="utf-8")
     return True
 
 

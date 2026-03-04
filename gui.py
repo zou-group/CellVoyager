@@ -202,13 +202,19 @@ if _run_clicked and not st.session_state.get("run_started"):
             "--log-home", str(ROOT / "logs"),
             "--output-dir", st.session_state.run_output_dir,
         ]
-        if _interactive_mode:
+        if _execution_mode == "claude":
+            # Always enable interactive plumbing for GUI-driven pause/continue.
+            # If step-by-step mode is off, use a very large intervene interval so pauses
+            # only happen when the user clicks Stop.
+            intervene = int(_intervene_every) if _interactive_mode else 999999
+            cmd.extend(["--interactive", "--intervene-every", str(intervene)])
+        elif _interactive_mode:
             cmd.extend(["--interactive", "--intervene-every", str(int(_intervene_every))])
         if _use_deepresearch:
             cmd.append("--deepresearch")
         env = os.environ.copy()
         env["PYTHONUNBUFFERED"] = "1"
-        if _interactive_mode and _execution_mode == "claude":
+        if _execution_mode == "claude":
             env["CELLVOYAGER_GUI_INTERACTIVE"] = "1"
         proc = subprocess.Popen(
             cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -219,7 +225,7 @@ if _run_clicked and not st.session_state.get("run_started"):
         st.session_state.run_output = []
         st.session_state.run_cmd = cmd
         st.session_state.run_started = True
-        st.session_state.run_interactive_mode = _interactive_mode
+        st.session_state.run_interactive_mode = (_interactive_mode or _execution_mode == "claude")
         st.session_state.run_thread_started = True
         log_path = run_output_dir / _RUN_LOG_FILE
         t = threading.Thread(target=g._read_output, args=(proc, st.session_state.run_output, log_path))

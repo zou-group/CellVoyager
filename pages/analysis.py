@@ -52,14 +52,36 @@ else:
 
 st.divider()
 
+run_output_dir = st.session_state.get("run_output_dir")
+pause_request_path = g._pause_request_path()
+pause_response_path = g._pause_response_path()
+stop_request_path = (Path(run_output_dir) / g._STOP_REQUEST_FILE) if run_output_dir else None
+is_paused_now = bool(pause_request_path and pause_request_path.exists())
+is_stop_pending = bool(
+    stop_request_path
+    and stop_request_path.exists()
+    and not is_paused_now
+)
+
 # Sidebar: Stop / Finish only
 with st.sidebar:
     st.markdown("### ▶ Analysis")
     if g._has_live_run():
-        if st.button("⏹ Stop Analysis", type="primary", use_container_width=True, help="Pause the analysis so you can edit. Click Continue to resume — no reload."):
-            if not g._request_pause():
-                g._kill_analysis(show_interactive_edit=True)
-            st.rerun()
+        if is_paused_now:
+            if st.button("▶ Continue Analysis", type="primary", use_container_width=True, help="Resume analysis from the current paused state."):
+                if pause_response_path:
+                    pause_response_path.write_text("", encoding="utf-8")
+                if pause_request_path:
+                    pause_request_path.unlink(missing_ok=True)
+                st.rerun()
+        else:
+            if st.button("⏹ Stop Analysis", type="primary", use_container_width=True, help="Pause the analysis at the next safe sub-step boundary, then continue from there."):
+                if not g._request_pause():
+                    # Fallback only when pause files cannot be created.
+                    g._kill_analysis(show_interactive_edit=True)
+                st.rerun()
+            if is_stop_pending:
+                st.caption("Stopping requested - waiting for current sub-step to finish...")
     else:
         if st.button("🏠 Finish", type="primary", use_container_width=True, help="Return to home and start a new analysis"):
             st.session_state.run_output_dir = None
@@ -252,6 +274,8 @@ if st.session_state.get("run_started") and g._has_live_run():
             run_col_title, run_col_status = st.columns([1, 0.4])
             with run_col_title:
                 st.markdown("### ▶ Analysis running")
+                if is_stop_pending:
+                    st.warning("Stop requested. Finishing current sub-step, then pausing for feedback...")
                 num_total = st.session_state.get("run_num_analyses", 1)
                 if num_total > 1:
                     completed, current = g._parse_run_progress(output_text)

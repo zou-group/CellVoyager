@@ -236,28 +236,11 @@ class NotebookSession:
         error_text = None
         paused_by_user = False
 
-        # Check for user-requested pause (Stop button) - use short timeout so we can poll
-        output_dir = Path(os.environ.get("CELLVOYAGER_INTERACTIVE_OUTPUT_DIR", "."))
-        pause_request_path = output_dir / _PAUSE_REQUEST_FILE
-        stop_request_path = output_dir / _STOP_REQUEST_FILE
-
         import queue
         while True:
-            # In GUI interactive mode, honor Stop immediately between IOPub messages too.
-            if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1" and (
-                pause_request_path.exists() or stop_request_path.exists()
-            ):
-                paused_by_user = True
-                break
             try:
                 msg = self.kc.get_iopub_msg(timeout=2)
             except queue.Empty:
-                # Timeout - check for pause request (Stop button)
-                if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1" and (
-                    pause_request_path.exists() or stop_request_path.exists()
-                ):
-                    paused_by_user = True
-                    break
                 continue
             if msg.get("parent_header", {}).get("msg_id") != msg_id:
                 continue
@@ -388,9 +371,52 @@ def run_mcp_server() -> None:
 
     mcp = FastMCP("jupyter")
 
+    def _force_gui_pause_if_requested(session: NotebookSession | None) -> str | None:
+        """Server-side pause gate: honor GUI Stop even if the agent misses check_user_stop."""
+        if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") != "1":
+            return None
+        output_dir = Path(os.environ.get("CELLVOYAGER_INTERACTIVE_OUTPUT_DIR", "."))
+        request_path = output_dir / _PAUSE_REQUEST_FILE
+        response_path = output_dir / _PAUSE_RESPONSE_FILE
+        stop_request_path = output_dir / _STOP_REQUEST_FILE
+        execute_request_path = output_dir / _EXECUTE_REQUEST_FILE
+        should_pause = stop_request_path.exists() or request_path.exists()
+        if not should_pause:
+            return None
+
+        nb_path = str(session.path) if session else ""
+        if session and not request_path.exists():
+            request_path.write_text(nb_path, encoding="utf-8")
+
+        # Wait for GUI Continue/Finish; allow GUI-triggered execute while paused.
+        while True:
+            if response_path.exists():
+                feedback = response_path.read_text(encoding="utf-8").strip()
+                response_path.unlink(missing_ok=True)
+                request_path.unlink(missing_ok=True)
+                stop_request_path.unlink(missing_ok=True)
+                if session and session.path.exists():
+                    session.nb = nbf.read(session.path, as_version=4)
+                return feedback
+
+            if session and execute_request_path.exists():
+                try:
+                    req = json.loads(execute_request_path.read_text(encoding="utf-8"))
+                    execute_request_path.unlink(missing_ok=True)
+                    idx = int(req.get("cell_index", -1))
+                    if session.path.exists():
+                        session.nb = nbf.read(session.path, as_version=4)
+                    if 0 <= idx < len(session.nb.cells) and session.nb.cells[idx].cell_type == "code":
+                        session.execute_cell(idx)
+                except Exception as e:
+                    sys.stderr.write(f"[CellVoyager] Forced-pause execute failed: {e}\n")
+
+            time.sleep(0.05)
+
     @mcp.tool()
     def use_notebook(notebook_path: str) -> dict[str, Any]:
         session = REGISTRY.use_notebook(notebook_path)
+        user_feedback = _force_gui_pause_if_requested(session)
         # Auto-execute setup cell exactly once per kernel session so adata is loaded once.
         if (
             not session.setup_executed
@@ -409,18 +435,23 @@ def run_mcp_server() -> None:
                 session.insert_cell(index=2, cell_type="markdown", source=plan_md)
             session.nb.metadata["cellvoyager_plan_inserted"] = True
             session.save()
-        return {
+        out = {
             "ok": True,
             "notebook_path": str(session.path),
             "num_cells": len(session.nb.cells),
         }
+        if user_feedback:
+            out["user_feedback"] = user_feedback
+        return out
 
     @mcp.tool()
     def read_notebook() -> dict[str, Any]:
+        _force_gui_pause_if_requested(REGISTRY.current)
         return REGISTRY.require_current().read_notebook()
 
     @mcp.tool()
     def read_cell(index: int) -> dict[str, Any]:
+        _force_gui_pause_if_requested(REGISTRY.current)
         return REGISTRY.require_current().read_cell(index)
 
     @mcp.tool()
@@ -428,31 +459,74 @@ def run_mcp_server() -> None:
         # In GUI interactive mode, always append to preserve user-inserted cell positions
         if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1":
             index = None
-        return REGISTRY.require_current().insert_cell(index=index, cell_type=cell_type, source=source)
+        session = REGISTRY.require_current()
+        user_feedback = _force_gui_pause_if_requested(session)
+        out = session.insert_cell(index=index, cell_type=cell_type, source=source)
+        if user_feedback:
+            out["user_feedback"] = user_feedback
+        return out
 
     @mcp.tool()
     def overwrite_cell_source(index: int, source: str) -> dict[str, Any]:
-        return REGISTRY.require_current().overwrite_cell_source(index=index, source=source)
+        session = REGISTRY.require_current()
+        user_feedback = _force_gui_pause_if_requested(session)
+        out = session.overwrite_cell_source(index=index, source=source)
+        if user_feedback:
+            out["user_feedback"] = user_feedback
+        return out
 
     @mcp.tool()
     def delete_cell(index: int) -> dict[str, Any]:
-        return REGISTRY.require_current().delete_cell(index=index)
+        session = REGISTRY.require_current()
+        user_feedback = _force_gui_pause_if_requested(session)
+        out = session.delete_cell(index=index)
+        if user_feedback:
+            out["user_feedback"] = user_feedback
+        return out
 
     @mcp.tool()
     def execute_cell(index: int) -> dict[str, Any]:
-        return REGISTRY.require_current().execute_cell(index=index)
+        session = REGISTRY.require_current()
+        user_feedback = _force_gui_pause_if_requested(session)
+        out = session.execute_cell(index=index)
+        if user_feedback:
+            out["user_feedback"] = user_feedback
+        return out
 
     @mcp.tool()
     def insert_execute_code_cell(index: int | None, source: str) -> dict[str, Any]:
         if os.environ.get("CELLVOYAGER_GUI_INTERACTIVE") == "1":
             index = None
-        return REGISTRY.require_current().insert_execute_code_cell(index=index, source=source)
+        session = REGISTRY.require_current()
+        user_feedback = _force_gui_pause_if_requested(session)
+        inserted = session.insert_cell(index=index, cell_type="code", source=source)
+        # Re-check pause after insertion so Stop can block before execution starts.
+        user_feedback_2 = _force_gui_pause_if_requested(session)
+        executed = session.execute_cell(inserted["cell_index"])
+        out = {
+            "ok": executed["ok"],
+            "cell_index": inserted["cell_index"],
+            "execution_count": executed["execution_count"],
+            "output_preview": executed["output_preview"],
+            "error": executed.get("error"),
+        }
+        if executed.get("paused_by_user"):
+            out["paused_by_user"] = True
+        if user_feedback:
+            out["user_feedback"] = user_feedback
+        elif user_feedback_2:
+            out["user_feedback"] = user_feedback_2
+        return out
 
     @mcp.tool()
     def restart_kernel() -> dict[str, Any]:
         session = REGISTRY.require_current()
+        user_feedback = _force_gui_pause_if_requested(session)
         session.restart_kernel()
-        return {"ok": True, "notebook_path": str(session.path)}
+        out = {"ok": True, "notebook_path": str(session.path)}
+        if user_feedback:
+            out["user_feedback"] = user_feedback
+        return out
 
     if os.environ.get("CELLVOYAGER_INTERACTIVE_MODE") == "1":
         output_dir = Path(os.environ.get("CELLVOYAGER_INTERACTIVE_OUTPUT_DIR", "."))
@@ -547,10 +621,14 @@ def run_mcp_server() -> None:
             if not session:
                 return {"ready": True, "user_feedback": ""}
             nb_path = str(session.path)
+            force_gui_pause = _GUI_MODE and stop_request_path.exists()
+            has_gui_request = _GUI_MODE and request_path.exists()
 
-            # User requested pause (Stop button): request file already exists. If user already
-            # clicked Continue, return immediately; otherwise enter poll loop.
-            if _GUI_MODE and request_path.exists():
+            # In GUI mode, a pause can be requested either by explicit pause file or by STOP.
+            # Treat STOP as a forced pause even if the request file was cleared by the UI.
+            if _GUI_MODE and (has_gui_request or force_gui_pause):
+                if not has_gui_request:
+                    request_path.write_text(nb_path, encoding="utf-8")
                 if not agent_summary_path.exists():
                     agent_summary_path.write_text(_extract_agent_summary(session.nb), encoding="utf-8")
                 if response_path.exists():
