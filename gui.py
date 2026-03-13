@@ -65,18 +65,25 @@ components.html("""
 
 # Inject custom styles
 st.markdown("""
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     :root {
-        --cv-bg: #f3f6fb;
-        --cv-panel: #ffffff;
-        --cv-border: #dbe4f0;
-        --cv-primary: #0f766e;
-        --cv-primary-dark: #0a6a63;
-        --cv-primary-soft: #e6f6f4;
-        --cv-title: #0f172a;
-        --cv-text: #334155;
-        --cv-muted: #64748b;
+        --cv-bg:            #07111f;
+        --cv-bg-mid:        #0b1829;
+        --cv-surface:       rgba(255,255,255,0.055);
+        --cv-surface-hi:    rgba(255,255,255,0.09);
+        --cv-border:        rgba(255,255,255,0.08);
+        --cv-border-bright: rgba(255,255,255,0.16);
+        --cv-primary:       #2563eb;
+        --cv-primary-dark:  #1d4ed8;
+        --cv-title:         #f1f5f9;
+        --cv-text:          #94a3b8;
+        --cv-text-bright:   #cbd5e1;
+        --cv-muted:         #475569;
+        --cv-eyebrow:       #93c5fd;
     }
+
+    body { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif !important; }
 
     /* Hide Streamlit chrome while keeping sidebar toggle accessible */
     header[data-testid="stHeader"] {
@@ -86,14 +93,16 @@ st.markdown("""
     #MainMenu, footer, [data-testid="stDecoration"],
     [data-testid="stDeployButton"],
     [data-testid="stStatusWidget"] { display: none !important; }
-    /* Hide toolbar content but not child buttons (sidebar toggle may live here) */
     [data-testid="stToolbar"] { visibility: hidden !important; }
     [data-testid="stToolbar"] button { visibility: visible !important; }
-    /* Prevent sidebar from being collapsed */
     [data-testid="stSidebarCollapseButton"] { display: none !important; }
 
     .stApp {
-        background: radial-gradient(ellipse 1000px 400px at 0% -10%, rgba(216,239,233,0.55) 0%, transparent 60%), var(--cv-bg);
+        background:
+            radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px),
+            radial-gradient(ellipse 160% 90% at -10% -20%, #1e3a8a 0%, #0f2060 30%, transparent 65%),
+            var(--cv-bg) !important;
+        background-size: 28px 28px, 100% 100%, 100% 100% !important;
     }
 
     .block-container {
@@ -108,10 +117,10 @@ st.markdown("""
         margin-bottom: 0.1rem !important;
     }
 
-    h3, .stMarkdown h3 { font-size: 1.4rem !important; }
+    h3, .stMarkdown h3 { font-size: 1.4rem !important; color: var(--cv-text-bright) !important; }
     h4, .stMarkdown h4 {
         font-size: 1.5rem !important;
-        color: #0b3b35 !important;
+        color: var(--cv-title) !important;
         font-weight: 650 !important;
         margin-top: 0.35rem !important;
     }
@@ -122,9 +131,14 @@ st.markdown("""
         line-height: 1.65 !important;
     }
 
-    .stCaption, [data-testid="stCaptionContainer"] p {
+    .stCaption, .stCaption *,
+    [data-testid="stCaptionContainer"],
+    [data-testid="stCaptionContainer"] p,
+    [data-testid="stCaptionContainer"] span,
+    [data-testid="stCaptionContainer"] small,
+    div[data-testid="stMarkdownContainer"] small {
         font-size: 1.25rem !important;
-        color: var(--cv-muted) !important;
+        color: #e2e8f0 !important;
     }
 
     div[data-testid="stVerticalBlock"] > div {
@@ -137,16 +151,16 @@ st.markdown("""
         min-width: 28rem !important;
     }
     section[data-testid="stSidebar"] > div {
-        background: #f7fbff;
-        border-right: 1px solid var(--cv-border);
+        background: var(--cv-bg-mid) !important;
+        border-right: 1px solid var(--cv-border) !important;
         width: 28rem !important;
     }
 
     section[data-testid="stSidebar"] .stMarkdown h3 {
-        font-size: 1.5rem !important;
+        font-size: 1.625rem !important;
         text-transform: uppercase !important;
         letter-spacing: 0.08em !important;
-        color: var(--cv-muted) !important;
+        color: var(--cv-eyebrow) !important;
         font-weight: 700 !important;
         margin-top: 1.4rem !important;
         margin-bottom: 0.4rem !important;
@@ -156,56 +170,107 @@ st.markdown("""
     .cv-field-label {
         font-size: 1.1rem !important;
         font-weight: 600 !important;
-        color: #2c4a70 !important;
+        color: var(--cv-eyebrow) !important;
         margin-top: 1rem !important;
         margin-bottom: 0.25rem !important;
         border-bottom: 1.5px solid var(--cv-border);
         padding-bottom: 0.2rem;
     }
 
-    /* Sidebar widget labels and captions */
+    /* Sidebar widget labels, captions, and placeholders — unified color */
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] label p,
     section[data-testid="stSidebar"] [data-testid="stWidgetLabel"],
     section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
     section[data-testid="stSidebar"] .stMarkdown p,
-    section[data-testid="stSidebar"] .stCaption {
+    section[data-testid="stSidebar"] .stCaption,
+    section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {
         font-size: 1.25rem !important;
+        color: #e2e8f0 !important;
+    }
+
+    /* Sidebar input text size + uniform background */
+    section[data-testid="stSidebar"] .stTextInput input,
+    section[data-testid="stSidebar"] .stNumberInput input,
+    section[data-testid="stSidebar"] .stTextArea textarea {
+        font-size: 1.33rem !important;
+        background: var(--cv-surface) !important;
+    }
+    section[data-testid="stSidebar"] .stSelectbox > div > div {
+        font-size: 1.3rem !important;
+        background: var(--cv-surface) !important;
+        min-height: 2.6rem !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 0.4rem 0.75rem !important;
+    }
+
+    /* Selectbox dropdown options */
+    [data-testid="stSelectboxVirtualDropdown"] li,
+    [data-testid="stSelectboxVirtualDropdown"] li span,
+    ul[data-testid="stVirtualDropdown"] li,
+    ul[data-testid="stVirtualDropdown"] li span,
+    div[data-baseweb="popover"] li,
+    div[data-baseweb="popover"] li span {
+        font-size: 1.3rem !important;
     }
 
     /* Primary button */
-    .stButton > button[kind="primary"] {
+    .stButton > button[kind="primary"],
+    .stButton > button[kind="primaryFormSubmit"],
+    .stButton button[data-testid="stBaseButton-primary"],
+    button[data-testid="stBaseButton-primary"] {
         background: linear-gradient(135deg, var(--cv-primary), var(--cv-primary-dark)) !important;
         border: 0 !important;
         color: #fff !important;
         border-radius: 10px !important;
+        font-size: 1.3rem !important;
         font-weight: 600 !important;
-        box-shadow: 0 2px 10px rgba(15, 118, 110, 0.22);
+        box-shadow: 0 2px 14px rgba(37,99,235,0.32);
         transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
-
-    .stButton > button[kind="primary"]:hover {
+    .stButton > button[kind="primary"]:hover,
+    button[data-testid="stBaseButton-primary"]:hover {
         transform: translateY(-1px);
-        box-shadow: 0 5px 16px rgba(15, 118, 110, 0.30);
+        box-shadow: 0 6px 22px rgba(37,99,235,0.44);
+    }
+
+    /* Secondary / default buttons */
+    .stButton > button:not([kind="primary"]) {
+        background: var(--cv-surface) !important;
+        border: 1px solid var(--cv-border-bright) !important;
+        color: var(--cv-text-bright) !important;
+        border-radius: 8px !important;
+    }
+    .stButton > button:not([kind="primary"]):hover {
+        background: var(--cv-surface-hi) !important;
+        border-color: rgba(255,255,255,0.26) !important;
     }
 
     /* Inputs */
     .stTextArea textarea {
+        background: var(--cv-surface) !important;
         border-radius: 10px !important;
-        border: 1px solid var(--cv-border) !important;
+        border: 1px solid var(--cv-border-bright) !important;
+        color: #ffffff !important;
         font-size: 1.25rem !important;
     }
+    .stTextArea textarea::placeholder { color: #94a3b8 !important; }
+    .stTextArea textarea:focus { border-color: rgba(37,99,235,0.55) !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.14) !important; }
 
     .stTextInput input, .stNumberInput input {
+        background: var(--cv-surface) !important;
         border-radius: 8px !important;
         font-size: 1.1rem !important;
-        background: #ffffff !important;
-        border: 1.5px solid #c8d6e8 !important;
+        color: #ffffff !important;
+        border: 1.5px solid var(--cv-border-bright) !important;
     }
+    .stTextInput input::placeholder, .stNumberInput input::placeholder { color: #94a3b8 !important; }
+    .stTextInput input:focus, .stNumberInput input:focus { border-color: rgba(37,99,235,0.55) !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.14) !important; }
 
     .stNumberInput > div {
-        background: #ffffff !important;
-        border: 1.5px solid #c8d6e8 !important;
+        background: transparent !important;
+        border: 1.5px solid var(--cv-border-bright) !important;
         border-radius: 8px !important;
     }
     .stNumberInput > div input {
@@ -213,8 +278,11 @@ st.markdown("""
         background: transparent !important;
     }
     .stNumberInput button {
+        color: var(--cv-text) !important;
+        background: transparent !important;
         transition: background-color 0.1s ease, color 0.1s ease !important;
     }
+    .stNumberInput button:hover { background: rgba(255,255,255,0.08) !important; }
     .stNumberInput button:focus:not(:focus-visible) {
         background-color: transparent !important;
         color: inherit !important;
@@ -223,12 +291,16 @@ st.markdown("""
     }
 
     .stSelectbox > div > div {
-        background: #ffffff !important;
-        border: 1.5px solid #c8d6e8 !important;
+        background: var(--cv-surface) !important;
+        border: 1.5px solid var(--cv-border-bright) !important;
         border-radius: 8px !important;
+        color: #ffffff !important;
     }
 
-    /* Widget labels (Analysis name, Analyses, etc.) */
+    /* Checkbox / Radio */
+    .stCheckbox label, .stRadio div[role="radiogroup"] label { color: var(--cv-text) !important; }
+
+    /* Widget labels */
     [data-testid="stWidgetLabel"],
     [data-testid="stWidgetLabel"] p,
     .stTextInput label, .stTextInput label p,
@@ -239,19 +311,29 @@ st.markdown("""
     .stRadio label, .stRadio label p,
     .stFileUploader label, .stFileUploader label p {
         font-size: 1.25rem !important;
+        color: var(--cv-text-bright) !important;
     }
 
-    /* Expander labels */
-    div[data-testid="stExpander"] summary p {
+    /* Expander: lock color + opacity across every state and every child */
+    html body [data-testid="stExpander"] details summary,
+    html body [data-testid="stExpander"] details[open] summary,
+    html body [data-testid="stExpander"] details summary *,
+    html body [data-testid="stExpander"] details[open] summary * {
+        color: #cbd5e1 !important;
+        opacity: 1 !important;
+        transition: none !important;
+    }
+    html body [data-testid="stExpander"] details summary p,
+    html body [data-testid="stExpander"] details[open] summary p {
         font-size: 1.25rem !important;
         font-weight: 600 !important;
     }
 
     /* File uploader */
     div[data-testid="stFileUploader"] > section {
-        border: 1.5px solid var(--cv-border) !important;
+        border: 1.5px dashed var(--cv-border-bright) !important;
         border-radius: 10px !important;
-        background: #fafcff !important;
+        background: var(--cv-surface) !important;
         padding: 1rem !important;
         min-height: 9rem !important;
     }
@@ -278,6 +360,7 @@ st.markdown("""
         overflow: visible !important;
         white-space: normal !important;
         text-overflow: unset !important;
+        color: var(--cv-text) !important;
     }
     div[data-testid="stFileUploaderDropzone"] button {
         font-size: 1.4rem !important;
@@ -292,30 +375,41 @@ st.markdown("""
 
     /* Expanders */
     div[data-testid="stExpander"] {
-        border-radius: 10px !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+        background: var(--cv-surface) !important;
         border: 1px solid var(--cv-border) !important;
+        border-radius: 10px !important;
         overflow: hidden;
     }
+
+    /* Tabs */
+    .stTabs [data-testid="stTabBar"] { background: transparent !important; border-bottom: 1px solid var(--cv-border) !important; }
+    .stTabs button[role="tab"] { color: var(--cv-text) !important; background: transparent !important; border: none !important; font-size: 2rem !important; }
+    .stTabs button[role="tab"][aria-selected="true"] { color: var(--cv-title) !important; font-weight: 600 !important; background: var(--cv-surface) !important; border-bottom: 2px solid var(--cv-primary) !important; }
+    .stTabs div[data-testid="stAlert"] p { font-size: 1.7rem !important; }
+
+    /* Dividers */
+    hr { border-color: var(--cv-border) !important; }
 
     /* Step cards */
     .cv-steps-row { display: flex; gap: 0.6rem; margin: 0.6rem 0 1.2rem; }
     .cv-step-card {
         flex: 1;
-        background: var(--cv-panel);
-        border: 1px solid var(--cv-border);
+        background: var(--cv-surface);
+        border: 1px solid var(--cv-border-bright);
         border-radius: 12px;
         padding: 0.85rem 0.9rem;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+        backdrop-filter: blur(12px);
     }
+    .cv-step-card--cta { border-color: rgba(37,99,235,0.38); background: rgba(37,99,235,0.07); }
     .cv-step-num {
         font-size: 1.5rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: var(--cv-primary);
+        color: var(--cv-eyebrow);
         margin-bottom: -0.2rem;
     }
+    .cv-step-card--cta .cv-step-num { color: #60a5fa; }
     .cv-step-title {
         font-size: 1.5rem;
         font-weight: 700;
@@ -324,25 +418,26 @@ st.markdown("""
     }
     .cv-step-desc {
         font-size: 1.25rem;
-        color: var(--cv-muted);
+        color: var(--cv-text);
         line-height: 1.5;
     }
 
-    /* Status banner (shown after dataset upload) */
+    /* Status banner */
     .cv-status-banner {
         display: flex;
         align-items: center;
         gap: 0.6rem;
-        background: #f0fdf4;
-        border: 1px solid #bde5df;
+        background: rgba(37,99,235,0.09);
+        border: 1px solid rgba(37,99,235,0.24);
         border-radius: 10px;
         padding: 0.6rem 1rem;
         margin-bottom: 0.8rem;
         font-size: 1.1rem;
+        color: var(--cv-text-bright);
     }
-    .cv-status-file { font-weight: 600; color: #0b5f58; }
-    .cv-status-sep { color: #94a3b8; }
-    .cv-status-state { color: #334155; }
+    .cv-status-file { font-weight: 600; color: var(--cv-eyebrow); }
+    .cv-status-sep { color: var(--cv-muted); }
+    .cv-status-state { color: #ffffff; }
 
     /* Section label above form fields */
     .cv-field-label {
@@ -350,15 +445,15 @@ st.markdown("""
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--cv-muted);
+        color: var(--cv-eyebrow);
         margin-bottom: 0.3rem;
     }
 
     .cv-kicker {
         display: inline-block;
-        background: var(--cv-primary-soft);
-        color: #0b5f58;
-        border: 1px solid #bde5df;
+        background: rgba(37,99,235,0.14);
+        color: var(--cv-eyebrow);
+        border: 1px solid rgba(37,99,235,0.25);
         border-radius: 999px;
         padding: 0.18rem 0.65rem;
         font-size: 0.74rem;
@@ -373,7 +468,7 @@ st.markdown("""
         font-weight: 700 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.07em !important;
-        color: var(--cv-muted) !important;
+        color: #e2e8f0 !important;
         margin-top: 1.1rem !important;
         margin-bottom: 0.1rem !important;
     }
@@ -383,13 +478,13 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 0.45rem;
-        background: var(--cv-primary-soft);
-        border: 1px solid #bde5df;
+        background: rgba(37,99,235,0.10);
+        border: 1px solid rgba(37,99,235,0.24);
         border-radius: 8px;
         padding: 0.45rem 0.7rem;
         font-size: 1.05rem;
         font-weight: 600;
-        color: #0b5f58;
+        color: var(--cv-eyebrow);
         margin-bottom: 0.5rem;
         word-break: break-all;
     }
@@ -620,7 +715,7 @@ with st.sidebar:
     _current_model = st.session_state.get("home_model_name", _DEFAULT_MODEL)
     _preset_val = _current_model if _current_model in _MODEL_PRESETS else "Custom..."
     _selected_preset = st.selectbox(
-        "Model for Hypothesis Generation",
+        "Hypothesis generation model",
         _MODEL_PRESETS,
         index=_MODEL_PRESETS.index(_preset_val),
         key="_home_model_preset",
@@ -705,8 +800,8 @@ _STEPS_HTML = """
     <div class="cv-step-title">Add context</div>
     <div class="cv-step-desc">Provide past analyses, focus directions, or biological background below.</div>
   </div>
-  <div class="cv-step-card" style="border-color:#bde5df;background:#f0fdf4;">
-    <div class="cv-step-num" style="color:#16a34a;">Step 5</div>
+  <div class="cv-step-card cv-step-card--cta">
+    <div class="cv-step-num">Step 5</div>
     <div class="cv-step-title">Run</div>
     <div class="cv-step-desc">Click <strong>Run analysis</strong> in the sidebar to launch the agent.</div>
   </div>
@@ -716,7 +811,7 @@ _STEPS_HTML = """
 if _h5ad_uploaded:
     _fname = Path(st.session_state.get("home_h5ad_path", "")).name if not DEMO_MODE else FIXED_H5AD_PATH.name
     _summary_filled = bool((st.session_state.get("home_dataset_summary") or "").strip())
-    _readiness = "✅ Ready to run" if _summary_filled else "⚠️ Add a Dataset Summary below, change the run configurations as desired, and then run"
+    _readiness = "✅\u2003Ready to run" if _summary_filled else "⚠️\u2003Add a Dataset Summary below, change the run configurations as desired, and then run"
     st.markdown(
         f'<div class="cv-status-banner">'
         f'<span class="cv-status-file">📂 {_fname}</span>'
@@ -744,9 +839,9 @@ if st.session_state.get("home_context_source") == "Structured fields":
         key="home_dataset_summary",
         label_visibility="collapsed",
     )
-    _run_btn_col, _ = st.columns([2, 3])
+    _run_btn_col, _ = st.columns([1, 4])
     with _run_btn_col:
-        _run_clicked = st.button("▶ Run analysis", type="primary", key="run_btn_main", use_container_width=True)
+        _run_clicked = st.button("▶\u2003Run analysis", type="primary", key="run_btn_main", use_container_width=True)
 
     st.markdown('<p class="cv-optional-header">Additional context <span style="font-weight:400;opacity:0.55;">— optional</span></p>', unsafe_allow_html=True)
     st.caption("Guide the agent and help it avoid redundant work.")
@@ -780,9 +875,9 @@ if st.session_state.get("home_context_source") == "Structured fields":
 else:
     st.markdown("#### 📄 Uploaded context summary")
     st.info("Using uploaded summary file as full analysis context.")
-    _run_btn_col2, _ = st.columns([2, 3])
+    _run_btn_col2, _ = st.columns([1, 4])
     with _run_btn_col2:
-        _run_clicked = st.button("▶ Run analysis", type="primary", key="run_btn_main_upload", use_container_width=True)
+        _run_clicked = st.button("▶\u2003Run analysis", type="primary", key="run_btn_main_upload", use_container_width=True)
 if _run_clicked and not st.session_state.get("run_started"):
     context_source = st.session_state.get("home_context_source", "Structured fields")
     if context_source == "Upload summary file":
@@ -959,8 +1054,27 @@ context_source: structured_fields
 if _run_validation_error:
     st.error(_run_validation_error)
 
-# Past runs — show tabs for each run in this session
+# Past runs — discover from disk + merge with in-memory session_runs
 _session_runs = st.session_state.get("session_runs", [])
+_known_dirs = {r["output_dir"] for r in _session_runs}
+if OUTPUTS_BASE.exists():
+    for _d in sorted(OUTPUTS_BASE.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+        if not _d.is_dir() or str(_d) in _known_dirs:
+            continue
+        _cfg_file = _d / g._RUN_CONFIG_FILE
+        if _cfg_file.exists():
+            try:
+                _cfg = json.loads(_cfg_file.read_text(encoding="utf-8"))
+                _session_runs.append({
+                    "output_dir": str(_d),
+                    "analysis_name": _cfg.get("analysis_name", _d.name),
+                    "num_analyses": int(_cfg.get("num_analyses", 1)),
+                    "started_at": _cfg.get("started_at", ""),
+                })
+                _known_dirs.add(str(_d))
+            except Exception:
+                pass
+    st.session_state.session_runs = _session_runs
 if _session_runs:
     st.markdown("---")
     st.markdown("## Past Runs")

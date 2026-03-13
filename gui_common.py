@@ -379,7 +379,7 @@ def _is_step_summary(cell):
 
 
 def _step_separator(step_label):
-    color = "#0d7377"
+    color = "#14a3a8"
     st.markdown(
         f'''
         <div style="display: flex; align-items: center; gap: 1rem; margin: 1.25rem 0;">
@@ -394,17 +394,21 @@ def _step_separator(step_label):
 
 # Keep plain-text outputs (including printed tables) in monospace for alignment.
 _TEXT_OUTPUT_STYLE = (
-    "margin: 0; white-space: pre-wrap; word-break: break-word; "
+    "margin: 0; white-space: pre-wrap; word-break: break-word; color: #0f172a; "
     "font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, "
     "'Liberation Mono', 'Courier New', monospace; font-size: 1.25rem; line-height: 1.5;"
 )
 
 
 def _normalize_output_text(text: Any) -> str:
+    import re
     if isinstance(text, list):
         text = "".join(str(t) for t in text)
     else:
         text = str(text)
+    # Strip ANSI escape codes to prevent black highlight artifacts
+    text = re.sub(r'\x1b\[[0-9;]*m', '', text)
+    text = re.sub(r'\x1b\[[\d;]*[A-Za-z]', '', text)
     return text.replace("\r\n", "\n").replace("\r", "\n")
 
 
@@ -421,7 +425,7 @@ def _render_cell_outputs(cell, show_success_toast: bool = False):
             text = _normalize_output_text(out.get("text", ""))
             if text.strip():
                 name = out.get("name", "stdout")
-                color = "inherit" if name == "stdout" else "#c53030"
+                color = "#0f172a" if name == "stdout" else "#c53030"
                 parts.append(
                     f'<div style="{_TEXT_OUTPUT_STYLE} color:{color};">{html.escape(text)}</div>'
                 )
@@ -495,7 +499,7 @@ def _render_cell_outputs(cell, show_success_toast: bool = False):
     )
     container_html = (
         '<div class="cv-cell-output" style="position:relative; margin-top:0.35rem; border:1px solid rgba(151,166,175,0.35); '
-        'border-radius:6px; background:#ffffff; padding:0.6rem 0.75rem; cursor:pointer;" '
+        'border-radius:6px; background:#ffffff; color:#0f172a; padding:0.6rem 0.75rem; cursor:pointer;" '
         'title="Click to toggle scrollable view">'
         f"{toast_html}{inner}"
         "</div>"
@@ -558,13 +562,13 @@ def _render_editable_cell(cell, cell_idx, pause_id, nb_path, use_button=False):
                     editor = st_ace(
                         value=st.session_state.get(editor_key, src),
                         language="python",
-                        theme="github",
+                        theme="monokai",
                         height=ace_height,
                         key=ace_key,
                         auto_update=True,
                         wrap=True,
                         show_gutter=False,
-                        font_size=15,
+                        font_size=18,
                     )
                     if editor is None:
                         editor = st.session_state.get(editor_key, src)
@@ -1068,7 +1072,15 @@ def _render_chat_box(
         '[data-testid="stColumn"]:has([data-testid="stForm"]) [data-testid="stHorizontalBlock"]:first-of-type [data-testid="stColumn"]:last-child button { font-size:0.72rem !important; padding:3px 8px !important; white-space:nowrap !important; overflow:visible !important; }'
         # Analysis label + selector row — align items vertically
         '[data-testid="stColumn"]:has([data-testid="stForm"]) [data-testid="stHorizontalBlock"]:has(select) { align-items:center !important; }'
-        '[data-testid="stForm"] input { background:#fff !important; border:1px solid #cbd5e1 !important; border-radius:6px !important; }'
+        '[data-testid="stForm"] input { background:#fff !important; border:1px solid #cbd5e1 !important; border-radius:6px !important; color:#0f172a !important; }'
+        '[data-testid="stForm"] input::placeholder { color:#94a3b8 !important; }'
+        # Chat box container — white background to match expanded view
+        '[data-testid="stColumn"]:has(.chat-box-outer) { background:#ffffff !important; border:2px solid #1e293b !important; border-radius:12px !important; padding:0.75rem !important; }'
+        # Chat text — force black inside the chat box
+        '[data-testid="stColumn"]:has(.chat-box-outer) .stMarkdown p,'
+        '[data-testid="stColumn"]:has(.chat-box-outer) .stMarkdown li,'
+        '[data-testid="stColumn"]:has(.chat-box-outer) .stMarkdown span,'
+        '[data-testid="stColumn"]:has(.chat-box-outer) .stChatMessage p { color:#0f172a !important; }'
         + _overlay_css +
         '</style>',
         unsafe_allow_html=True,

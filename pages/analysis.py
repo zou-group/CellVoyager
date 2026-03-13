@@ -75,10 +75,11 @@ st.markdown("""
 
     /* Typography — minimum 1.25rem */
     h1 { font-size: 2rem !important; font-weight: 600 !important; letter-spacing: -0.02em !important; }
-    h3 { font-size: 1.5rem !important; color: #0f172a !important; font-weight: 650 !important; margin-top: 0.5rem !important; }
-    h4 { font-size: 1.35rem !important; color: #0f172a !important; font-weight: 650 !important; }
+    h3 { font-size: 1.5rem !important; color: #f1f5f9 !important; font-weight: 650 !important; margin-top: 0.5rem !important; }
+    h4 { font-size: 1.35rem !important; color: #f1f5f9 !important; font-weight: 650 !important; }
+    .cv-notebooks-title { font-size: 3.04rem !important; color: #f1f5f9 !important; font-weight: 650 !important; margin-top: 0.5rem !important; }
 
-    .stMarkdown p, .stText { font-size: 1.25rem !important; line-height: 1.65 !important; }
+    .stMarkdown p, .stText { font-size: 1.25rem !important; line-height: 1.65 !important; color: #f1f5f9 !important; }
     .stCaption, [data-testid="stCaptionContainer"] p { font-size: 1.25rem !important; }
 
     /* Widget labels */
@@ -92,7 +93,25 @@ st.markdown("""
     .stSelectbox > div > div { font-size: 1.25rem !important; }
 
     /* Expander labels */
-    div[data-testid="stExpander"] summary p { font-size: 1.25rem !important; font-weight: 600 !important; }
+    div[data-testid="stExpander"] summary p { font-size: 1.25rem !important; font-weight: 600 !important; color: #e2e8f0 !important; }
+
+    /* Expanders — dark surface background */
+    div[data-testid="stExpander"] {
+        background: rgba(255,255,255,0.055) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+    }
+
+    /* Output log text area + code blocks inside expanders — white text on dark bg */
+    div[data-testid="stExpander"] .stTextArea textarea,
+    div[data-testid="stExpander"] [data-testid="stCode"] pre,
+    div[data-testid="stExpander"] [data-testid="stCode"] code {
+        background: rgba(255,255,255,0.04) !important;
+        color: #f1f5f9 !important;
+    }
+
+    /* Feedback textarea — black text, lighter placeholder */
+    .stTextArea textarea { color: #0f172a !important; }
+    .stTextArea textarea::placeholder { color: #94a3b8 !important; }
 
     /* Alerts */
     div[data-testid="stAlert"] { border-radius: 8px !important; font-size: 1.25rem !important; }
@@ -101,7 +120,7 @@ st.markdown("""
     /* Tabs */
     div[data-testid="stTabs"] button[role="tab"] {
         font-weight: 600 !important;
-        font-size: 1.5rem !important;
+        font-size: 2.25rem !important;
         padding: 0.6rem 1.2rem !important;
     }
 
@@ -110,8 +129,8 @@ st.markdown("""
 
     /* Sidebar */
     section[data-testid="stSidebar"] > div {
-        background: #f7fbff;
-        border-right: 1px solid #dbe4f0;
+        background: #0b1829 !important;
+        border-right: 1px solid rgba(255,255,255,0.08) !important;
         width: 22rem !important;
     }
     section[data-testid="stSidebar"] { width: 22rem !important; min-width: 22rem !important; }
@@ -119,7 +138,7 @@ st.markdown("""
         font-size: 1rem !important;
         text-transform: uppercase !important;
         letter-spacing: 0.08em !important;
-        color: #64748b !important;
+        color: #93c5fd !important;
         font-weight: 700 !important;
         margin-top: 1.4rem !important;
         margin-bottom: 0.4rem !important;
@@ -129,7 +148,7 @@ st.markdown("""
     section[data-testid="stSidebar"] [data-testid="stWidgetLabel"],
     section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
     section[data-testid="stSidebar"] .stMarkdown p,
-    section[data-testid="stSidebar"] .stCaption { font-size: 1.25rem !important; }
+    section[data-testid="stSidebar"] .stCaption { font-size: 1.25rem !important; color: #e2e8f0 !important; }
 
     /* Primary buttons */
     .stButton > button[kind="primary"] {
@@ -215,6 +234,19 @@ st.markdown("""
         padding: 0 0.6rem !important;
     }
 
+    /* Chat box — white background matching expanded view */
+    div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child {
+        background: #ffffff !important;
+        border: 2px solid #1e293b !important;
+    }
+    /* Chat input text — black, placeholder lighter */
+    div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) input {
+        color: #0f172a !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) input::placeholder {
+        color: #94a3b8 !important;
+    }
+
     /* Feedback section */
     .feedback-box-header {
         font-size: 1.25rem;
@@ -252,6 +284,24 @@ st.markdown("""
     .cv-cell-output {
         transition: max-height 0.25s ease;
     }
+    html body .cv-cell-output,
+    html body .cv-cell-output *,
+    html body .cv-cell-output p,
+    html body .cv-cell-output span,
+    html body .cv-cell-output div,
+    html body .cv-cell-output pre,
+    html body .cv-cell-output code,
+    html body .cv-cell-output td,
+    html body .cv-cell-output th,
+    html body .cv-cell-output li {
+        color: #0f172a !important;
+    }
+    /* Strip ANSI-to-HTML black highlight spans but keep the container white */
+    html body .cv-cell-output span[style],
+    html body .cv-cell-output font[color] {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
     .cv-cell-output.cv-scrollable {
         height: 260px;
         min-height: 80px;
@@ -264,6 +314,10 @@ st.markdown("""
     .output_html {
         overflow-x: auto;
         max-width: 100%;
+        color: #0f172a;
+    }
+    .output_html * {
+        color: inherit;
     }
     .output_html table {
         border-collapse: collapse;
@@ -393,6 +447,28 @@ with st.sidebar:
     if st.button("← Home", width="stretch", help="Return to home screen. The analysis will be stopped if running."):
         if g._has_live_run():
             g._kill_analysis(show_interactive_edit=False)
+        # Ensure this run appears in session history so it shows up in Past Runs
+        _cur_dir = st.session_state.get("run_output_dir")
+        if _cur_dir:
+            _session_runs = st.session_state.get("session_runs", [])
+            if not any(r["output_dir"] == _cur_dir for r in _session_runs):
+                _cfg_path = Path(_cur_dir) / g._RUN_CONFIG_FILE
+                _name = "Analysis"
+                _num = st.session_state.get("run_num_analyses", 1)
+                if _cfg_path.exists():
+                    try:
+                        _cfg = json.loads(_cfg_path.read_text(encoding="utf-8"))
+                        _name = _cfg.get("analysis_name", _name)
+                        _num = _cfg.get("num_analyses", _num)
+                    except Exception:
+                        pass
+                _session_runs.append({
+                    "output_dir": _cur_dir,
+                    "analysis_name": _name,
+                    "num_analyses": int(_num),
+                    "started_at": "Resumed",
+                })
+                st.session_state.session_runs = _session_runs
         st.session_state.run_started = False
         st.session_state.run_pid = None
         st.session_state.run_proc = None
@@ -415,7 +491,7 @@ with st.sidebar:
                     st.markdown("**💬 Feedback for the agent**")
                     st.text_area(
                         "Feedback",
-                        placeholder="e.g., focus more on cluster 3, or skip the next visualization...",
+                        placeholder="E.g., for the next step look more into cluster 3...",
                         height=120,
                         key=f"pause_feedback_{pause_id}",
                         label_visibility="collapsed",
@@ -550,7 +626,7 @@ def _running_view():
             st.warning("Stop requested. Finishing current sub-step, then pausing for feedback...")
         with st.expander("📋 Output log", expanded=False):
             st.text_area("Log", value=output_text, height=200, disabled=True, label_visibility="collapsed")
-        st.markdown("#### Notebook")
+        st.markdown('<div class="cv-notebooks-title">Notebooks</div>', unsafe_allow_html=True)
         num_total = st.session_state.get("run_num_analyses", 1)
         completed, current = g._parse_run_progress(output_text) if num_total > 1 else (0, 1)
         if num_total > 1:
@@ -680,7 +756,7 @@ if st.session_state.get("run_started") and g._has_live_run():
             if _is_between_pause:
                 st.markdown("### ✅ Analysis complete — review before continuing")
             else:
-                st.markdown("### ⏸ Agent waiting for feedback")
+                st.markdown('<div class="cv-notebooks-title">⏸\u2003Agent waiting for feedback</div>', unsafe_allow_html=True)
             if num_total > 1 and paused_analysis_idx is not None:
                 analyses = g._collect_notebooks_by_analysis(st.session_state.run_output_dir, num_total)
                 tab_labels = [f"Analysis {i}" + (" ⏸" if i == paused_analysis_idx else "") for i, _ in analyses]
@@ -815,7 +891,6 @@ if st.session_state.get("run_started") and g._has_live_run():
                 st.rerun()
             elif edit_clicked:
                 st.session_state[f"pause_edit_mode_{pause_id}"] = True
-                st.session_state["open_edit_cell"] = 0
                 st.rerun()
             elif continue_clicked:
                 if _is_between_pause:
@@ -945,7 +1020,6 @@ elif st.session_state.run_output_dir and not st.session_state.run_started and st
                         nbf.write(nb, f)
                 if edit_clicked:
                     st.session_state[f"pause_edit_mode_{pause_id}"] = True
-                    st.session_state["open_edit_cell"] = 0
                     st.rerun()
                 elif continue_clicked:
                     st.session_state.run_show_interactive = False
