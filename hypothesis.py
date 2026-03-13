@@ -3,8 +3,24 @@ Hypothesis generation module.
 Extracted from agent.py - Phase 1: Idea Generation.
 """
 import os
-import json
+import instructor
+import litellm
+from pydantic import BaseModel
 from utils import get_documentation
+
+litellm.drop_params = True  # ignore unsupported params per-model silently
+
+# Instructor client wrapping LiteLLM — handles retries, validation, and structured output
+# for all OpenAI and Anthropic models uniformly.
+_instructor_client = instructor.from_litellm(litellm.completion)
+
+
+class AnalysisPlan(BaseModel):
+    hypothesis: str
+    analysis_plan: list[str]
+    first_step_code: str
+    code_description: str = ""
+    summary: str = ""
 
 
 class HypothesisGenerator:
@@ -15,7 +31,6 @@ class HypothesisGenerator:
 
     def __init__(
         self,
-        client,
         model_name,
         prompt_dir,
         coding_guidelines,
@@ -28,8 +43,8 @@ class HypothesisGenerator:
         max_iterations=6,
         deepresearch_background="",
         log_prompts=False,
+        client=None,  # kept for backward compat, unused
     ):
-        self.client = client
         self.model_name = model_name
         self.prompt_dir = prompt_dir
         self.coding_guidelines = coding_guidelines
@@ -42,6 +57,20 @@ class HypothesisGenerator:
         self.max_iterations = max_iterations
         self.deepresearch_background = deepresearch_background
         self.log_prompts = log_prompts
+
+    def _complete_structured(self, messages: list) -> dict:
+        """Call LiteLLM via instructor and return a validated AnalysisPlan dict."""
+        result = _instructor_client.chat.completions.create(
+            model=self.model_name,
+            messages=list(messages),
+            response_model=AnalysisPlan,
+        )
+        return result.model_dump()
+
+    def _complete(self, messages: list) -> str:
+        """Call LiteLLM for plain-text responses (e.g. critique feedback)."""
+        response = litellm.completion(model=self.model_name, messages=list(messages))
+        return response.choices[0].message.content
 
     def generate_jupyter_summary(self, notebook_cells):
         """Generate a comprehensive summary of notebook cells including source code and outputs (including errors)"""
@@ -69,31 +98,10 @@ class HypothesisGenerator:
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Initial Analysis")
 
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {"role": "system", "content": self.coding_system_prompt},
-                {"role": "user", "content": prompt},
-            ],
-            response_format={"type": "json_object"},
-        )
-        result = response.choices[0].message.content
-
-        # Debug logging for API response issues
-        if result is None:
-            print(f"⚠️ API returned None response in generate_initial_analysis")
-            print(f"   Model: {self.model_name}")
-            print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for initial analysis")
-
-        try:
-            analysis = json.loads(result)
-        except json.JSONDecodeError as e:
-            print(f"⚠️ JSON decode error in generate_initial_analysis: {e}")
-            print(f"   Raw result: {repr(result)}")
-            raise
-
-        return analysis
+        return self._complete_structured([
+            {"role": "system", "content": self.coding_system_prompt},
+            {"role": "user", "content": prompt},
+        ])
 
     def critique_step(self, analysis, past_analyses, notebook_cells, num_steps_left):
         hypothesis = analysis["hypothesis"]
@@ -137,21 +145,15 @@ class HypothesisGenerator:
                 num_steps_left=num_steps_left,
             )
 
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a single-cell bioinformatics expert providing feedback on code and analysis plan.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-        )
-        feedback = response.choices[0].message.content
-        return feedback
+        return self._complete([
+            {
+                "role": "system",
+                "content": "You are a single-cell bioinformatics expert providing feedback on code and analysis plan.",
+            },
+            {"role": "user", "content": prompt},
+        ])
 
     def incorporate_critique(self, analysis, feedback, notebook_cells, num_steps_left):
-        ## Return analysis object
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
         first_step_code = analysis["first_step_code"]
@@ -171,34 +173,13 @@ class HypothesisGenerator:
             num_steps_left=num_steps_left,
         )
 
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {"role": "system", "content": self.coding_system_prompt},
-                {"role": "user", "content": prompt},
-            ],
-            response_format={"type": "json_object"},
-        )
-        result = response.choices[0].message.content
-
-        # Debug logging for API response issues
-        if result is None:
-            print(f"⚠️ API returned None response in incorporate_critique")
-            print(f"   Model: {self.model_name}")
-            print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for critique incorporation")
-
-        try:
-            modified_analysis = json.loads(result)
-        except json.JSONDecodeError as e:
-            print(f"⚠️ JSON decode error in incorporate_critique: {e}")
-            print(f"   Raw result: {repr(result)}")
-            raise
-
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Incorporate Critiques")
 
-        return modified_analysis
+        return self._complete_structured([
+            {"role": "system", "content": self.coding_system_prompt},
+            {"role": "user", "content": prompt},
+        ])
 
     def get_feedback(self, analysis, past_analyses, notebook_cells, num_steps_left, iterations=1):
         current_analysis = analysis
@@ -302,29 +283,10 @@ class HypothesisGenerator:
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Seeded Hypothesis Analysis")
 
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {"role": "system", "content": self.coding_system_prompt},
-                {"role": "user", "content": prompt},
-            ],
-            response_format={"type": "json_object"},
-        )
-        result = response.choices[0].message.content
-
-        # Debug logging for API response issues
-        if result is None:
-            print(f"⚠️ API returned None response in generate_analysis_from_hypothesis")
-            print(f"   Model: {self.model_name}")
-            print(f"   Response object: {response}")
-            raise ValueError("OpenAI API returned None response for hypothesis analysis")
-
-        try:
-            analysis = json.loads(result)
-        except json.JSONDecodeError as e:
-            print(f"⚠️ JSON decode error in generate_analysis_from_hypothesis: {e}")
-            print(f"   Raw result: {repr(result)}")
-            raise
+        analysis = self._complete_structured([
+            {"role": "system", "content": self.coding_system_prompt},
+            {"role": "user", "content": prompt},
+        ])
 
         analysis = self.get_feedback(analysis, past_analyses, None, self.max_iterations)
 

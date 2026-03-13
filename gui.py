@@ -23,47 +23,379 @@ _RUN_INTERACTIVE_FILE = g._RUN_INTERACTIVE_FILE
 _RUN_LOG_FILE = g._RUN_LOG_FILE
 _RUN_PID_FILE = g._RUN_PID_FILE
 
-LOGO_PATH = ROOT / "images" / "symbol.jpeg"
+DEMO_MODE = os.getenv("CELLVOYAGER_DEMO_MODE", "0") == "1"
+FIXED_H5AD_PATH = Path(
+    os.getenv("CELLVOYAGER_FIXED_H5AD_PATH", str(ROOT / "example" / "covid19.h5ad"))
+).resolve()
+FIXED_PAPER_PATH = Path(
+    os.getenv("CELLVOYAGER_FIXED_PAPER_PATH", str(ROOT / "example" / "covid19_summary.txt"))
+).resolve()
+
+LOGO_PATH = ROOT / "images" / "logo.jpeg"
+ICON_PATH = ROOT / "images" / "symbol.jpeg"
 st.set_page_config(
     page_title="CellVoyager",
-    page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "📊",
+    page_icon=str(ICON_PATH) if ICON_PATH.exists() else "📊",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# Pin tab title to avoid flickering between "CellVoyager" and "Streamlit" on reruns
-if hasattr(st, "html"):
-    st.html('<div style="display:none"><script>document.title="CellVoyager";</script></div>', unsafe_allow_javascript=True)
-else:
-    import streamlit.components.v1 as components
-    components.html('<script>try{window.parent.document.title="CellVoyager"}catch(e){}</script>', height=0)
+import streamlit.components.v1 as components
+components.html('<script>try{window.parent.document.title="CellVoyager"}catch(e){}</script>', height=0)
 
-# Inject custom styles for polish
+# Auto-expand the sidebar if it is currently collapsed
+components.html("""
+<script>
+(function() {
+  var doc = (window.parent || window).document;
+  var tries = 0;
+  function expand() {
+    tries++;
+    if (tries > 50) return;
+    // Click the collapsed-control expand button if present
+    var btn = doc.querySelector('[data-testid="collapsedControl"] button')
+           || doc.querySelector('[data-testid="collapsedControl"]');
+    if (btn) { try { btn.click(); } catch(e) {} return; }
+    setTimeout(expand, 150);
+  }
+  expand();
+})();
+</script>
+""", height=0)
+
+# Inject custom styles
 st.markdown("""
 <style>
-    /* Hero and typography */
-    h1 { font-weight: 600 !important; letter-spacing: -0.02em !important; }
-    .stMarkdown p { color: #495057 !important; }
-    /* Tighter section spacing */
-    div[data-testid="stVerticalBlock"] > div { gap: 0.5rem !important; }
-    /* Card-style containers for notebook cells */
-    div[data-testid="stExpander"] { border-radius: 10px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important; }
-    /* Info/success boxes */
-    div[data-testid="stAlert"] { border-radius: 8px !important; }
+    :root {
+        --cv-bg: #f3f6fb;
+        --cv-panel: #ffffff;
+        --cv-border: #dbe4f0;
+        --cv-primary: #0f766e;
+        --cv-primary-dark: #0a6a63;
+        --cv-primary-soft: #e6f6f4;
+        --cv-title: #0f172a;
+        --cv-text: #334155;
+        --cv-muted: #64748b;
+    }
+
+    /* Hide Streamlit chrome while keeping sidebar toggle accessible */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        border-bottom: none !important;
+    }
+    #MainMenu, footer, [data-testid="stDecoration"],
+    [data-testid="stDeployButton"],
+    [data-testid="stStatusWidget"] { display: none !important; }
+    /* Hide toolbar content but not child buttons (sidebar toggle may live here) */
+    [data-testid="stToolbar"] { visibility: hidden !important; }
+    [data-testid="stToolbar"] button { visibility: visible !important; }
+    /* Prevent sidebar from being collapsed */
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
+
+    .stApp {
+        background: radial-gradient(ellipse 1000px 400px at 0% -10%, rgba(216,239,233,0.55) 0%, transparent 60%), var(--cv-bg);
+    }
+
+    .block-container {
+        padding-top: 1.2rem;
+        padding-bottom: 1.8rem;
+    }
+
+    h1 {
+        color: var(--cv-title) !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.03em !important;
+        margin-bottom: 0.1rem !important;
+    }
+
+    h3, .stMarkdown h3 { font-size: 1.4rem !important; }
+    h4, .stMarkdown h4 {
+        font-size: 1.5rem !important;
+        color: #0b3b35 !important;
+        font-weight: 650 !important;
+        margin-top: 0.35rem !important;
+    }
+
+    .stMarkdown p {
+        font-size: 1rem !important;
+        color: var(--cv-text) !important;
+        line-height: 1.65 !important;
+    }
+
+    .stCaption, [data-testid="stCaptionContainer"] p {
+        font-size: 1.25rem !important;
+        color: var(--cv-muted) !important;
+    }
+
+    div[data-testid="stVerticalBlock"] > div {
+        gap: 0.55rem !important;
+    }
+
+    /* Sidebar */
+    section[data-testid="stSidebar"] {
+        width: 28rem !important;
+        min-width: 28rem !important;
+    }
+    section[data-testid="stSidebar"] > div {
+        background: #f7fbff;
+        border-right: 1px solid var(--cv-border);
+        width: 28rem !important;
+    }
+
+    section[data-testid="stSidebar"] .stMarkdown h3 {
+        font-size: 1.5rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.08em !important;
+        color: var(--cv-muted) !important;
+        font-weight: 700 !important;
+        margin-top: 1.4rem !important;
+        margin-bottom: 0.4rem !important;
+    }
+
+    /* Field sub-labels in sidebar */
+    .cv-field-label {
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        color: #2c4a70 !important;
+        margin-top: 1rem !important;
+        margin-bottom: 0.25rem !important;
+        border-bottom: 1.5px solid var(--cv-border);
+        padding-bottom: 0.2rem;
+    }
+
+    /* Sidebar widget labels and captions */
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] label p,
+    section[data-testid="stSidebar"] [data-testid="stWidgetLabel"],
+    section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+    section[data-testid="stSidebar"] .stMarkdown p,
+    section[data-testid="stSidebar"] .stCaption {
+        font-size: 1.25rem !important;
+    }
+
+    /* Primary button */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, var(--cv-primary), var(--cv-primary-dark)) !important;
+        border: 0 !important;
+        color: #fff !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 2px 10px rgba(15, 118, 110, 0.22);
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .stButton > button[kind="primary"]:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(15, 118, 110, 0.30);
+    }
+
+    /* Inputs */
+    .stTextArea textarea {
+        border-radius: 10px !important;
+        border: 1px solid var(--cv-border) !important;
+        font-size: 1.25rem !important;
+    }
+
+    .stTextInput input, .stNumberInput input {
+        border-radius: 8px !important;
+        font-size: 1.1rem !important;
+        background: #ffffff !important;
+        border: 1.5px solid #c8d6e8 !important;
+    }
+
+    .stNumberInput > div {
+        background: #ffffff !important;
+        border: 1.5px solid #c8d6e8 !important;
+        border-radius: 8px !important;
+    }
+    .stNumberInput > div input {
+        border: none !important;
+        background: transparent !important;
+    }
+    .stNumberInput button {
+        transition: background-color 0.1s ease, color 0.1s ease !important;
+    }
+    .stNumberInput button:focus:not(:focus-visible) {
+        background-color: transparent !important;
+        color: inherit !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    .stSelectbox > div > div {
+        background: #ffffff !important;
+        border: 1.5px solid #c8d6e8 !important;
+        border-radius: 8px !important;
+    }
+
+    /* Widget labels (Analysis name, Analyses, etc.) */
+    [data-testid="stWidgetLabel"],
+    [data-testid="stWidgetLabel"] p,
+    .stTextInput label, .stTextInput label p,
+    .stNumberInput label, .stNumberInput label p,
+    .stSelectbox label, .stSelectbox label p,
+    .stCheckbox label, .stCheckbox label p,
+    .stTextArea label, .stTextArea label p,
+    .stRadio label, .stRadio label p,
+    .stFileUploader label, .stFileUploader label p {
+        font-size: 1.25rem !important;
+    }
+
+    /* Expander labels */
+    div[data-testid="stExpander"] summary p {
+        font-size: 1.25rem !important;
+        font-weight: 600 !important;
+    }
+
+    /* File uploader */
+    div[data-testid="stFileUploader"] > section {
+        border: 1.5px solid var(--cv-border) !important;
+        border-radius: 10px !important;
+        background: #fafcff !important;
+        padding: 1rem !important;
+        min-height: 9rem !important;
+    }
+    div[data-testid="stFileUploaderDropzone"] {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        min-height: 7rem !important;
+        height: 7rem !important;
+    }
+    div[data-testid="stFileUploaderDropzone"] > div {
+        min-height: 7rem !important;
+        height: 7rem !important;
+        justify-content: center !important;
+    }
+    div[data-testid="stFileUploaderDropzoneInstructions"] {
+        overflow: visible !important;
+        white-space: normal !important;
+    }
+    div[data-testid="stFileUploaderDropzoneInstructions"] span,
+    div[data-testid="stFileUploaderDropzoneInstructions"] small,
+    div[data-testid="stFileUploaderDropzoneInstructions"] p {
+        font-size: 1.25rem !important;
+        overflow: visible !important;
+        white-space: normal !important;
+        text-overflow: unset !important;
+    }
+    div[data-testid="stFileUploaderDropzone"] button {
+        font-size: 1.4rem !important;
+        padding: 0.6rem 1.2rem !important;
+        min-height: 3rem !important;
+    }
+
+    /* Alerts */
+    div[data-testid="stAlert"] {
+        border-radius: 10px !important;
+    }
+
+    /* Expanders */
+    div[data-testid="stExpander"] {
+        border-radius: 10px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+        border: 1px solid var(--cv-border) !important;
+        overflow: hidden;
+    }
+
+    /* Step cards */
+    .cv-steps-row { display: flex; gap: 0.6rem; margin: 0.6rem 0 1.2rem; }
+    .cv-step-card {
+        flex: 1;
+        background: var(--cv-panel);
+        border: 1px solid var(--cv-border);
+        border-radius: 12px;
+        padding: 0.85rem 0.9rem;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+    }
+    .cv-step-num {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--cv-primary);
+        margin-bottom: -0.2rem;
+    }
+    .cv-step-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--cv-title);
+        margin-bottom: 0.15rem;
+    }
+    .cv-step-desc {
+        font-size: 1.25rem;
+        color: var(--cv-muted);
+        line-height: 1.5;
+    }
+
+    /* Status banner (shown after dataset upload) */
+    .cv-status-banner {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: #f0fdf4;
+        border: 1px solid #bde5df;
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+    }
+    .cv-status-file { font-weight: 600; color: #0b5f58; }
+    .cv-status-sep { color: #94a3b8; }
+    .cv-status-state { color: #334155; }
+
+    /* Section label above form fields */
+    .cv-field-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--cv-muted);
+        margin-bottom: 0.3rem;
+    }
+
+    .cv-kicker {
+        display: inline-block;
+        background: var(--cv-primary-soft);
+        color: #0b5f58;
+        border: 1px solid #bde5df;
+        border-radius: 999px;
+        padding: 0.18rem 0.65rem;
+        font-size: 0.74rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.3rem;
+    }
+
+    /* "Additional context" muted section label */
+    p.cv-optional-header {
+        font-size: 1.64rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.07em !important;
+        color: var(--cv-muted) !important;
+        margin-top: 1.1rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+
+    /* Uploaded file chip in sidebar */
+    .cv-uploaded-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: var(--cv-primary-soft);
+        border: 1px solid #bde5df;
+        border-radius: 8px;
+        padding: 0.45rem 0.7rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #0b5f58;
+        margin-bottom: 0.5rem;
+        word-break: break-all;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# Hero header (always shown in both modes)
-if LOGO_PATH.exists():
-    col_logo, col_title = st.columns([0.15, 1])
-    with col_logo:
-        st.image(str(LOGO_PATH), width='stretch')
-    with col_title:
-        st.title("CellVoyager")
-else:
-    st.title("CellVoyager")
-
-st.divider()
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 # If a run is active, go straight to analysis page (home content never renders)
@@ -76,103 +408,486 @@ _run_clicked = False  # Set in sidebar below
 
 # Sidebar: home inputs only
 with st.sidebar:
-    st.markdown("### 📁 Data & context")
-    h5ad_file = st.file_uploader(
-        "Dataset (.h5ad)",
-        type=["h5ad"],
-        help="Single-cell dataset in AnnData format",
-        key="home_h5ad_upload",
-    )
-    if h5ad_file:
-        save_path = UPLOADS_DIR / h5ad_file.name
-        with open(save_path, "wb") as f:
-            f.write(h5ad_file.getvalue())
-        st.session_state.home_h5ad_path = str(save_path)
+    # Logo (contains CellVoyager name)
+    if LOGO_PATH.exists():
+        st.image(str(LOGO_PATH), width="stretch")
     else:
-        st.session_state.home_h5ad_path = None
-    paper_source = st.radio("Paper summary source", ["Type or paste", "Upload file"], horizontal=True, key="home_paper_source")
-    if paper_source == "Upload file":
-        paper_file = st.file_uploader("Paper file (.txt, .md)", type=["txt", "md"], help="Summary or abstract", key="home_paper_upload")
-        if paper_file:
-            txt = paper_file.read().decode()
-            fp = UPLOADS_DIR / f"{st.session_state.home_analysis_name}_paper.txt"
+        st.markdown("## CellVoyager")
+    st.divider()
+
+    st.markdown("### 📁 Data & context")
+    st.markdown('<p class="cv-field-label">Dataset</p>', unsafe_allow_html=True)
+    if DEMO_MODE:
+        st.info("Demo mode enabled: using fixed COVID-19 dataset.")
+        st.caption(f"Dataset: `{FIXED_H5AD_PATH}`")
+        st.session_state.home_h5ad_path = str(FIXED_H5AD_PATH) if FIXED_H5AD_PATH.exists() else None
+    else:
+        _existing_path = st.session_state.get("home_h5ad_path")
+        _replacing = st.session_state.get("home_replacing_h5ad", False)
+        if _existing_path and not _replacing:
+            _existing_name = Path(_existing_path).name
+            st.markdown(
+                f'<div class="cv-uploaded-chip">📂 {_existing_name}</div>',
+                unsafe_allow_html=True,
+            )
+            _r_col, _d_col = st.columns(2)
+            with _r_col:
+                if st.button("Replace", key="home_h5ad_replace", use_container_width=True):
+                    st.session_state["_home_pending_replace"] = True
+            with _d_col:
+                if st.button("Remove", key="home_h5ad_remove", use_container_width=True):
+                    st.session_state["_home_pending_remove"] = True
+        else:
+            if _replacing and _existing_path:
+                _existing_name = Path(_existing_path).name
+                st.markdown(
+                    f'<div class="cv-uploaded-chip">📂 {_existing_name}</div>',
+                    unsafe_allow_html=True,
+                )
+                # Hide the file uploader UI and cancel button — both stay in the DOM
+                st.markdown(
+                    '<style>'
+                    'section[data-testid="stSidebar"] [data-testid="stFileUploader"]'
+                    '{visibility:hidden!important;height:0!important;overflow:hidden!important;'
+                    'margin:0!important;padding:0!important}'
+                    'section[data-testid="stSidebar"] [data-testid="stButton"]'
+                    '{display:none!important}'
+                    '</style>',
+                    unsafe_allow_html=True,
+                )
+            h5ad_file = st.file_uploader(
+                "Dataset (.h5ad)",
+                type=["h5ad"],
+                help="Single-cell dataset in AnnData format",
+                key="home_h5ad_upload",
+                label_visibility="collapsed",
+            )
+            if h5ad_file:
+                save_path = UPLOADS_DIR / h5ad_file.name
+                with open(save_path, "wb") as f:
+                    f.write(h5ad_file.getvalue())
+                st.session_state.home_h5ad_path = str(save_path)
+                st.session_state.pop("home_replacing_h5ad", None)
+                st.session_state["_home_pending_upload_done"] = True
+            else:
+                if not _replacing:
+                    st.session_state.home_h5ad_path = None
+                else:
+                    # In replace mode: auto-open the file dialog, then auto-cancel if dismissed
+                    components.html("""
+<script>
+(function() {
+  var doc = (window.parent || window).document;
+  var win = window.parent || window;
+  var tries = 0;
+
+  function findCancelBtn() {
+    var sidebar = doc.querySelector('section[data-testid="stSidebar"]');
+    if (!sidebar) return null;
+    var btns = sidebar.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++) {
+      if ((btns[i].innerText || btns[i].textContent || '').trim() === 'Cancel') return btns[i];
+    }
+    return null;
+  }
+
+  function clickBrowse() {
+    tries++;
+    if (tries > 40) return;
+    var sidebar = doc.querySelector('section[data-testid="stSidebar"]');
+    var btn = sidebar && sidebar.querySelector('[data-testid="stFileUploaderDropzone"] button');
+    if (btn) {
+      btn.click();
+      // Wait briefly for the dialog to open, then listen for window regaining focus
+      setTimeout(function() {
+        win.addEventListener('focus', function onFocus() {
+          win.removeEventListener('focus', onFocus);
+          // Wait to see if Streamlit reruns (file selected); if Cancel still exists, click it
+          setTimeout(function() {
+            var cancelBtn = findCancelBtn();
+            if (cancelBtn) cancelBtn.click();
+          }, 500);
+        }, { once: true });
+      }, 200);
+    } else {
+      setTimeout(clickBrowse, 100);
+    }
+  }
+  clickBrowse();
+})();
+</script>
+""", height=0)
+                    if st.button("Cancel", key="home_h5ad_cancel"):
+                        st.session_state["_home_pending_cancel"] = True
+
+    st.markdown('<p class="cv-field-label">Context</p>', unsafe_allow_html=True)
+    context_source = st.radio(
+        "Context input",
+        ["Structured fields", "Upload summary file"],
+        horizontal=True,
+        key="home_context_source",
+        help="Provide context via structured fields or upload one file containing all context.",
+        label_visibility="collapsed",
+    )
+    if context_source == "Upload summary file":
+        context_file = st.file_uploader(
+            "Summary file (.txt, .md)",
+            type=["txt", "md"],
+            help="A single file containing dataset summary, past analyses, focus directions, and biological background.",
+            key="home_context_upload",
+        )
+        if context_file:
+            txt = context_file.read().decode()
+            fp = UPLOADS_DIR / f"{st.session_state.home_analysis_name}_context.txt"
             fp.write_text(txt, encoding="utf-8")
             st.session_state.home_paper_file_path = str(fp)
-            paper_text = txt
+            st.session_state.home_paper_text = txt
         else:
             st.session_state.home_paper_file_path = None
-            paper_text = st.session_state.get("home_paper_text", "")
-        st.session_state.home_paper_text = paper_text
+            st.session_state.home_paper_text = st.session_state.get("home_paper_text", "")
     else:
-        paper_file = None
-        paper_text = st.session_state.get("home_paper_text", "")
-
-    _run_clicked = st.button("▶ Run analysis", type="primary", key="run_btn_sidebar", use_container_width=True)
+        st.session_state.home_paper_file_path = None
 
     st.divider()
-    st.markdown("### ⚙️ Settings")
+    st.markdown("### ⚙️ Run Configuration")
 
     analysis_name = st.text_input("Analysis name", key="home_analysis_name", help="Output folders and logs")
-    num_analyses = st.number_input("Analyses", min_value=1, max_value=20, key="home_num_analyses", help="Plans per run")
-    max_iterations = st.number_input("Max iterations", min_value=1, max_value=50, key="home_max_iterations")
-    execution_mode = st.selectbox("Execution", ["claude", "legacy"], key="home_execution_mode", help="claude = Agent + Jupyter")
-    interactive_mode = st.checkbox("Interactive mode", key="home_interactive_mode", help="Pause for feedback and edits (claude)")
-    intervene_every = st.number_input(
+    if DEMO_MODE:
+        st.session_state.home_num_analyses = 1
+        st.number_input(
+            "Analyses",
+            min_value=1,
+            max_value=1,
+            value=1,
+            disabled=True,
+            help="Demo mode runs a single analysis to reduce memory pressure.",
+        )
+    else:
+        st.number_input("Analyses", min_value=1, max_value=20, key="home_num_analyses", help="Number of analyses to run")
+    st.number_input("Max steps per analysis", min_value=1, max_value=50, key="home_max_iterations")
+
+    st.markdown("### 🤖 Agent Behavior")
+    interactive_mode = st.checkbox("Interactive mode", key="home_interactive_mode", help="Pauses for user feedback/interaction every N steps")
+    st.number_input(
         "Intervene every N steps",
         min_value=1,
         max_value=20,
         disabled=not interactive_mode,
         key="home_intervene_every",
-        help="Show edit screen every N interpretation steps when interactive (1 = after each step)",
+        help="Allow user to interact with the agent every N steps in the analysis (1 = after every single step)",
     )
-    use_deepresearch = st.checkbox("DeepResearch", key="home_use_deepresearch", help="Paper-based background")
-    model_name = st.text_input("Model", key="home_model_name")
+    if interactive_mode:
+        st.checkbox("Notify when ready for feedback", key="home_ding_on_pause", help="Play a sound when the agent pauses for feedback")
+
+    st.markdown("### 🔬 Advanced Options")
+    st.checkbox("DeepResearch", key="home_use_deepresearch", help="Runs DeepResearch to get additional biological background")
+
+    _EXEC_MODEL_OPTIONS = [
+        "claude-sonnet-4-6",
+        "claude-opus-4-6",
+        "claude-sonnet-4-5",
+        "claude-opus-4-5",
+        "claude-haiku-4-5",
+    ]
+    _DEFAULT_EXEC_MODEL = "claude-sonnet-4-6"
+    if st.session_state.get("home_execution_model") not in _EXEC_MODEL_OPTIONS:
+        st.session_state["home_execution_model"] = _DEFAULT_EXEC_MODEL
+    st.selectbox(
+        "Execution model",
+        _EXEC_MODEL_OPTIONS,
+        index=_EXEC_MODEL_OPTIONS.index(st.session_state.get("home_execution_model", _DEFAULT_EXEC_MODEL)),
+        key="home_execution_model",
+        help="LLM to use to execute the analyses",
+    )
+
+    _MODEL_PRESETS = [
+        "claude-sonnet-4-6",
+        "claude-opus-4-6",
+        "claude-sonnet-4-5",
+        "claude-opus-4-5",
+        "claude-haiku-4-5",
+        "gpt-5.2",
+        "gpt-5.3",
+        "o3-mini",
+        "o1",
+        "gpt-4o",
+        "gpt-4o-mini",
+        "Custom...",
+    ]
+    _DEFAULT_MODEL = "claude-sonnet-4-6"
+    if st.session_state.get("home_model_name") in (None, "", "o3-mini"):
+        st.session_state["home_model_name"] = _DEFAULT_MODEL
+    _current_model = st.session_state.get("home_model_name", _DEFAULT_MODEL)
+    _preset_val = _current_model if _current_model in _MODEL_PRESETS else "Custom..."
+    _selected_preset = st.selectbox(
+        "Model for Hypothesis Generation",
+        _MODEL_PRESETS,
+        index=_MODEL_PRESETS.index(_preset_val),
+        key="_home_model_preset",
+        help="OpenAI or Anthropic model for hypothesis/critique generation",
+    )
+    if _selected_preset == "Custom...":
+        _custom = st.text_input("Custom model name", value=_current_model if _preset_val == "Custom..." else "", key="_home_model_custom")
+        st.session_state["home_model_name"] = _custom.strip() or _DEFAULT_MODEL
+    else:
+        st.session_state["home_model_name"] = _selected_preset
+
+    _model_for_validation = st.session_state.get("home_model_name", _DEFAULT_MODEL)
+    def _model_provider(m):
+        if m.startswith("claude-") or m.startswith("anthropic/"):
+            return "anthropic"
+        if m.startswith("gpt-") or m.startswith("o1") or m.startswith("o3") or m.startswith("o4"):
+            return "openai"
+        return "unknown"
+    _provider = _model_provider(_model_for_validation)
 
     st.divider()
     api_keys_ok = True
-    if not os.getenv("OPENAI_API_KEY"):
-        st.error("OPENAI_API_KEY not set")
-        api_keys_ok = False
-    if execution_mode == "claude" and not os.getenv("ANTHROPIC_API_KEY"):
-        st.error("ANTHROPIC_API_KEY not set (needed for claude)")
+    if _provider == "openai":
+        if not os.getenv("OPENAI_API_KEY"):
+            st.error("OPENAI_API_KEY not set")
+            api_keys_ok = False
+        else:
+            st.caption(f"Using OpenAI model `{_model_for_validation}`")
+    elif _provider == "anthropic":
+        if not os.getenv("ANTHROPIC_API_KEY"):
+            st.error("ANTHROPIC_API_KEY not set")
+            api_keys_ok = False
+        else:
+            st.caption(f"Using Anthropic model `{_model_for_validation}`")
+    else:
+        st.warning(f"Unknown provider for `{_model_for_validation}`. Ensure the correct API key is set.")
+        if not os.getenv("OPENAI_API_KEY") and not os.getenv("ANTHROPIC_API_KEY"):
+            st.error("No API keys set (OPENAI_API_KEY or ANTHROPIC_API_KEY)")
+            api_keys_ok = False
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        st.error("ANTHROPIC_API_KEY not set (required for Claude execution agent)")
         api_keys_ok = False
 
-    st.caption("Click **Run analysis** to start.")
+    # Deferred reruns — processed here so ALL sidebar widgets above have already rendered
+    # and committed their values to session state before the rerun fires.
+    if st.session_state.pop("_home_pending_remove", False):
+        st.session_state["home_h5ad_path"] = None
+        st.rerun()
+    elif st.session_state.pop("_home_pending_replace", False):
+        st.session_state["home_replacing_h5ad"] = True
+        st.rerun()
+    elif st.session_state.pop("_home_pending_cancel", False):
+        st.session_state.pop("home_replacing_h5ad", None)
+        st.rerun()
+    elif st.session_state.pop("_home_pending_upload_done", False):
+        st.rerun()
 
+# Evaluated after the sidebar so home_h5ad_path is correctly set by the file uploader
+_h5ad_uploaded = bool(st.session_state.get("home_h5ad_path")) if not DEMO_MODE else FIXED_H5AD_PATH.exists()
+
+
+# Main area: status banner or getting started
+_STEPS_HTML = """
+<div class="cv-steps-row">
+  <div class="cv-step-card">
+    <div class="cv-step-num">Step 1</div>
+    <div class="cv-step-title">Upload dataset</div>
+    <div class="cv-step-desc">Add your <code>.h5ad</code> AnnData file using the sidebar uploader.</div>
+  </div>
+  <div class="cv-step-card">
+    <div class="cv-step-num">Step 2</div>
+    <div class="cv-step-title">Describe your data</div>
+    <div class="cv-step-desc">Fill in the Dataset Summary below — cohort, cell types, preprocessing, caveats.</div>
+  </div>
+  <div class="cv-step-card">
+    <div class="cv-step-num">Step 3</div>
+    <div class="cv-step-title">Configure the run</div>
+    <div class="cv-step-desc">Set the number of analyses, max steps, and execution mode in the sidebar.</div>
+  </div>
+  <div class="cv-step-card">
+    <div class="cv-step-num">Step 4 <span style="font-weight:400;opacity:0.7;">(optional)</span></div>
+    <div class="cv-step-title">Add context</div>
+    <div class="cv-step-desc">Provide past analyses, focus directions, or biological background below.</div>
+  </div>
+  <div class="cv-step-card" style="border-color:#bde5df;background:#f0fdf4;">
+    <div class="cv-step-num" style="color:#16a34a;">Step 5</div>
+    <div class="cv-step-title">Run</div>
+    <div class="cv-step-desc">Click <strong>Run analysis</strong> in the sidebar to launch the agent.</div>
+  </div>
+</div>
+"""
+
+if _h5ad_uploaded:
+    _fname = Path(st.session_state.get("home_h5ad_path", "")).name if not DEMO_MODE else FIXED_H5AD_PATH.name
+    _summary_filled = bool((st.session_state.get("home_dataset_summary") or "").strip())
+    _readiness = "✅ Ready to run" if _summary_filled else "⚠️ Add a Dataset Summary below, change the run configurations as desired, and then run"
+    st.markdown(
+        f'<div class="cv-status-banner">'
+        f'<span class="cv-status-file">📂 {_fname}</span>'
+        f'<span class="cv-status-sep">·</span>'
+        f'<span class="cv-status-state">{_readiness}</span>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
+    with st.expander("Getting Started", expanded=False):
+        st.caption("CellVoyager autonomously generates and explores single-cell analysis ideas inside a live Jupyter notebook.")
+        st.markdown(_STEPS_HTML, unsafe_allow_html=True)
+else:
+    st.markdown("# Getting Started")
+    st.caption("CellVoyager autonomously generates and explores single-cell analysis ideas inside a live Jupyter notebook.")
+    st.markdown(_STEPS_HTML, unsafe_allow_html=True)
+
+# Main area: context input
+if st.session_state.get("home_context_source") == "Structured fields":
+    st.markdown("# Dataset Summary")
+    st.caption("Required — the agent uses this to understand your dataset before generating analyses.")
+    st.text_area(
+        "Summary of the dataset",
+        height=140,
+        placeholder="Example: PBMC single-cell RNA-seq dataset from COVID-19 patients and healthy controls. ~120k cells with donor metadata including disease severity, age, and tissue source. Cells were clustered into major immune populations (T cells, B cells, NK cells, monocytes). Key columns: donor_id, disease_severity, cell_type, tissue.",
+        key="home_dataset_summary",
+        label_visibility="collapsed",
+    )
+    _run_btn_col, _ = st.columns([2, 3])
+    with _run_btn_col:
+        _run_clicked = st.button("▶ Run analysis", type="primary", key="run_btn_main", use_container_width=True)
+
+    st.markdown('<p class="cv-optional-header">Additional context <span style="font-weight:400;opacity:0.55;">— optional</span></p>', unsafe_allow_html=True)
+    st.caption("Guide the agent and help it avoid redundant work.")
+
+    with st.expander("Past analyses tried", expanded=False):
+        st.text_area(
+            "Past analyses tried",
+            height=120,
+            placeholder="List analyses you have tried along with their respective results.",
+            key="home_past_analyses",
+            label_visibility="collapsed",
+        )
+
+    with st.expander("Directions to focus on", expanded=False):
+        st.text_area(
+            "Directions to focus on",
+            height=120,
+            placeholder="Specify what kind of questions/analyses you want the agent to focus on.",
+            key="home_focus_directions",
+            label_visibility="collapsed",
+        )
+
+    with st.expander("Additional biological background", expanded=False):
+        st.text_area(
+            "Additional biological background",
+            height=120,
+            placeholder="Any sort of additional context about the disease, experimental setup, etc.",
+            key="home_bio_background",
+            label_visibility="collapsed",
+        )
+else:
+    st.markdown("#### 📄 Uploaded context summary")
+    st.info("Using uploaded summary file as full analysis context.")
+    _run_btn_col2, _ = st.columns([2, 3])
+    with _run_btn_col2:
+        _run_clicked = st.button("▶ Run analysis", type="primary", key="run_btn_main_upload", use_container_width=True)
 if _run_clicked and not st.session_state.get("run_started"):
-    _paper = st.session_state.home_paper_text or ""
-    _paper_file_path = st.session_state.get("home_paper_file_path")
-    if not _paper.strip() and _paper_file_path and Path(_paper_file_path).exists():
-        try:
-            _paper = Path(_paper_file_path).read_text(encoding="utf-8")
-        except Exception:
-            pass
+    context_source = st.session_state.get("home_context_source", "Structured fields")
+    if context_source == "Upload summary file":
+        uploaded_context = st.session_state.home_paper_text or ""
+        _paper_file_path = st.session_state.get("home_paper_file_path")
+        if not uploaded_context.strip() and _paper_file_path and Path(_paper_file_path).exists():
+            try:
+                uploaded_context = Path(_paper_file_path).read_text(encoding="utf-8")
+            except Exception:
+                pass
+        _paper = f"""# USER CONTEXT PACKAGE
+context_source: uploaded_summary_file
+
+## Dataset summary
+(included within uploaded context if provided by user)
+
+## Past analyses tried
+(included within uploaded context if provided by user)
+
+## Directions to focus on
+(included within uploaded context if provided by user)
+
+## Additional biological background
+(included within uploaded context if provided by user)
+
+## Uploaded context (verbatim)
+BEGIN_UPLOADED_CONTEXT
+{uploaded_context}
+END_UPLOADED_CONTEXT
+"""
+    else:
+        dataset_summary = (st.session_state.get("home_dataset_summary") or "").strip()
+        past_analyses = (st.session_state.get("home_past_analyses") or "").strip()
+        focus_directions = (st.session_state.get("home_focus_directions") or "").strip()
+        bio_background = (st.session_state.get("home_bio_background") or "").strip()
+        _paper = f"""# USER CONTEXT PACKAGE
+context_source: structured_fields
+
+## Dataset summary
+{dataset_summary}
+
+## Past analyses tried
+{past_analyses or "(none provided)"}
+
+## Directions to focus on
+{focus_directions or "(none provided)"}
+
+## Additional biological background
+{bio_background or "(none provided)"}
+"""
+        _paper_file_path = None
     _analysis_name = st.session_state.home_analysis_name
-    _num_analyses = st.session_state.home_num_analyses
+    _num_analyses = 1 if DEMO_MODE else st.session_state.home_num_analyses
     _max_iterations = st.session_state.home_max_iterations
-    _execution_mode = st.session_state.home_execution_mode
     _interactive_mode = st.session_state.home_interactive_mode
     _intervene_every = st.session_state.home_intervene_every
     _use_deepresearch = st.session_state.home_use_deepresearch
     _model_name = st.session_state.home_model_name
-    _h5ad_path = st.session_state.get("home_h5ad_path")
-    _api_ok = bool(os.getenv("OPENAI_API_KEY")) and (
-        _execution_mode != "claude" or bool(os.getenv("ANTHROPIC_API_KEY"))
-    )
+    _execution_model = st.session_state.get("home_execution_model", "claude-sonnet-4-6")
+    _h5ad_path = str(FIXED_H5AD_PATH) if DEMO_MODE else st.session_state.get("home_h5ad_path")
+    # Claude execution agent always needs ANTHROPIC_API_KEY; hypothesis model needs its own key
+    def __model_provider(m):
+        if m.startswith("claude-") or m.startswith("anthropic/"):
+            return "anthropic"
+        return "openai"
+    _hyp_provider = __model_provider(_model_name)
+    _hyp_key_ok = bool(os.getenv("OPENAI_API_KEY")) if _hyp_provider == "openai" else bool(os.getenv("ANTHROPIC_API_KEY"))
+    _api_ok = _hyp_key_ok and bool(os.getenv("ANTHROPIC_API_KEY"))
     _has_h5ad = _h5ad_path and Path(_h5ad_path).exists()
-    _has_paper = bool(_paper.strip()) or (_paper_file_path and Path(_paper_file_path).exists())
+    if context_source == "Structured fields":
+        _has_paper = bool((st.session_state.get("home_dataset_summary") or "").strip())
+    else:
+        _has_paper = bool(_paper.strip()) or (_paper_file_path and Path(_paper_file_path).exists())
     if not _api_ok:
         _run_validation_error = "Set API keys in your environment and restart."
     elif not _has_h5ad:
-        _run_validation_error = "Upload a dataset (.h5ad file) to run the analysis."
+        _run_validation_error = (
+            f"Fixed demo dataset not found at: {FIXED_H5AD_PATH}"
+            if DEMO_MODE else "Upload a dataset (.h5ad file) to run the analysis."
+        )
     elif not _has_paper:
-        _run_validation_error = "Provide paper summary: type it above or upload a file."
+        _run_validation_error = (
+            "Provide context: dataset summary is required (other fields optional), "
+            "or upload a summary file containing all context."
+        )
     else:
         h5ad_path = Path(_h5ad_path)
         paper_path = UPLOADS_DIR / f"{_analysis_name}_paper.txt"
         paper_path.write_text(_paper, encoding="utf-8")
-        run_output_dir = OUTPUTS_BASE / f"{_analysis_name}_gui_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        run_output_dir = OUTPUTS_BASE / f"{_analysis_name}_gui_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
         run_output_dir.mkdir(parents=True, exist_ok=True)
+        # Ensure a fresh run starts with no stale pause/stop/error control files.
+        for control_file in (
+            g._PAUSE_REQUEST_FILE,
+            g._PAUSE_RESPONSE_FILE,
+            g._EXECUTE_REQUEST_FILE,
+            g._STEP_COUNT_FILE,
+            g._STOP_REQUEST_FILE,
+            g._AGENT_SUMMARY_FILE,
+            g._CHAT_REQUEST_FILE,
+            g._CHAT_RESPONSE_FILE,
+            g._RUN_ERROR_FILE,
+        ):
+            (run_output_dir / control_file).unlink(missing_ok=True)
+        st.session_state.pop("run_error", None)
         st.session_state.run_output_dir = str(run_output_dir)
         st.session_state.run_num_analyses = int(_num_analyses)
         OUTPUTS_BASE.mkdir(parents=True, exist_ok=True)
@@ -182,11 +897,13 @@ if _run_clicked and not st.session_state.get("run_started"):
             "h5ad_path": str(h5ad_path),
             "paper_path": str(paper_path),
             "analysis_name": _analysis_name,
-            "execution_mode": _execution_mode,
+            "execution_mode": "claude",
             "max_iterations": int(_max_iterations),
             "model_name": _model_name,
+            "execution_model": _execution_model,
             "use_deepresearch": _use_deepresearch,
             "intervene_every": int(_intervene_every),
+            "ding_on_pause": bool(st.session_state.get("home_ding_on_pause", False)),
         }
         (run_output_dir / g._RUN_CONFIG_FILE).write_text(json.dumps(run_config), encoding="utf-8")
         cmd = [
@@ -196,52 +913,95 @@ if _run_clicked and not st.session_state.get("run_started"):
             "--analysis-name", _analysis_name,
             "--num-analyses", str(_num_analyses),
             "--max-iterations", str(int(_max_iterations)),
-            "--execution-mode", _execution_mode,
+            "--execution-mode", "claude",
             "--model-name", _model_name,
             "--output-home", str(ROOT),
             "--log-home", str(ROOT / "logs"),
             "--output-dir", st.session_state.run_output_dir,
         ]
-        if _execution_mode == "claude":
-            # Always enable interactive plumbing for GUI-driven pause/continue.
-            # If step-by-step mode is off, use a very large intervene interval so pauses
-            # only happen when the user clicks Stop.
-            intervene = int(_intervene_every) if _interactive_mode else 999999
-            cmd.extend(["--interactive", "--intervene-every", str(intervene)])
-        elif _interactive_mode:
-            cmd.extend(["--interactive", "--intervene-every", str(int(_intervene_every))])
+        # Always enable interactive plumbing for GUI-driven pause/continue.
+        # If step-by-step mode is off, use a very large intervene interval so pauses
+        # only happen when the user clicks Stop.
+        intervene = int(_intervene_every) if _interactive_mode else 999999
+        cmd.extend(["--interactive", "--intervene-every", str(intervene)])
+        if _execution_model:
+            cmd.extend(["--execution-model", _execution_model])
         if _use_deepresearch:
             cmd.append("--deepresearch")
         env = os.environ.copy()
         env["PYTHONUNBUFFERED"] = "1"
-        if _execution_mode == "claude":
-            env["CELLVOYAGER_GUI_INTERACTIVE"] = "1"
+        env["CELLVOYAGER_GUI_INTERACTIVE"] = "1"
         proc = subprocess.Popen(
             cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             text=True, bufsize=1, env=env, start_new_session=True,
         )
         (run_output_dir / _RUN_PID_FILE).write_text(str(proc.pid), encoding="utf-8")
         st.session_state.run_proc = proc
+        st.session_state.run_pid = proc.pid
         st.session_state.run_output = []
         st.session_state.run_cmd = cmd
         st.session_state.run_started = True
-        st.session_state.run_interactive_mode = (_interactive_mode or _execution_mode == "claude")
+        st.session_state.run_interactive_mode = True
         st.session_state.run_thread_started = True
         log_path = run_output_dir / _RUN_LOG_FILE
         t = threading.Thread(target=g._read_output, args=(proc, st.session_state.run_output, log_path))
         t.daemon = True
         t.start()
+        # Track in session history
+        st.session_state.session_runs.append({
+            "output_dir": str(run_output_dir),
+            "analysis_name": _analysis_name,
+            "num_analyses": int(_num_analyses),
+            "started_at": datetime.datetime.now().strftime("%b %d, %I:%M %p"),
+        })
         st.switch_page("pages/analysis.py")
 
-# Main area: paper input
-if st.session_state.get("home_paper_source") == "Type or paste":
-    st.markdown("#### 📄 Paper summary")
-    st.text_area(
-        "Paste the paper summary or biological context below",
-        height=200,
-        placeholder="Paste paper abstract, methods, or key findings...",
-        label_visibility="collapsed",
-        key="home_paper_text",
-    )
 if _run_validation_error:
     st.error(_run_validation_error)
+
+# Past runs — show tabs for each run in this session
+_session_runs = st.session_state.get("session_runs", [])
+if _session_runs:
+    st.markdown("---")
+    st.markdown("## Past Runs")
+    st.caption("Analyses from this session. Click **View** to open a run or continue it further.")
+
+    # Most recent first
+    _runs_reversed = list(reversed(_session_runs))
+    _tab_labels = [
+        f"{r['analysis_name']} · {r['started_at']}" for r in _runs_reversed
+    ]
+    _run_tabs = st.tabs(_tab_labels)
+    for _tab, _run in zip(_run_tabs, _runs_reversed):
+        with _tab:
+            _out_dir = Path(_run["output_dir"])
+            _cfg_path = _out_dir / g._RUN_CONFIG_FILE
+            _err_file = _out_dir / g._RUN_ERROR_FILE
+            _num = _run["num_analyses"]
+
+            # Status badge
+            if _err_file.exists():
+                st.error("Crashed")
+            else:
+                _notebooks = g._collect_notebooks_by_analysis(str(_out_dir), _num)
+                _done = sum(1 for _, nb in _notebooks if nb)
+                if _done == _num:
+                    st.success(f"Completed — {_done}/{_num} {'analyses' if _num > 1 else 'analysis'}")
+                elif _done == 0:
+                    st.info("No notebooks yet")
+                else:
+                    st.warning(f"Partial — {_done}/{_num} analyses")
+
+            st.caption(f"Output: `{_run['output_dir']}`")
+
+            if st.button("View / Continue →", key=f"home_view_run_{_run['output_dir']}", type="primary"):
+                st.session_state.run_output_dir = _run["output_dir"]
+                st.session_state.run_num_analyses = _num
+                st.session_state.pop("run_error", None)
+                # Restore error state if the run crashed
+                if _err_file.exists():
+                    try:
+                        st.session_state["run_error"] = _err_file.read_text(encoding="utf-8").strip()
+                    except Exception:
+                        pass
+                st.switch_page("pages/analysis.py")

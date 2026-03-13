@@ -20,7 +20,7 @@ def main():
     parser.add_argument(
         "--paper-path",
         default=os.path.join(os.getcwd(), "example/covid19_summary.txt"),
-        help="Path to the paper summary text file (default: example/covid19_summary.txt)",
+        help="Path to context summary text file (dataset summary, prior analyses, focus directions, bio background).",
     )
     parser.add_argument(
         "--analysis-name",
@@ -68,8 +68,13 @@ def main():
     # Optional arguments with defaults
     parser.add_argument(
         "--model-name",
-        default="o3-mini",
-        help="OpenAI model name to use (default: o3-mini)",
+        default="claude-sonnet-4-6",
+        help="LLM model for hypothesis generation — any OpenAI or Anthropic model (e.g. o3-mini, gpt-4o, claude-sonnet-4-5). Default: o3-mini",
+    )
+    parser.add_argument(
+        "--execution-model",
+        default=None,
+        help="Anthropic model for the Claude execution agent (e.g. claude-sonnet-4-6, claude-opus-4-6). Defaults to the Claude Code CLI default.",
     )
     parser.add_argument(
         "--num-analyses",
@@ -212,6 +217,7 @@ def main():
             "stop_jupyter_on_complete": args.stop_jupyter_on_complete,
             "interactive_mode": True,
             "intervene_every": intervene,
+            "execution_model": args.execution_model or cfg.get("execution_model"),
         }
         agent = AnalysisAgentV2(
             h5ad_path=cfg["h5ad_path"],
@@ -290,6 +296,7 @@ def main():
             "stop_jupyter_on_complete": args.stop_jupyter_on_complete,
             "interactive_mode": args.interactive,
             "intervene_every": args.intervene_every,
+            "execution_model": args.execution_model,
         }
 
     agent = AnalysisAgentV2(

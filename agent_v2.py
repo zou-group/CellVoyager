@@ -134,7 +134,6 @@ class AnalysisAgentV2:
 
         # (1) Hypothesis generation module
         self.hypothesis_generator = HypothesisGenerator(
-            client=self.client,
             model_name=self.model_name,
             prompt_dir=self.prompt_dir,
             coding_guidelines=self.coding_guidelines,
@@ -395,6 +394,34 @@ class AnalysisAgentV2:
                     analysis, past_analyses, analysis_idx, seeded=seeded
                 )
                 print(f"✅ Completed Analysis {analysis_idx+1}")
+
+                # In interactive mode, pause between analyses so the user can review
+                # the completed notebook and optionally provide feedback before continuing.
+                if analysis_idx + 1 < self.num_analyses and hasattr(self.executor, "inter_analysis_pause"):
+                    nb_path = os.path.join(
+                        self.output_dir, f"{self.analysis_name}_analysis_{analysis_idx + 1}.ipynb"
+                    )
+                    _user_stopped = False
+                    while True:
+                        feedback = self.executor.inter_analysis_pause(nb_path, analysis_idx)
+                        if feedback in ("__STOP__", "__FINISH__"):
+                            print(f"⏹ User stopped after Analysis {analysis_idx + 1}.")
+                            _user_stopped = True
+                            break
+                        if feedback.startswith("__CONTINUE_CURRENT__"):
+                            user_note = feedback[len("__CONTINUE_CURRENT__"):].lstrip(":").strip()
+                            print(f"📝 Extending Analysis {analysis_idx + 1} further...")
+                            self.executor.resume_from_notebook(
+                                nb_path, analysis_idx,
+                                user_feedback=user_note or None,
+                                extend=True,
+                            )
+                            continue
+                        if feedback:
+                            past_analyses += f"User feedback before Analysis {analysis_idx + 2}: {feedback}\n\n"
+                        break
+                    if _user_stopped:
+                        break
 
             except ValueError as e:
                 if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
