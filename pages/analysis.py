@@ -54,6 +54,9 @@ if st.session_state.pop("_go_home", False):
 
 st.markdown("""
 <style>
+    /* Scale all rem-based sizes proportionally with viewport width. */
+    html { font-size: clamp(10px, 0.709vw, 22px) !important; }
+
     /* Hide Streamlit toolbar, footer, and top decoration line */
     header[data-testid="stHeader"] {
         background: transparent !important;
@@ -235,15 +238,15 @@ st.markdown("""
     }
 
     /* Chat box — white background matching expanded view */
-    div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child {
+    div[data-testid="stHorizontalBlock"]:has(.cv-chat-top-anchor) > div:last-child {
         background: #ffffff !important;
-        border: 2px solid #1e293b !important;
+        border: 2px solid #60a5fa !important;
     }
     /* Chat input text — black, placeholder lighter */
-    div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) input {
+    div[data-testid="stHorizontalBlock"]:has(.cv-chat-top-anchor) input {
         color: #0f172a !important;
     }
-    div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) input::placeholder {
+    div[data-testid="stHorizontalBlock"]:has(.cv-chat-top-anchor) input::placeholder {
         color: #94a3b8 !important;
     }
 
@@ -603,7 +606,7 @@ def _running_view():
 
     show_chat = g._should_show_chat()
     if show_chat:
-        main_col, _gap, chat_col = st.columns([0.831, 0.02, 0.236])
+        main_col, _gap, chat_col = st.columns([0.81, 0.02, 0.26])
     else:
         main_col = st.container()
         chat_col = None
@@ -743,7 +746,7 @@ if st.session_state.get("run_started") and g._has_live_run():
         pause_id = f"paused_{req_mtime}"
         edit_mode = st.session_state.get(f"pause_edit_mode_{pause_id}", False)
         show_chat = g._should_show_chat()
-        main_col, _gap, chat_col = st.columns([0.831, 0.02, 0.236])
+        main_col, _gap, chat_col = st.columns([0.81, 0.02, 0.26])
         num_total = st.session_state.get("run_num_analyses", 1)
         paused_analysis_idx = None
         if nb_path:
@@ -982,7 +985,7 @@ elif st.session_state.run_output_dir and not st.session_state.run_started and st
         edit_mode = st.session_state.get(f"pause_edit_mode_{pause_id}", False)
         show_chat = g._should_show_chat()
         if show_chat or edit_mode:
-            main_col, _gap, chat_col = st.columns([0.831, 0.02, 0.236])
+            main_col, _gap, chat_col = st.columns([0.81, 0.02, 0.26])
         else:
             main_col = st.container()
             chat_col = None
@@ -1078,7 +1081,7 @@ elif st.session_state.run_output_dir and not st.session_state.run_started:
                 pass
     show_chat = g._should_show_chat()
     if show_chat:
-        main_col, _gap, chat_col = st.columns([0.831, 0.02, 0.236])
+        main_col, _gap, chat_col = st.columns([0.81, 0.02, 0.26])
     else:
         main_col = st.container()
         chat_col = None

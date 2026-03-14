@@ -40,7 +40,7 @@ div:has(.feedback-box-header) {
     border-radius: 12px 12px 0 0;
     background: linear-gradient(135deg, #f0fafb 0%, #e6f7f8 100%);
     margin: 1rem 0 0;
-    box-shadow: 0 -2px 8px rgba(13, 115, 119, 0.08);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 0 40px rgba(96, 165, 250, 0.25);
 }
 /* Text area block: bottom part of the box (visually connected) */
 div:has(.feedback-box-header) + div {
@@ -49,7 +49,7 @@ div:has(.feedback-box-header) + div {
     border-radius: 0 0 12px 12px;
     background: linear-gradient(135deg, #f0fafb 0%, #e6f7f8 100%);
     margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.15);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 0 40px rgba(96, 165, 250, 0.25);
 }
 
 /* Chat box on the side — box around entire chat */

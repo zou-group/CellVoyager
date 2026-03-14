@@ -83,6 +83,9 @@ st.markdown("""
         --cv-eyebrow:       #93c5fd;
     }
 
+    /* Scale all rem-based sizes proportionally with viewport width.
+       Calibrated so 1rem = 16px at ~2257px effective viewport (67% zoom on 14" MacBook). */
+    html { font-size: clamp(10px, 0.709vw, 22px) !important; }
     body { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif !important; }
 
     /* Hide Streamlit chrome while keeping sidebar toggle accessible */
@@ -251,12 +254,19 @@ st.markdown("""
     .stTextArea textarea {
         background: var(--cv-surface) !important;
         border-radius: 10px !important;
-        border: 1px solid var(--cv-border-bright) !important;
+        border: 2px solid #60a5fa !important;
         color: #ffffff !important;
         font-size: 1.25rem !important;
+        -webkit-box-shadow: 0 0 15px 5px #60a5fa !important;
+        -moz-box-shadow: 0 0 15px 5px #60a5fa !important;
+        box-shadow: 0 0 15px 5px #60a5fa !important;
+    }
+    section[data-testid="stSidebar"] .stTextArea textarea {
+        border: 1px solid var(--cv-border-bright) !important;
+        box-shadow: none !important;
     }
     .stTextArea textarea::placeholder { color: #94a3b8 !important; }
-    .stTextArea textarea:focus { border-color: rgba(37,99,235,0.55) !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.14) !important; }
+    .stTextArea textarea:focus { border-color: #60a5fa !important; }
 
     .stTextInput input, .stNumberInput input {
         background: var(--cv-surface) !important;
@@ -336,6 +346,7 @@ st.markdown("""
         background: var(--cv-surface) !important;
         padding: 1rem !important;
         min-height: 9rem !important;
+        box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 0 40px rgba(96, 165, 250, 0.25) !important;
     }
     div[data-testid="stFileUploaderDropzone"] {
         border: none !important;
@@ -356,7 +367,7 @@ st.markdown("""
     div[data-testid="stFileUploaderDropzoneInstructions"] span,
     div[data-testid="stFileUploaderDropzoneInstructions"] small,
     div[data-testid="stFileUploaderDropzoneInstructions"] p {
-        font-size: 1.25rem !important;
+        font-size: 19px !important;
         overflow: visible !important;
         white-space: normal !important;
         text-overflow: unset !important;

@@ -1074,13 +1074,22 @@ def _render_chat_box(
         '[data-testid="stColumn"]:has([data-testid="stForm"]) [data-testid="stHorizontalBlock"]:has(select) { align-items:center !important; }'
         '[data-testid="stForm"] input { background:#fff !important; border:1px solid #cbd5e1 !important; border-radius:6px !important; color:#0f172a !important; }'
         '[data-testid="stForm"] input::placeholder { color:#94a3b8 !important; }'
-        # Chat box container — white background to match expanded view
-        '[data-testid="stColumn"]:has(.chat-box-outer) { background:#ffffff !important; border:2px solid #1e293b !important; border-radius:12px !important; padding:0.75rem !important; }'
-        # Chat text — force black inside the chat box
-        '[data-testid="stColumn"]:has(.chat-box-outer) .stMarkdown p,'
-        '[data-testid="stColumn"]:has(.chat-box-outer) .stMarkdown li,'
-        '[data-testid="stColumn"]:has(.chat-box-outer) .stMarkdown span,'
-        '[data-testid="stColumn"]:has(.chat-box-outer) .stChatMessage p { color:#0f172a !important; }'
+        # Chat box container — prominent border so it stands out on dark backgrounds
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) { background:#ffffff !important; border:2px solid #60a5fa !important; border-radius:12px !important; padding:0.75rem !important; box-shadow:0 0 20px rgba(96,165,250,0.6), 0 0 40px rgba(96,165,250,0.25) !important; max-height:calc(100vh - 4rem) !important; overflow-y:auto !important; }'
+        # All text inside chat box — force dark (override dark theme)
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) * { color:#0f172a !important; }'
+        # Buttons inside chat box — restore white text for dark-theme buttons
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) button { color:#ffffff !important; background-color:rgb(19,23,32) !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) button p,'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) button span { color:#ffffff !important; }'
+        # Selectbox inside chat box — white text on dark background
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) [data-testid="stSelectbox"] *,'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) select,'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) [data-baseweb="select"] * { color:#ffffff !important; }'
+        # User bubble text — keep white
+        '.cv-user-bubble, .cv-user-bubble * { color:#ffffff !important; }'
+        # Agent response bubble text — force dark on all children
+        '.cv-agent-bubble, .cv-agent-bubble * { color:#0f172a !important; }'
         + _overlay_css +
         '</style>',
         unsafe_allow_html=True,
@@ -1137,7 +1146,7 @@ def _render_chat_box(
                 safe = html.escape(msg["content"]).replace("\n", "<br>")
                 st.markdown(
                     f'<div style="display:flex;justify-content:flex-end;margin:4px 8px 4px 0">'
-                    f'<div style="background:#2563eb;color:#fff;padding:8px 12px;'
+                    f'<div class="cv-user-bubble" style="background:#2563eb;color:#fff;padding:8px 12px;'
                     f'border-radius:16px 16px 4px 16px;max-width:85%;font-size:1.25rem;line-height:1.45">'
                     f'{safe}</div></div>',
                     unsafe_allow_html=True,
@@ -1146,7 +1155,7 @@ def _render_chat_box(
                 rendered = _markdown.markdown(msg["content"], extensions=["nl2br", "tables", "fenced_code"])
                 st.markdown(
                     f'<div style="display:flex;justify-content:flex-start;margin:4px 0">'
-                    f'<div style="background:#f1f5f9;color:#1e293b;padding:8px 12px;'
+                    f'<div class="cv-agent-bubble" style="background:#f1f5f9;padding:8px 12px;'
                     f'border-radius:16px 16px 16px 4px;max-width:85%;font-size:1.25rem;line-height:1.45">'
                     f'{rendered}</div></div>',
                     unsafe_allow_html=True,
