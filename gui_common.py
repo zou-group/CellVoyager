@@ -1041,8 +1041,8 @@ def _render_chat_box(
         "body::before { content:''; position:fixed; inset:0; background:rgba(0,0,0,0.52); z-index:9998; pointer-events:all; }"
         # Float chat column as centered modal above the backdrop
         "[data-testid='stColumn']:has([data-testid='stForm']) {"
-        "  position:fixed !important; top:5vh !important; left:50% !important;"
-        "  transform:translateX(-50%) !important; width:70vw !important;"
+        "  position:fixed !important; top:5vh !important; left:calc(28rem + (100vw - 28rem) / 2) !important;"
+        "  transform:translateX(-50%) !important; width:min(70vw, calc(100vw - 30rem)) !important;"
         "  max-height:90vh !important; overflow-y:auto !important;"
         "  z-index:9999 !important; background:#fff !important;"
         "  border-radius:16px !important; box-shadow:0 32px 80px rgba(0,0,0,0.35) !important;"
