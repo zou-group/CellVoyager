@@ -383,6 +383,9 @@ st.markdown("""
     div[data-testid="stAlert"] {
         border-radius: 10px !important;
     }
+    section[data-testid="stSidebar"] div[data-testid="stAlert"] p {
+        font-size: 1.25rem !important;
+    }
 
     /* Expanders */
     div[data-testid="stExpander"] {
@@ -525,7 +528,6 @@ with st.sidebar:
     st.markdown('<p class="cv-field-label">Dataset</p>', unsafe_allow_html=True)
     if DEMO_MODE:
         st.info("Demo mode enabled: using fixed COVID-19 dataset.")
-        st.caption(f"Dataset: `{FIXED_H5AD_PATH}`")
         st.session_state.home_h5ad_path = str(FIXED_H5AD_PATH) if FIXED_H5AD_PATH.exists() else None
     else:
         _existing_path = st.session_state.get("home_h5ad_path")
@@ -1065,27 +1067,8 @@ context_source: structured_fields
 if _run_validation_error:
     st.error(_run_validation_error)
 
-# Past runs — discover from disk + merge with in-memory session_runs
+# Past runs — only show runs from this session (not all runs on disk)
 _session_runs = st.session_state.get("session_runs", [])
-_known_dirs = {r["output_dir"] for r in _session_runs}
-if OUTPUTS_BASE.exists():
-    for _d in sorted(OUTPUTS_BASE.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
-        if not _d.is_dir() or str(_d) in _known_dirs:
-            continue
-        _cfg_file = _d / g._RUN_CONFIG_FILE
-        if _cfg_file.exists():
-            try:
-                _cfg = json.loads(_cfg_file.read_text(encoding="utf-8"))
-                _session_runs.append({
-                    "output_dir": str(_d),
-                    "analysis_name": _cfg.get("analysis_name", _d.name),
-                    "num_analyses": int(_cfg.get("num_analyses", 1)),
-                    "started_at": _cfg.get("started_at", ""),
-                })
-                _known_dirs.add(str(_d))
-            except Exception:
-                pass
-    st.session_state.session_runs = _session_runs
 if _session_runs:
     st.markdown("---")
     st.markdown("## Past Runs")
@@ -1116,8 +1099,6 @@ if _session_runs:
                     st.info("No notebooks yet")
                 else:
                     st.warning(f"Partial — {_done}/{_num} analyses")
-
-            st.caption(f"Output: `{_run['output_dir']}`")
 
             if st.button("View / Continue →", key=f"home_view_run_{_run['output_dir']}", type="primary"):
                 st.session_state.run_output_dir = _run["output_dir"]
