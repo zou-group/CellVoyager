@@ -367,7 +367,7 @@ st.markdown("""
     div[data-testid="stFileUploaderDropzoneInstructions"] span,
     div[data-testid="stFileUploaderDropzoneInstructions"] small,
     div[data-testid="stFileUploaderDropzoneInstructions"] p {
-        font-size: 19px !important;
+        font-size: 14px !important;
         overflow: visible !important;
         white-space: normal !important;
         text-overflow: unset !important;
