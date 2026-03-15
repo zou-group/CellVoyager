@@ -1056,6 +1056,8 @@ context_source: structured_fields
         t.daemon = True
         t.start()
         # Track in session history
+        if "session_runs" not in st.session_state:
+            st.session_state.session_runs = []
         st.session_state.session_runs.append({
             "output_dir": str(run_output_dir),
             "analysis_name": _analysis_name,
