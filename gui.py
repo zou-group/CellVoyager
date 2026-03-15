@@ -672,10 +672,10 @@ with st.sidebar:
         )
     else:
         st.number_input("Analyses", min_value=1, max_value=20, key="home_num_analyses", help="Number of analyses to run")
-    st.number_input("Max steps per analysis", min_value=1, max_value=50, value=5, key="home_max_iterations")
+    st.number_input("Max steps per analysis", min_value=1, max_value=50, key="home_max_iterations")
 
     st.markdown("### 🤖 Agent Behavior")
-    interactive_mode = st.checkbox("Interactive mode", value=True, key="home_interactive_mode", help="Pauses for user feedback/interaction every N steps")
+    interactive_mode = st.checkbox("Interactive mode", key="home_interactive_mode", help="Pauses for user feedback/interaction every N steps")
     st.number_input(
         "Intervene every N steps",
         min_value=1,

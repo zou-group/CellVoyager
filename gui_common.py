@@ -94,9 +94,9 @@ for key, default in [
     ("home_bio_background", ""),
     ("home_analysis_name", "covid19"),
     ("home_num_analyses", 1),
-    ("home_max_iterations", 8),
+    ("home_max_iterations", 5),
 
-    ("home_interactive_mode", False),
+    ("home_interactive_mode", True),
     ("home_intervene_every", 1),
     ("home_ding_on_pause", False),
     ("home_use_deepresearch", False),
