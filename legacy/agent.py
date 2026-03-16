@@ -6,7 +6,7 @@ import pandas as pd
 from nbconvert.preprocessors import ExecutePreprocessor
 import numpy as np
 import datetime
-from logger import Logger
+from cellvoyager.logger import Logger
 import base64
 import h5py
 from h5py import Dataset, Group
@@ -14,13 +14,13 @@ import re
 import shutil
 from jupyter_client import KernelManager
 from nbformat.v4 import new_code_cell, new_output
-from deepresearch import DeepResearcher
-from utils import get_documentation
+from cellvoyager.deepresearch import DeepResearcher
+from cellvoyager.utils import get_documentation
 
 AVAILABLE_PACKAGES = "scanpy, scvi, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 class AnalysisAgent:
     def __init__(self, h5ad_path, paper_summary_path, openai_api_key, model_name, analysis_name, 
-                num_analyses=5, max_iterations=6, prompt_dir="prompts", output_home=".", log_home=".",
+                num_analyses=5, max_iterations=6, prompt_dir=None, output_home=".", log_home=".",
                 use_self_critique=True, use_VLM=True, use_documentation=True, log_prompts = False,
                 max_fix_attempts=3, use_deepresearch_background=True):
         self.h5ad_path = h5ad_path
@@ -30,7 +30,9 @@ class AnalysisAgent:
         self.analysis_name = analysis_name
         self.max_iterations = max_iterations
         self.num_analyses = num_analyses
-        self.prompt_dir = prompt_dir
+        self.prompt_dir = prompt_dir or os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "cellvoyager", "prompts"
+        )
         self.log_prompts = log_prompts
         self.max_fix_attempts = max_fix_attempts
         self.use_deepresearch_background = use_deepresearch_background

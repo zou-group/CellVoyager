@@ -669,20 +669,11 @@ def run_mcp_server() -> None:
                 if step_count % _INTERVENE_EVERY != 0:
                     return {"ready": True, "user_feedback": ""}
 
-            if not _GUI_MODE:
-                # Add feedback cell so the notebook serves as the UI in terminal mode
-                feedback_cell_source = f"""{_FEEDBACK_CELL_MARKER}
-
-{_FEEDBACK_INSTRUCTION}
-
-
-"""
-                session.insert_cell(index=None, cell_type="markdown", source=feedback_cell_source)
             response_path.unlink(missing_ok=True)
             request_path.write_text(nb_path, encoding="utf-8")
             agent_summary_path.write_text(_extract_agent_summary(session.nb), encoding="utf-8")
             _poll_interval = 0.05  # 50ms for responsive execute handling
-            _iter_limit = None if _GUI_MODE else 1200  # GUI: wait indefinitely; terminal: 60 sec
+            _iter_limit = None  # Wait indefinitely for user feedback in both modes
             _iter = 0
             while _iter_limit is None or _iter < _iter_limit:
                 _iter += 1
@@ -712,17 +703,7 @@ def run_mcp_server() -> None:
                         if session.path.exists():
                             session.nb = nbf.read(session.path, as_version=4)
                         return {"ready": True, "user_feedback": response_feedback}
-                    # Terminal mode: reload notebook, prefer feedback from the cell
-                    if session.path.exists():
-                        nb = nbf.read(session.path, as_version=4)
-                        session.nb = nb
-                    for cell in session.nb.cells:
-                        if cell.cell_type == "markdown" and cell.source.strip().startswith(_FEEDBACK_CELL_MARKER):
-                            raw = cell.source.replace(_FEEDBACK_CELL_MARKER, "").replace(_FEEDBACK_INSTRUCTION, "").strip()
-                            content = "\n".join(l for l in raw.split("\n") if l.strip()).strip()
-                            if content or response_feedback:
-                                return {"ready": True, "user_feedback": content or response_feedback}
-                            break
+                    # Terminal mode: feedback comes directly from terminal
                     return {"ready": True, "user_feedback": response_feedback}
                 time.sleep(_poll_interval)
             return {"ready": True, "user_feedback": "(timeout)" if not _GUI_MODE else ""}
@@ -772,18 +753,17 @@ class _InteractiveWatcher:
                     nb_path = "(unknown)"
                 self.request_path.unlink(missing_ok=True)
                 try:
-                    print("\n=== PAUSE: The notebook is your UI ===", flush=True)
+                    print("\n=== PAUSE: Agent is waiting for your feedback ===", flush=True)
                     print(f"Notebook: {nb_path}", flush=True)
-                    print("Edit cells and/or type feedback in the '📝 Your feedback' cell. Save, then press Enter here to continue.", flush=True)
+                    print("You can edit the notebook directly before continuing.", flush=True)
+                    print("Enter feedback below (or press Enter to continue without feedback):", flush=True)
                     if Path("/dev/tty").exists():
                         tty = open("/dev/tty", "r")
-                        tty.readline()
-                        print("Type feedback for the agent (optional, Enter to skip): ", end="", flush=True)
+                        print("> ", end="", flush=True)
                         feedback = tty.readline().rstrip()
                         tty.close()
                     else:
-                        input()
-                        feedback = input("Type feedback for the agent (optional, Enter to skip): ").strip()
+                        feedback = input("> ").strip()
                 except Exception as e:
                     feedback = f"(error reading input: {e})"
                 self.response_path.write_text(feedback, encoding="utf-8")
@@ -924,16 +904,16 @@ INTERACTIVE MODE (GUI): The user gives feedback via the GUI. The user can also e
 """
             else:
                 interactive_block = """
-INTERACTIVE MODE (TERMINAL): The notebook is the user's UI. The user edits the notebook and types feedback in the feedback cell.
+INTERACTIVE MODE (TERMINAL): The user provides feedback directly in the terminal. The user can also edit the notebook between steps.
 - Before each new step AND before every tool call, call check_user_stop. If stop_requested: true, do NOT add any more steps; stop immediately. If pause_requested: true, call pause_for_user_review immediately.
 - If execute_cell or insert_execute_code_cell returns paused_by_user: true (user clicked Stop), call pause_for_user_review immediately.
 - After EVERY interpretation cell (including after step 1), you MUST call pause_for_user_review.
 - If pause_for_user_review returns user_feedback exactly "__STOP__", the user stopped the analysis. Do NOT add any more steps; stop immediately.
 - If pause_for_user_review returns user_feedback exactly "__FINISH__", the user has requested to finish early. Do NOT add any more code or analysis cells. Instead, add exactly one final markdown cell that concisely summarizes the key findings, visualizations, and conclusions from all analyses completed in the notebook so far, then stop immediately. Do not continue to the next analysis.
-- The tool adds a "## 📝 Your feedback" cell and blocks. The user edits the notebook, types in that cell, saves, then presses Enter in the terminal to continue.
-- When it returns, the tool provides user_feedback (extracted from the feedback cell). You also get the updated notebook state.
-- CRITICAL: Preserve all existing cells. Use insert_cell with index=None (append) so your new cells go at the end. Do NOT use delete_cell. Do NOT use overwrite_cell_source except to fix a code cell that YOU added and that failed to run — never overwrite cells the user may have added. Incorporate user_feedback and any user edits (new cells, modified code) into your next steps. Do NOT add interpretation cells that merely summarize or repeat user-added code.
-- Proceed with the next step only after pause_for_user_review returns.
+- The tool blocks until the user enters feedback in the terminal. The user can also edit the notebook directly while paused. They press Enter to continue (with or without typed feedback).
+- When it returns, the tool provides user_feedback from the terminal. After resuming, call read_notebook to pick up any edits the user made to the notebook.
+- CRITICAL: Preserve all existing cells. Use insert_cell with index=None (append) so your new cells go at the end. Do NOT use delete_cell. Do NOT use overwrite_cell_source except to fix a code cell that YOU added and that failed to run.
+- Incorporate user_feedback and any user edits into your next steps. Proceed with the next step only after pause_for_user_review returns.
 
 """
 

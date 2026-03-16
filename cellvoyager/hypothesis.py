@@ -6,7 +6,7 @@ import os
 import instructor
 import litellm
 from pydantic import BaseModel
-from utils import get_documentation
+from cellvoyager.utils import get_documentation
 
 litellm.drop_params = True  # ignore unsupported params per-model silently
 

@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+._*
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# Environment
+.env
+
+# Data files
+example/covid19_slim.h5ad
+example/covid19.h5ad
+
+# Runtime directories
+gui_uploads/
+outputs/
+logs/
+logs_successRate/
+jobs_files/
+
+# Legacy / internal
+run_agent.sh
+CellBench_2/
+caseStudies_paperSummaries/
+tests/
+website/

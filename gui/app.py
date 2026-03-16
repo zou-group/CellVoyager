@@ -1,7 +1,7 @@
 """
 CellVoyager GUI — Home: dataset, settings, paper summary, run analysis.
-Run with: streamlit run gui.py
-Analysis runs on pages/analysis.py (separate page, no home content).
+Run with: streamlit run gui/app.py
+Analysis runs on gui/pages/analysis.py (separate page, no home content).
 """
 import datetime
 import json
@@ -11,9 +11,14 @@ import sys
 import threading
 from pathlib import Path
 
+# Ensure project root is on sys.path so `gui` resolves as a package
+_project_root = str(Path(__file__).resolve().parent.parent)
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
 import streamlit as st
 
-import gui_common as g
+import gui.common as g
 
 ROOT = g.ROOT
 UPLOADS_DIR = g.UPLOADS_DIR
@@ -31,8 +36,8 @@ FIXED_PAPER_PATH = Path(
     os.getenv("CELLVOYAGER_FIXED_PAPER_PATH", str(ROOT / "example" / "covid19_summary.txt"))
 ).resolve()
 
-LOGO_PATH = ROOT / "images" / "logo.jpeg"
-ICON_PATH = ROOT / "images" / "symbol.jpeg"
+LOGO_PATH = ROOT / "gui" / "assets" / "logo.jpeg"
+ICON_PATH = ROOT / "gui" / "assets" / "symbol.jpeg"
 st.set_page_config(
     page_title="CellVoyager",
     page_icon=str(ICON_PATH) if ICON_PATH.exists() else "📊",
@@ -1015,7 +1020,7 @@ context_source: structured_fields
         }
         (run_output_dir / g._RUN_CONFIG_FILE).write_text(json.dumps(run_config), encoding="utf-8")
         cmd = [
-            sys.executable, str(ROOT / "run_v2.py"),
+            sys.executable, str(ROOT / "run_cellvoyager.py"),
             "--h5ad-path", str(h5ad_path),
             "--paper-path", str(paper_path),
             "--analysis-name", _analysis_name,

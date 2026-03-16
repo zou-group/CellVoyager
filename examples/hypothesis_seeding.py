@@ -4,7 +4,8 @@ Simple hypothesis seeding example - the clean, minimal approach
 """
 
 import os
-from agent import AnalysisAgent
+
+from cellvoyager.agent import AnalysisAgentV2 as AnalysisAgent
 
 def simple_example():
     """Basic hypothesis seeding usage"""

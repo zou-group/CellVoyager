@@ -1,52 +1,75 @@
 <div align="center">
-<img src="images/logo.jpeg" alt="CellVoyager Logo" width="700">
+<img src="gui/assets/logo.jpeg" alt="CellVoyager Logo" width="700">
 </div>
 
-## Running CellVoyager
-First clone the current repository as:
-```
+## Installation
+
+Clone the repository and create the conda environment:
+
+```bash
 git clone https://github.com/zou-group/CellVoyager.git
 cd CellVoyager
-```
-
-
-To create the necessary environment, run
-```
-conda env create -f CellVoyager_env.yaml
+conda env create -f environment.yml
 conda activate CellVoyager
 ```
 
-To run the agent, use the following command:
-```
-python run.py --h5ad-path PATH_TO_H5AD_DATASET \
-              --paper-path PATH_TO_PAPER_SUMMARY \
-              --analysis-name RUN_NAME
-```
-where
-* `h5ad-path` is the absolute path of the anndata `.h5ad` file
-* `paper-path` is the absolute path of a `.txt` file containing the LLM or human generated summary of the paper
-* `analysis-name` is the name you want your analysis files to be saved under
+CellVoyager requires API keys depending on which execution mode you use. Create a `.env` file in the project root:
 
-
-The current implementation of the model only support OpenAI models. As a result, it assumes you have `.env` file that contains
 ```
 OPENAI_API_KEY=sk-xxxxxxxxxxxxx
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxx
 ```
+
+## Usage
+
+### Terminal
+
+```bash
+python run_cellvoyager.py --h5ad-path PATH_TO_H5AD_DATASET \
+                          --paper-path PATH_TO_PAPER_SUMMARY \
+                          --analysis-name RUN_NAME
+```
+
+| Argument | Description |
+|---|---|
+| `--h5ad-path` | Path to the anndata `.h5ad` file |
+| `--paper-path` | Path to a `.txt` file containing a summary of the paper / biological context |
+| `--analysis-name` | Name for the analysis output directory |
+| `--execution-mode` | `claude` (default) or `legacy` |
+| `--model-name` | LLM for hypothesis generation (default: `claude-sonnet-4-6`) |
+| `--num-analyses` | Number of analyses to run (default: 1) |
+| `--max-iterations` | Max iterations per analysis (default: 8) |
+| `--interactive` | Pause after each step so you can edit the notebook in Jupyter |
+
+Run `python run_cellvoyager.py --help` for the full list of options.
+
+### GUI
+
+```bash
+streamlit run gui/app.py
+```
+
+This opens a browser-based interface where you can upload datasets, configure settings, and monitor analyses in real time.
 
 ## Example
-We are going to use the COVID-19 case study from the CellVoyager, which builds on [this paper](https://www.nature.com/articles/s41591-020-0944-y).
 
+We use the COVID-19 case study from [Wilk et al. 2020](https://www.nature.com/articles/s41591-020-0944-y).
 
-To download the `.h5ad` object run
+Download the `.h5ad` object:
+
+```bash
+curl -o example/covid19.h5ad "https://hosted-matrices-prod.s3-us-west-2.amazonaws.com/Single_cell_atlas_of_peripheral_immune_response_to_SARS_CoV_2_infection-25/Single_cell_atlas_of_peripheral_immune_response_to_SARS_CoV_2_infection.h5ad"
 ```
-curl -o example/covid19.h5ad "https://hosted-matrices-prod.s3-us-
-west-2.amazonaws.com/Single_cell_atlas_of_peripheral_immune_response_to_SARS_CoV_2_infection-25/Single_cell_atlas_of_peripheral_immune_response_to_S
-ARS_CoV_2_infection.h5ad"
+
+An example manuscript summary is already included in `example/covid19_summary.txt`.
+
+Then run with defaults (uses the COVID-19 dataset):
+
+```bash
+python run_cellvoyager.py
 ```
-An example summary of the associated manuscript is already included in `example/covid19_summary.txt`.
 
-
-Then simply run `python run.py` which by default uses the COVID-19 dataset and manuscript summary. You will see the Jupyter notebooks in an `outputs` directory, which will update the notebook in real-time. Currently, the notebooks are run sequentially, but we are currently experimenting with ways to parallelize this.
+Output notebooks appear in the `outputs/` directory and update in real time.
 
 ## CellBench
 

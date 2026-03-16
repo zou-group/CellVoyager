@@ -10,7 +10,7 @@ import datetime
 import nbformat as nbf
 from nbformat.v4 import new_code_cell, new_output
 from jupyter_client import KernelManager
-from utils import get_documentation
+from cellvoyager.utils import get_documentation
 
 AVAILABLE_PACKAGES = "scanpy, scvi, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 

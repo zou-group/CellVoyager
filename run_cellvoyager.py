@@ -1,11 +1,11 @@
 """
-Run CellVoyager analysis using agent_v2 with configurable execution module.
+CLI entry point for CellVoyager analysis with configurable execution module.
 """
 import json
 import os
 import argparse
 from pathlib import Path
-from agent_v2 import AnalysisAgentV2
+from cellvoyager.agent import AnalysisAgentV2
 
 
 def main():
@@ -111,8 +111,8 @@ def main():
     )
     parser.add_argument(
         "--prompt-dir",
-        default="prompts",
-        help="Directory containing prompt templates (default: prompts)",
+        default=None,
+        help="Directory containing prompt templates (default: built-in)",
     )
 
     # Boolean flags

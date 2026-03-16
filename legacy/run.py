@@ -2,7 +2,7 @@ import os
 import json
 import argparse
 import openai
-from agent import AnalysisAgent
+from legacy.agent import AnalysisAgent
 
 
 def main():
@@ -50,8 +50,8 @@ def main():
                        help="Home directory for logs (default: current directory)")
     
     parser.add_argument("--prompt-dir", 
-                       default="prompts",
-                       help="Directory containing prompt templates (default: prompts)")
+                       default=None,
+                       help="Directory containing prompt templates (default: cellvoyager/prompts)")
     
     # Boolean flags
     parser.add_argument("--no-self-critique", 

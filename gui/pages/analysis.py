@@ -4,12 +4,18 @@ No home content (Settings, Paper) is ever rendered here.
 """
 import html
 import json
+import sys
 import time
 from pathlib import Path
 
+# Ensure project root is on sys.path so `gui` resolves as a package
+_project_root = str(Path(__file__).resolve().parent.parent.parent)
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
 import streamlit as st
 
-import gui_common as g
+import gui.common as g
 
 if not st.session_state.get("run_output_dir"):
     # Restore from last run file if session was reset (e.g. after completion transition)
@@ -21,7 +27,7 @@ if not st.session_state.get("run_output_dir"):
         except Exception:
             pass
 if not st.session_state.get("run_output_dir"):
-    st.switch_page("gui.py")
+    st.switch_page("app.py")
 
 # Recover running state after page refresh/session reset by checking persisted PID.
 run_output_dir = st.session_state.get("run_output_dir")
@@ -39,7 +45,7 @@ if run_output_dir:
     if run_pid is not None and g._process_alive(run_pid):
         st.session_state.run_started = True
 
-LOGO_PATH = g.ROOT / "images" / "symbol.jpeg"
+LOGO_PATH = g.ROOT / "gui" / "assets" / "symbol.jpeg"
 st.set_page_config(
     page_title="CellVoyager — Analysis",
     page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "📊",
@@ -50,7 +56,7 @@ st.set_page_config(
 # Checked immediately after set_page_config so it fires regardless of any rerun
 # triggered elsewhere on the page (transition block, fragment, etc.)
 if st.session_state.pop("_go_home", False):
-    st.switch_page("gui.py")
+    st.switch_page("app.py")
 
 st.markdown("""
 <style>
@@ -442,7 +448,7 @@ if is_paused_now and run_output_dir:
         pass
 
 # Sidebar: logo + Stop / Finish only
-SIDEBAR_LOGO = g.ROOT / "images" / "logo.jpeg"
+SIDEBAR_LOGO = g.ROOT / "gui" / "assets" / "logo.jpeg"
 with st.sidebar:
     if SIDEBAR_LOGO.exists():
         st.image(str(SIDEBAR_LOGO), width="stretch")
@@ -477,7 +483,7 @@ with st.sidebar:
         st.session_state.run_proc = None
         st.session_state.run_output_dir = None
         st.session_state.pop("run_error", None)
-        st.switch_page("gui.py")
+        st.switch_page("app.py")
     st.divider()
     if g._has_live_run():
         st.session_state.pop("_resume_restoring", None)  # clear transitional restoring state
@@ -554,7 +560,7 @@ with st.sidebar:
         if st.button("Finish Analysis", type="primary", width="stretch", help="Return to home and start a new analysis"):
             st.session_state.run_output_dir = None
             st.session_state.pop("run_error", None)
-            st.switch_page("gui.py")
+            st.switch_page("app.py")
 
 # Main: running / pause / notebook viewer
 # If run was started but process is dead (e.g. finished, or server restarted), transition to completed view
@@ -1037,7 +1043,7 @@ elif st.session_state.run_output_dir and not st.session_state.run_started and st
                     st.session_state.run_show_interactive = False
                     if request_path and request_path.exists():
                         request_path.unlink(missing_ok=True)
-                    st.switch_page("gui.py")
+                    st.switch_page("app.py")
                 elif st.session_state.pop("_cell_inline_edit_toggled", False):
                     st.rerun()
         if chat_col is not None:
@@ -1057,7 +1063,7 @@ elif st.session_state.run_output_dir and not st.session_state.run_started and st
             st.session_state.run_show_interactive = False
             if request_path and request_path.exists():
                 request_path.unlink(missing_ok=True)
-            st.switch_page("gui.py")
+            st.switch_page("app.py")
 
 # Notebook viewer (when analysis completed)
 elif st.session_state.run_output_dir and not st.session_state.run_started:

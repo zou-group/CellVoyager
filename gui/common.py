@@ -1,6 +1,6 @@
 """
 Shared logic for CellVoyager GUI — constants, session state, helper functions.
-Imported by gui.py (home) and pages/analysis.py (analysis view).
+Imported by gui/app.py (home) and gui/pages/analysis.py (analysis view).
 """
 import base64
 import html
@@ -39,7 +39,7 @@ def _launch_resume(output_dir: str, analysis_idx: int, run_to_completion: bool =
             except Exception:
                 pass
     cmd = [
-        sys.executable, str(ROOT / "run_v2.py"),
+        sys.executable, str(ROOT / "run_cellvoyager.py"),
         "--resume",
         "--resume-output-dir", output_dir,
         "--resume-analysis-idx", str(analysis_idx),
@@ -69,7 +69,7 @@ def _launch_resume(output_dir: str, analysis_idx: int, run_to_completion: bool =
     t.start()
 
 # Paths
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 UPLOADS_DIR = ROOT / "gui_uploads"
 OUTPUTS_BASE = ROOT / "outputs"
 _LAST_RUN_FILE = OUTPUTS_BASE / ".last_run"

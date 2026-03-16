@@ -1,7 +1,7 @@
 """
-Agent v2: Modular architecture with separate hypothesis generation and execution.
-Uses hypothesis.py (HypothesisGenerator) and either execution_old.py (IdeaExecutor)
-or execution.py (ClaudeJupyterExecutor). agent.py remains unchanged.
+CellVoyager agent: Modular architecture with separate hypothesis generation and execution.
+Uses HypothesisGenerator (cellvoyager.hypothesis) and either IdeaExecutor
+(cellvoyager.execution.legacy) or ClaudeJupyterExecutor (cellvoyager.execution.claude).
 """
 import os
 import datetime
@@ -13,10 +13,10 @@ from h5py import Dataset, Group
 
 import anndata
 
-from hypothesis import HypothesisGenerator
-from execution_old import IdeaExecutor
-from logger import Logger
-from deepresearch import DeepResearcher
+from cellvoyager.hypothesis import HypothesisGenerator
+from cellvoyager.execution.legacy import IdeaExecutor
+from cellvoyager.logger import Logger
+from cellvoyager.deepresearch import DeepResearcher
 
 AVAILABLE_PACKAGES = "scanpy, scvi, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 
@@ -31,7 +31,7 @@ class AnalysisAgentV2:
         analysis_name,
         num_analyses=5,
         max_iterations=6,
-        prompt_dir="prompts",
+        prompt_dir=None,
         output_home=".",
         output_dir=None,
         log_home=".",
@@ -47,7 +47,7 @@ class AnalysisAgentV2:
     ):
         """
         Args:
-            execution_mode: "legacy" (default) uses IdeaExecutor from execution_old.py;
+            execution_mode: "legacy" (default) uses IdeaExecutor;
                 "claude" uses ClaudeJupyterExecutor from execution.py (live Jupyter + Claude Agent SDK).
             anthropic_api_key: Required when execution_mode="claude". Can also set ANTHROPIC_API_KEY env.
             **execution_kwargs: Passed to ClaudeJupyterExecutor when execution_mode="claude",
@@ -60,7 +60,7 @@ class AnalysisAgentV2:
         self.analysis_name = analysis_name
         self.max_iterations = max_iterations
         self.num_analyses = num_analyses
-        self.prompt_dir = prompt_dir
+        self.prompt_dir = prompt_dir or os.path.join(os.path.dirname(__file__), "prompts")
         self.log_prompts = log_prompts
         self.max_fix_attempts = max_fix_attempts
         self.use_deepresearch_background = use_deepresearch_background
@@ -170,7 +170,7 @@ class AnalysisAgentV2:
         )
 
         if execution_mode == "claude":
-            from execution import ClaudeJupyterExecutor
+            from cellvoyager.execution.claude import ClaudeJupyterExecutor
             self.executor = ClaudeJupyterExecutor(
                 **shared_executor_kwargs,
                 anthropic_api_key=anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY"),
