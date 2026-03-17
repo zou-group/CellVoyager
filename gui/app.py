@@ -534,6 +534,12 @@ with st.sidebar:
     if DEMO_MODE:
         st.info("Demo mode enabled: using fixed COVID-19 dataset.")
         st.session_state.home_h5ad_path = str(FIXED_H5AD_PATH) if FIXED_H5AD_PATH.exists() else None
+        if not st.session_state.get("home_dataset_summary"):
+            st.session_state["home_dataset_summary"] = (
+                "The dataset consists of Seq-Well single-cell RNA-seq profiles of peripheral blood "
+                "mononuclear cells from seven hospitalized COVID-19 patients (including ARDS cases) "
+                "and six healthy controls, comprising 44,721 cells across eight patient samples."
+            )
     else:
         _existing_path = st.session_state.get("home_h5ad_path")
         _replacing = st.session_state.get("home_replacing_h5ad", False)
