@@ -108,8 +108,12 @@ class NotebookSession:
         self._execute_source(bootstrap)
 
     def save(self) -> None:
-        with open(self.path, "w", encoding="utf-8") as f:
+        # Atomic write: write to a temp file then rename so the GUI never
+        # sees a truncated/empty notebook.
+        tmp_path = self.path.with_suffix(".tmp")
+        with open(tmp_path, "w", encoding="utf-8") as f:
             nbf.write(self.nb, f)
+        tmp_path.replace(self.path)
 
     def _normalize_insert_index(self, index: int | None) -> int:
         if index is None or index < 0 or index > len(self.nb.cells):

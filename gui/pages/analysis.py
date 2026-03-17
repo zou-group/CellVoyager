@@ -902,8 +902,7 @@ if st.session_state.get("run_started") and g._has_live_run():
                     nb.cells[i].source = src
                     notebook_dirty = True
             if notebook_dirty:
-                with open(nb_path, "w", encoding="utf-8") as f:
-                    nbf.write(nb, f)
+                g._atomic_nb_write(nb, nb_path)
             if run_clicked is not None:
                 if exec_path:
                     nb_mtime_before = Path(nb_path).stat().st_mtime_ns if Path(nb_path).exists() else 0
@@ -925,8 +924,7 @@ if st.session_state.get("run_started") and g._has_live_run():
                 new_cell["id"] = f"gui_{uuid.uuid4().hex[:12]}"
                 insert_at = insert_after_idx + 1
                 nb.cells.insert(insert_at, new_cell)
-                with open(nb_path, "w", encoding="utf-8") as f:
-                    nbf.write(nb, f)
+                g._atomic_nb_write(nb, nb_path)
                 st.session_state["open_edit_cell"] = insert_at
                 st.rerun()
             elif edit_clicked:
@@ -1052,16 +1050,14 @@ elif st.session_state.run_output_dir and not st.session_state.run_started and st
                         nb.cells[i].source = src
                         notebook_dirty = True
                 if notebook_dirty:
-                    with open(nb_path, "w", encoding="utf-8") as f:
-                        nbf.write(nb, f)
+                    g._atomic_nb_write(nb, nb_path)
                 if insert_type is not None and insert_after_idx >= 0:
                     new_cell = new_code_cell("") if insert_type == "code" else new_markdown_cell("")
                     new_cell["cell_type"] = insert_type
                     import uuid
                     new_cell["id"] = f"gui_{uuid.uuid4().hex[:12]}"
                     nb.cells.insert(insert_after_idx + 1, new_cell)
-                    with open(nb_path, "w", encoding="utf-8") as f:
-                        nbf.write(nb, f)
+                    g._atomic_nb_write(nb, nb_path)
                 if edit_clicked:
                     st.session_state[f"pause_edit_mode_{pause_id}"] = True
                     st.rerun()

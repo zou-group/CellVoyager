@@ -20,6 +20,15 @@ import markdown as _markdown
 import streamlit as st
 
 
+def _atomic_nb_write(nb, nb_path):
+    """Write notebook atomically so concurrent readers never see a truncated file."""
+    import nbformat as nbf
+    tmp = Path(nb_path).with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        nbf.write(nb, f)
+    tmp.replace(nb_path)
+
+
 def _launch_resume(output_dir: str, analysis_idx: int, run_to_completion: bool = False) -> None:
     """Launch run_v2 in resume mode for the given analysis. Sets session state and reruns.
     If run_to_completion=True (e.g. when resuming from Stop), use high intervene_every so the agent
@@ -717,8 +726,7 @@ def _render_notebook_jupyter_style(nb_path, editable=False, pause_id=None, stand
         if _ki is not None and _ki < len(nb.cells) and nb.cells[_ki].cell_type == "code":
             nb.cells[_ki].outputs = []
             try:
-                with open(nb_path, "w", encoding="utf-8") as f:
-                    nbf.write(nb, f)
+                _atomic_nb_write(nb, nb_path)
             except Exception:
                 pass
     # Read the running-cell signal file (written by the execution backend)
