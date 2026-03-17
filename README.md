@@ -2,7 +2,7 @@
 <img src="gui/assets/logo.jpeg" alt="CellVoyager Logo" width="700">
 </div>
 
-## Installation
+# Installation
 
 Clone the repository and create the conda environment:
 
@@ -20,9 +20,9 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxx
 ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxx
 ```
 
-## Usage
+# Usage
 
-### GUI (Recommended)
+## GUI (Recommended)
 
 ```bash
 streamlit run gui/app.py
@@ -32,7 +32,7 @@ This opens a browser-based interface where you can upload datasets, configure se
 
 It also simulatenously builds a Jupyter notebook in your `outputs/` folder.
 
-#### GUI Home Screen
+### GUI Home Screen
 
 <img width="1881" height="906" alt="image" src="https://github.com/user-attachments/assets/bb78208d-fe36-4b5b-a8f1-4f9eff1fb34e" />
 
@@ -53,7 +53,7 @@ It also simulatenously builds a Jupyter notebook in your `outputs/` folder.
 | Execution model | Select from the options which LLM to use for all code generation (if using custom; use LiteLLM naming convention) |
 | Hypothesis generation model | Select from the options which LLM to use for hypothesis generation |
 
-#### GUI Interactive Screen
+### GUI Interactive Screen
 
 <img width="2982" height="1422" alt="image" src="https://github.com/user-attachments/assets/ece22db1-dcb9-4779-a5ac-51b0301afb51" />
 
@@ -67,7 +67,7 @@ It also simulatenously builds a Jupyter notebook in your `outputs/` folder.
 | Chat with Agent | Live chatbox (one for each analysis) with the agent |
 
 
-### Terminal
+## Terminal
 
 ```bash
 python run_cellvoyager.py --h5ad-path PATH_TO_H5AD_DATASET \
@@ -90,7 +90,7 @@ Run `python run_cellvoyager.py --help` for the full list of options.
 
 The agent will work in a live Jupyter notebook and the user can interact with the agent via the terminal (if `--interactive` is enabled).
 
-## Example
+# Example
 
 We use the COVID-19 case study from [Wilk et al. 2020](https://www.nature.com/articles/s41591-020-0944-y).
 
@@ -102,7 +102,7 @@ curl -o example/covid19.h5ad "https://hosted-matrices-prod.s3-us-west-2.amazonaw
 
 Then either run the GUI and drag the dataset into it or run it with `python run_cellvoyager.py`
 
-## CellBench
+# CellBench
 
 To run base LLMs (gpt-4o, o3-mini) 3x on CellBench:
 
