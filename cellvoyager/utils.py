@@ -115,6 +115,7 @@ def get_documentation(code: str, max_characters: int = 10000) -> str:
             continue
             
         try:
+            name = name.replace("sc.", "scanpy.")
             fn  = resolve_obj(name, ns)
             doc = inspect.getdoc(fn) or "<no docstring>"
         except Exception as e:

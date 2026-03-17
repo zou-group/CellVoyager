@@ -1,0 +1,165 @@
+/* CellVoyager — base styles (page-specific CSS in gui.py / analysis.py overrides these) */
+.stApp {
+    background: #07111f;
+}
+.stApp header[data-testid="stHeader"] {
+    background: transparent;
+}
+div[data-testid="stHorizontalBlock"] > div {
+    padding: 0.25rem 0;
+}
+/* Card-like sections */
+div[data-testid="stExpander"] {
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+/* Notebook cell styling */
+.stCodeBlock {
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+/* Softer dividers */
+hr {
+    border-color: #e9ecef !important;
+    opacity: 0.8;
+}
+/* Feedback box — prominent and noticeable */
+.feedback-box-header {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #0d7377;
+    margin: 0.25rem 0;
+}
+/* Header block: top part of the box */
+div:has(.feedback-box-header) {
+    padding: 0.75rem 1.25rem 0.25rem;
+    border: 2px solid #0d7377;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(135deg, #f0fafb 0%, #e6f7f8 100%);
+    margin: 1rem 0 0;
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 0 40px rgba(96, 165, 250, 0.25);
+}
+/* Text area block: bottom part of the box (visually connected) */
+div:has(.feedback-box-header) + div {
+    padding: 0.5rem 1.25rem 1rem;
+    border: 2px solid #0d7377;
+    border-radius: 0 0 12px 12px;
+    background: linear-gradient(135deg, #f0fafb 0%, #e6f7f8 100%);
+    margin-bottom: 1rem;
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 0 40px rgba(96, 165, 250, 0.25);
+}
+
+/* Chat box on the side — box around entire chat */
+.chat-box-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0d7377;
+    margin: 0 0 0.25rem 0;
+}
+.chat-box-caption {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0 0 0.75rem 0 !important;
+}
+.chat-box-outer {
+    margin-bottom: 0.5rem;
+}
+
+/* Agent summary box (below notebook during pause) */
+.agent-summary-box {
+    padding: 1rem 1.25rem;
+    border: 2px solid #0d7377;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f8fafb 0%, #eef7f8 100%);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.agent-summary-content {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    list-style: none;
+    padding-left: 0;
+}
+.agent-summary-content ul,
+.agent-summary-content ol {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Chat box: sticky so it stays visible when scrolling */
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) {
+    align-items: flex-start;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:first-child {
+    flex: 1;
+    min-width: 0;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child {
+    position: sticky;
+    top: 1.5rem;
+    align-self: flex-start;
+    flex-shrink: 0;
+    width: 360px;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.75rem;
+    border: 2px solid #1e293b;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    z-index: 999;
+}
+/* Ensure scrollbar is visible when chat overflows */
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child::-webkit-scrollbar {
+    width: 8px;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child::-webkit-scrollbar-track {
+    background: #eef7f8;
+    border-radius: 4px;
+}
+div[data-testid="stHorizontalBlock"]:has(.chat-box-outer) > div:last-child::-webkit-scrollbar-thumb {
+    background: #0d7377;
+    border-radius: 4px;
+}
+
+/* Analysis running — status box with loading spinner */
+.analysis-status-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border: 3px solid #0d7377;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e8f6f7 0%, #d4efef 100%);
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0d7377;
+    box-shadow: 0 4px 12px rgba(13, 115, 119, 0.25), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.status-spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(13, 115, 119, 0.3);
+    border-top-color: #0d7377;
+    border-radius: 50%;
+    animation: status-spin 0.8s linear infinite;
+}
+@keyframes status-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Primary button polish */
+.stButton > button[kind="primary"] {
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(13, 115, 119, 0.2);
+}
+.stButton > button[kind="primary"]:hover {
+    box-shadow: 0 4px 8px rgba(13, 115, 119, 0.25);
+}

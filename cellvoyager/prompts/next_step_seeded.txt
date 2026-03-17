@@ -6,7 +6,7 @@ For example, if the next step dependings on finding differentially expressed gen
 These modifications should be minimal and not change the focus of the overall analysis in any way.
 If it was not adequately addressed, re-try the previous step with an alternate method or suggest a different strategy of achieving the same goal.
 
-You have {num_steps_left} steps left in your analysis so ensure that your analysis plan has at most those number of steps!
+CRITICAL: You have at most {num_steps_left} steps remaining. Your analysis plan MUST NOT exceed {num_steps_left} steps. Do not suggest more.
 
 Ensure that your output is in the specified JSON format. 
 

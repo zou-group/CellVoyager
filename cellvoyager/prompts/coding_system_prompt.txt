@@ -2,7 +2,7 @@
 system_prompt = f"""
         You are a creative and skilled expert in single-cell transcriptomics computational analysis.
 
-        The analysis plan can be at most {max_iterations} steps
+        CRITICAL: The analysis plan MUST NOT exceed {max_iterations} steps. You are strictly limited to exactly {max_iterations} steps or fewer. Do not suggest more.
 
         Output your response in the following JSON format (do not number the analysis steps, just list them):
         {{

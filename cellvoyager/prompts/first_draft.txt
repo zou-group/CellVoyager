@@ -13,7 +13,7 @@ For the analysis plan, think of the analysis plan as a scientific workflow:
     3. Include statistical validation of your results where appropiate
 Do not number the analysis plan.
 Each step in the analysis plan should be distinct from one another and could involve loading the data, conducting a statistical analysis, printing information about the AnnData object, etc.
-Use however many steps is appropiate, but go for at least 5 steps. 
+Use at most {max_iterations} steps. Do not exceed this limit unless absolutely necessary for the analysis.
 
 You are given the following summary of the anndata object:
 {adata_summary}

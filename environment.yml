@@ -1,0 +1,37 @@
+# CellVoyager environment
+# Note: --execution-mode claude requires claude-agent-sdk (pip install claude-agent-sdk)
+# and a system with GLIBC >= 2.18. On HPC clusters with older glibc, use --execution-mode legacy.
+# Claude mode uses external jupyter-mcp-server (pip install jupyter-mcp-server, or uvx).
+name: CellVoyager
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+
+  - numpy
+  - scipy
+  - pandas
+  - matplotlib
+  - seaborn
+  - anndata
+  - scanpy
+  - scvi-tools
+  - igraph
+  - python-igraph
+  - leidenalg
+  - h5py
+  - pillow
+  - nbformat
+  - nbconvert
+  - ipykernel
+  - tqdm
+  - python-dotenv
+  - pip
+  - pip:
+      - openai
+      - anthropic
+      - celltypist
+      - streamlit
+      - streamlit-extras

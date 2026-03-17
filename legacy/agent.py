@@ -6,7 +6,7 @@ import pandas as pd
 from nbconvert.preprocessors import ExecutePreprocessor
 import numpy as np
 import datetime
-from logger import Logger
+from cellvoyager.logger import Logger
 import base64
 import h5py
 from h5py import Dataset, Group
@@ -14,13 +14,13 @@ import re
 import shutil
 from jupyter_client import KernelManager
 from nbformat.v4 import new_code_cell, new_output
-from deepresearch import DeepResearcher
-from utils import get_documentation
+from cellvoyager.deepresearch import DeepResearcher
+from cellvoyager.utils import get_documentation
 
 AVAILABLE_PACKAGES = "scanpy, scvi, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 class AnalysisAgent:
     def __init__(self, h5ad_path, paper_summary_path, openai_api_key, model_name, analysis_name, 
-                num_analyses=5, max_iterations=6, prompt_dir="prompts", output_home=".", log_home=".",
+                num_analyses=5, max_iterations=6, prompt_dir=None, output_home=".", log_home=".",
                 use_self_critique=True, use_VLM=True, use_documentation=True, log_prompts = False,
                 max_fix_attempts=3, use_deepresearch_background=True):
         self.h5ad_path = h5ad_path
@@ -30,7 +30,9 @@ class AnalysisAgent:
         self.analysis_name = analysis_name
         self.max_iterations = max_iterations
         self.num_analyses = num_analyses
-        self.prompt_dir = prompt_dir
+        self.prompt_dir = prompt_dir or os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "cellvoyager", "prompts"
+        )
         self.log_prompts = log_prompts
         self.max_fix_attempts = max_fix_attempts
         self.use_deepresearch_background = use_deepresearch_background
@@ -127,18 +129,6 @@ class AnalysisAgent:
             summarization_str += f"Column {col} contains the unique values {vals_str} \n"
         return summarization_str
 
-    def generate_jupyter_summary(self, notebook_cells):
-        """Generate a comprehensive summary of notebook code cells, markdown, and errors"""
-        if notebook_cells is None:
-            return ""
-            
-        jupyter_summary = ""
-        for cell in notebook_cells:
-            if cell['cell_type'] == 'code' or cell['cell_type'] == 'markdown' or cell['cell_type'] == 'error':
-                jupyter_summary += f"{cell['source']}\n"
-        
-        return jupyter_summary
-
     def load_h5ad_obs(self, h5ad_path):
         """Load just the .obs data from an h5ad file while preserving data types"""
         with h5py.File(h5ad_path, 'r') as f:
@@ -162,7 +152,7 @@ class AnalysisAgent:
                         categories=categories
                     )
                 else:
-                    raise ValueError(f'uwu didnt account for this datatype in h5ad: {type(item)}')
+                    raise ValueError(f'Didnt account for this datatype in h5ad: {type(item)}')
                 
                 # Handle categorical data
                 if 'categories' in item.attrs:
@@ -238,12 +228,7 @@ class AnalysisAgent:
             print(f"⚠️ API returned None response in generate_initial_analysis")
             print(f"   Model: {self.model_name}")
             print(f"   Response object: {response}")
-            # Check if this is a refusal
-            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
-                print(f"   Refusal reason: {response.choices[0].message.refusal}")
-                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
-            else:
-                raise ValueError("OpenAI API returned None response for initial analysis")
+            raise ValueError("OpenAI API returned None response for initial analysis")
         
         try:
             analysis = json.loads(result)
@@ -264,15 +249,28 @@ class AnalysisAgent:
                 
         # Keep only the most recent cells up to code_memory_size
         self.code_memory = code_cells[-self.code_memory_size:] if len(code_cells) > 0 else []
+    
+    def generate_jupyter_summary(self, notebook_cells):
+        """Generate a comprehensive summary of notebook cells including source code and outputs (including errors)"""
+        if notebook_cells is None:
+            return ""
+            
+        jupyter_summary = ""
+        for cell in notebook_cells:
+            if cell['cell_type'] == 'code' or cell['cell_type'] == 'markdown' or cell['cell_type'] == 'error':
+                jupyter_summary += f"{cell['source']}\n"
         
-    def generate_next_step_analysis(self, analysis, attempted_analyses, notebook_cells, results_interpretation, num_steps_left):
+        return jupyter_summary
+        
+    def generate_next_step_analysis(self, analysis, attempted_analyses, notebook_cells, num_steps_left, seeded):
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
         first_step_code = analysis["first_step_code"]
         
         # Update code memory with latest notebook cells
         self.update_code_memory(notebook_cells)
-
+        
+        # Generate comprehensive jupyter summary including outputs and errors
         jupyter_summary = self.generate_jupyter_summary(notebook_cells)
         
         # Use the code memory for generating the next step
@@ -282,7 +280,7 @@ class AnalysisAgent:
             prompt = open(os.path.join(self.prompt_dir, "next_step_seeded.txt")).read()
             prompt = prompt.format(hypothesis=hypothesis, analysis_plan = analysis_plan, num_steps_left=num_steps_left,
                                  CODING_GUIDELINES=self.coding_guidelines, jupyter_notebook=jupyter_summary,
-                                 jupyter_notebook=jupyter_summary, adata_summary=self.adata_summary, past_analyses=attempted_analyses,
+                                 adata_summary=self.adata_summary, past_analyses=attempted_analyses,
                                  paper_txt=self.paper_summary)
         else:
             prompt = open(os.path.join(self.prompt_dir, "next_step.txt")).read()
@@ -292,52 +290,88 @@ class AnalysisAgent:
                                 paper_txt=self.paper_summary, num_steps_left=num_steps_left)
         
         
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {"role": "system", "content": self.coding_system_prompt},
-                {"role": "user", "content": prompt}
-            ],
-            response_format={"type": "json_object"}
-        )
-        result = response.choices[0].message.content
+        # Retry logic for generating valid analysis plan
+        max_retries = 2
+        for attempt in range(max_retries + 1):
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[
+                        {"role": "system", "content": self.coding_system_prompt},
+                        {"role": "user", "content": prompt}
+                    ],
+                    response_format={"type": "json_object"}
+                )
+                result = response.choices[0].message.content
 
-        # Debug logging for API response issues
-        if result is None:
-            print(f"⚠️ API returned None response in generate_next_step")
-            print(f"   Model: {self.model_name}")
-            print(f"   Response object: {response}")
-            # Check if this is a refusal
-            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
-                print(f"   Refusal reason: {response.choices[0].message.refusal}")
-                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
-            else:
-                raise ValueError("OpenAI API returned None response for next step")
-        
-        try:
-            analysis = json.loads(result)
-        except json.JSONDecodeError as e:
-            print(f"⚠️ JSON decode error in generate_next_step: {e}")
-            print(f"   Raw result: {repr(result)}")
-            raise
+                # Debug logging for API response issues
+                if result is None:
+                    print(f"⚠️ API returned None response in generate_next_step (attempt {attempt + 1})")
+                    print(f"   Model: {self.model_name}")
+                    print(f"   Response object: {response}")
+                    if attempt == max_retries:
+                        raise ValueError("OpenAI API returned None response for next step after all retries")
+                    continue
+                
+                try:
+                    analysis = json.loads(result)
+                except json.JSONDecodeError as e:
+                    print(f"⚠️ JSON decode error in generate_next_step (attempt {attempt + 1}): {e}")
+                    print(f"   Raw result: {repr(result)}")
+                    if attempt == max_retries:
+                        raise
+                    continue
+
+                # Validate that analysis_plan exists and is not empty
+                if 'analysis_plan' not in analysis:
+                    print(f"⚠️ Missing 'analysis_plan' key in response (attempt {attempt + 1})")
+                    if attempt == max_retries:
+                        raise ValueError("Generated analysis missing 'analysis_plan' key after all retries")
+                    continue
+                
+                if not isinstance(analysis['analysis_plan'], list):
+                    print(f"⚠️ 'analysis_plan' is not a list (attempt {attempt + 1}): {type(analysis['analysis_plan'])}")
+                    if attempt == max_retries:
+                        raise ValueError("Generated analysis 'analysis_plan' is not a list after all retries")
+                    continue
+                
+                if len(analysis['analysis_plan']) == 0:
+                    print(f"⚠️ Empty analysis_plan returned (attempt {attempt + 1})")
+                    if attempt == max_retries:
+                        raise ValueError("Generated analysis has empty 'analysis_plan' after all retries")
+                    continue
+                
+                # Validate expected number of steps (should be <= num_steps_left)
+                if len(analysis['analysis_plan']) > num_steps_left:
+                    print(f"⚠️ Analysis plan too long (attempt {attempt + 1}): {len(analysis['analysis_plan'])} steps > {num_steps_left} allowed")
+                    if attempt == max_retries:
+                        # Truncate instead of failing completely
+                        print(f"   Truncating analysis plan to {num_steps_left} steps")
+                        analysis['analysis_plan'] = analysis['analysis_plan'][:num_steps_left]
+                
+                # Success! Valid analysis_plan found
+                print(f"✅ Valid analysis plan generated (attempt {attempt + 1}): {len(analysis['analysis_plan'])} steps")
+                break
+                
+            except Exception as e:
+                if attempt == max_retries:
+                    print(f"❌ All retry attempts failed for generate_next_step_analysis")
+                    raise
+                print(f"⚠️ Attempt {attempt + 1} failed: {e}. Retrying...")
+                continue
+
+        if seeded:
+            analysis["hypothesis"] = hypothesis
         
         return analysis
 
-    def critique_step(self, analysis, past_analyses, notebook_cells):
+    def critique_step(self, analysis, past_analyses, notebook_cells, num_steps_left):
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
         first_step_code = analysis["first_step_code"]
 
+        # Generate comprehensive jupyter summary including outputs and errors
         jupyter_summary = self.generate_jupyter_summary(notebook_cells)
-
-        if notebook_cells is None:
-            recent_code = ""
-        else:
-            # Update code memory with latest notebook cells
-            self.update_code_memory(notebook_cells)
-            
-            # Use the code memory for generating the next step
-            recent_code = "\n\n# Next Cell\n".join(reversed(self.code_memory))
 
         if self.use_documentation:
             prompt = open(os.path.join(self.prompt_dir, "critic.txt")).read()
@@ -349,12 +383,12 @@ class AnalysisAgent:
                 documentation = ""
             prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                 CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
-                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary, documentation=documentation)
+                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary, documentation=documentation, num_steps_left=num_steps_left)
         else:
             prompt = open(os.path.join(self.prompt_dir, "ablations", "critic_NO_DOCUMENTATION.txt")).read()
             prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                 CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary, past_analyses=past_analyses,
-                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary)
+                                paper_txt=self.paper_summary, jupyter_notebook=jupyter_summary, num_steps_left=num_steps_left)
 
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -366,25 +400,19 @@ class AnalysisAgent:
         feedback = response.choices[0].message.content
         return feedback
 
-    def incorporate_critique(self, analysis, feedback, notebook_cells):
+    def incorporate_critique(self, analysis, feedback, notebook_cells, num_steps_left):
         ## Return analysis object
         hypothesis = analysis["hypothesis"]
         analysis_plan = analysis["analysis_plan"]
         first_step_code = analysis["first_step_code"]
 
-        if notebook_cells is None:
-            recent_code = ""
-        else:
-            # Update code memory with latest notebook cells
-            self.update_code_memory(notebook_cells)
-
-        #recent_code = "\n\n# Next Cell\n".join(reversed(self.code_memory))
+        # Generate comprehensive jupyter summary including outputs and errors
         jupyter_summary = self.generate_jupyter_summary(notebook_cells)
 
         prompt = open(os.path.join(self.prompt_dir, "incorporate_critque.txt")).read()
         prompt = prompt.format(hypothesis=hypothesis, analysis_plan=analysis_plan, first_step_code=first_step_code,
                                CODING_GUIDELINES=self.coding_guidelines, adata_summary=self.adata_summary,
-                               feedback=feedback, jupyter_notebook=jupyter_summary)
+                               feedback=feedback, jupyter_notebook=jupyter_summary, num_steps_left=num_steps_left)
         
         response = self.client.chat.completions.create(
             model=self.model_name,
@@ -401,12 +429,7 @@ class AnalysisAgent:
             print(f"⚠️ API returned None response in incorporate_critique")
             print(f"   Model: {self.model_name}")
             print(f"   Response object: {response}")
-            # Check if this is a refusal
-            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
-                print(f"   Refusal reason: {response.choices[0].message.refusal}")
-                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
-            else:
-                raise ValueError("OpenAI API returned None response for critique incorporation")
+            raise ValueError("OpenAI API returned None response for critique incorporation")
         
         try:
             modified_analysis = json.loads(result)
@@ -629,29 +652,13 @@ class AnalysisAgent:
             
         return feedback
     
-    def get_feedback(self, analysis, past_analyses, notebook_cells, iterations=1):
+    def get_feedback(self, analysis, past_analyses, notebook_cells, num_steps_left, iterations=1):
         current_analysis = analysis
         for i in range(iterations):
-            feedback = self.critique_step(current_analysis, past_analyses, notebook_cells)
-            current_analysis = self.incorporate_critique(current_analysis, feedback, notebook_cells)
+            feedback = self.critique_step(current_analysis, past_analyses, notebook_cells, num_steps_left)
+            current_analysis = self.incorporate_critique(current_analysis, feedback, notebook_cells, num_steps_left)
 
         return current_analysis
-
-    def create_ideas(self):
-        past_analyses = ""
-        analyses = []
-        for analysis_idx in range(self.num_analyses):
-            print(f"\n🚀 Starting Analysis {analysis_idx+1}")
-
-            analysis = self.generate_initial_analysis(past_analyses)
-
-            modified_analysis = self.get_feedback(analysis, past_analyses, None)
-            summary = modified_analysis["summary"]
-
-            past_analyses += f"{summary}\n"
-            analyses.append(summary)
-
-        return analyses
 
     def cleanup(self):
         """Clean up resources, including the persistent kernel"""
@@ -722,34 +729,11 @@ class AnalysisAgent:
         msg_id = self.kernel_client.execute(code)
         outputs = []
 
-        # Set up strict timeout mechanism
-        import time
-        start_time = time.time()
-        max_execution_time = 600  # 10 minutes maximum (600 seconds)
-        message_timeout = 30  # 30 seconds timeout for individual messages
-        timed_out = False
-        
         while True:
-            # Check if we've exceeded the overall maximum execution time
-            elapsed_time = time.time() - start_time
-            if elapsed_time > max_execution_time:
-                print(f"⏰ Maximum execution time exceeded ({max_execution_time/60:.1f} minutes)")
-                timed_out = True
-                break
-            
-            # Calculate remaining time for this message
-            remaining_time = max_execution_time - elapsed_time
-            current_timeout = min(message_timeout, remaining_time)
-            
             try:
-                msg = self.kernel_client.get_iopub_msg(timeout=current_timeout)
-            except Exception as e:
-                # Check if we still have time left
-                if time.time() - start_time >= max_execution_time:
-                    print(f"⏰ Timeout reached during message wait ({elapsed_time/60:.1f} minutes)")
-                    timed_out = True
-                    break
-                continue
+                msg = self.kernel_client.get_iopub_msg(timeout=300)
+            except Exception:
+                break
 
             msg_type = msg['msg_type']
             content = msg['content']
@@ -778,30 +762,6 @@ class AnalysisAgent:
                                         evalue=content['evalue'],
                                         traceback=content['traceback']))
 
-        # Add timeout message to outputs if execution timed out
-        if timed_out:
-            timeout_message = f"""
-⏰ EXECUTION TIMEOUT OCCURRED
-
-This code cell took longer than expected to complete (>{max_execution_time/60:.0f} minutes).
-The execution may still be running in the background.
-
-Consider these alternatives for the next analysis step:
-1. Use faster algorithms or smaller parameter values
-2. Subsample the data for computational efficiency  
-3. Use simpler analysis methods
-4. For model training: reduce max_epochs, enable early_stopping
-5. Try a completely different analytical approach
-"""
-            
-            # Add timeout message as stream output
-            timeout_output = new_output(
-                output_type='stream',
-                name='stderr', 
-                text=timeout_message
-            )
-            outputs.append(timeout_output)
-
         # Update outputs in the last code cell by finding its index
         #last_code_cell.outputs = outputs
         code_cell_index = nb.cells.index(last_code_cell)
@@ -813,17 +773,6 @@ Consider these alternatives for the next analysis step:
                 error_msg = f"{output.ename}: {output.evalue}"
                 return False, error_msg, nb
 
-        # Final check: ensure kernel is actually idle before declaring success
-        try:
-            # Wait a bit and check if kernel is truly idle
-            final_msg = self.kernel_client.get_iopub_msg(timeout=5)
-            if final_msg['msg_type'] == 'status' and final_msg['content'].get('execution_state') == 'busy':
-                print("⚠️ Warning: Kernel still appears busy after supposed completion")
-        except:
-            # Timeout is expected if kernel is truly idle
-            pass
-
-        # Return success even if timed out - the timeout message in outputs will guide the agent
         return True, None, nb
 
     def generate_idea(self, past_analyses, analysis_idx=None, seeded_hypothesis=None):
@@ -858,7 +807,7 @@ Consider these alternatives for the next analysis step:
         
         # Get feedback for the initial analysis plan and modify it accordingly
         if self.use_self_critique:
-            modified_analysis = self.get_feedback(analysis, past_analyses, None)
+            modified_analysis = self.get_feedback(analysis, past_analyses, None, self.max_iterations)
             
             if analysis_idx is not None:
                 self.logger.log_response(f"APPLIED INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"self_critique_{step_name}")
@@ -918,12 +867,7 @@ Consider these alternatives for the next analysis step:
             print(f"⚠️ API returned None response in generate_analysis_from_hypothesis")
             print(f"   Model: {self.model_name}")
             print(f"   Response object: {response}")
-            # Check if this is a refusal
-            if hasattr(response.choices[0].message, 'refusal') and response.choices[0].message.refusal:
-                print(f"   Refusal reason: {response.choices[0].message.refusal}")
-                raise ValueError(f"OpenAI API refused to generate response: {response.choices[0].message.refusal}")
-            else:
-                raise ValueError("OpenAI API returned None response for hypothesis analysis")
+            raise ValueError("OpenAI API returned None response for hypothesis analysis")
         
         try:
             analysis = json.loads(result)
@@ -931,6 +875,8 @@ Consider these alternatives for the next analysis step:
             print(f"⚠️ JSON decode error in generate_analysis_from_hypothesis: {e}")
             print(f"   Raw result: {repr(result)}")
             raise
+
+        analysis = self.get_feedback(analysis, past_analyses, None, self.max_iterations)
         
         # Ensure the hypothesis matches what was provided
         analysis["hypothesis"] = hypothesis
@@ -957,7 +903,7 @@ Consider these alternatives for the next analysis step:
             seeded: Boolean indicating if the analysis is seeded
 
         Returns:
-            tuple: (hypotheses_analysis list, updated past_analyses string)
+            updated past_analyses string
         """
         def namer(analysis_idx, step_idx):
             return f"{analysis_idx+1}_{step_idx}"
@@ -972,7 +918,7 @@ Consider these alternatives for the next analysis step:
         # Start the persistent kernel for this analysis
         if not self.start_persistent_kernel():
             print(f"⚠️ Failed to start kernel for analysis {analysis_idx+1}. Skipping...")
-            return hypotheses_analysis, past_analyses
+            return past_analyses
 
         hypothesis = analysis["hypothesis"]                
         analysis_plan = analysis["analysis_plan"]
@@ -1003,10 +949,9 @@ Consider these alternatives for the next analysis step:
         for iteration in range(self.max_iterations):
             step_name = namer(analysis_idx, iteration + 1)
             # Execute the notebook
-            #success, error_msg, notebook = self.execute_notebook(notebook)
             success, error_msg, notebook = self.run_last_cell(notebook)
             print(f"🚀 Beginning step {iteration + 1}...")
-    
+
 
             if success:
                 self.logger.log_response(f"STEP {iteration + 1} RAN SUCCESSFULLY - Analysis {analysis_idx+1}", f"step_execution_success_{step_name}")
@@ -1026,9 +971,6 @@ Consider these alternatives for the next analysis step:
                     fix_attempt += 1
                     print(f"  🔧 Fix attempt {fix_attempt}/{self.max_fix_attempts}")
                     
-                    # Log fix attempt start
-                    #self.logger.log_response(f"FIX ATTEMPT {fix_attempt}/{max_fix_attempts} - Analysis {analysis_idx+1}, Step {iteration + 1}", "fix_attempt_start")
-
                     # Get relevant documentation on the single-cell packages being used
                     documentation = ""
                     if self.use_documentation:
@@ -1095,42 +1037,23 @@ Consider these alternatives for the next analysis step:
 
             # Only generate next step if this is not the final iteration
             if iteration < self.max_iterations - 1:
-                analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
                 num_steps_left = self.max_iterations - iteration - 1
-                
-                try:
-                    next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, results_interpretation, num_steps_left, seeded = seeded)
-                except ValueError as e:
-                    if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
-                        print(f"🚫 API refusal/error for next step. Skipping remaining iterations for this analysis.")
-                        self.logger.log_response(f"API REFUSAL/ERROR - Ending Analysis {analysis_idx+1} early at step {iteration + 1}: {str(e)}", f"api_refusal_{step_name}")
-                        # Add a note to the notebook about the early termination
-                        termination_note = f"### Analysis Terminated Early\n\nAPI refusal/error occurred when generating next step: {str(e)}\n\nCompleted {iteration + 1} of {self.max_iterations} planned iterations."
-                        notebook.cells.append(nbf.v4.new_markdown_cell(termination_note))
-                        break  # Exit the iteration loop early
-                    else:
-                        # Re-raise other ValueErrors
-                        raise
 
-                self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {next_step_analysis['analysis_plan'][0]}\n\nCode:\n```python\n{next_step_analysis['first_step_code']}\n```", f"initial_analysis_{step_name}")
+                analysis = {"hypothesis": hypothesis, "analysis_plan": analysis_plan, "first_step_code": current_code}
+                next_step_analysis = self.generate_next_step_analysis(analysis, past_analyses, notebook.cells, num_steps_left, seeded)
 
-                
+                # Safety check for analysis_plan to prevent IndexError
+                first_step_description = next_step_analysis['analysis_plan'][0] if next_step_analysis['analysis_plan'] else "No additional analysis steps generated"
+                self.logger.log_response(f"NEXT STEP PLAN - Analysis {analysis_idx+1}, Step {iteration + 2}: {first_step_description}\n\nCode:\n```python\n{next_step_analysis['first_step_code']}\n```", f"initial_analysis_{step_name}")
+
                 if self.use_self_critique:
-                    try:
-                        modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells)
-                        self.logger.log_response(f"APPLIED SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", f"self_critique_{step_name}")
-                    except ValueError as e:
-                        if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
-                            print(f"🚫 API refusal/error during self-critique. Using analysis without critique.")
-                            self.logger.log_response(f"API REFUSAL DURING CRITIQUE - Using original analysis: {str(e)}", f"critique_refusal_{step_name}")
-                            modified_analysis = next_step_analysis
-                        else:
-                            # Re-raise other ValueErrors
-                            raise
+                    modified_analysis = self.get_feedback(next_step_analysis, past_analyses, notebook.cells, num_steps_left)
+                    self.logger.log_response(f"APPLIED SELF-CRITIQUE - Analysis {analysis_idx+1}, Step {iteration + 2}", f"self_critique_{step_name}")
 
                     hypothesis = modified_analysis["hypothesis"]                
                     analysis_plan = modified_analysis["analysis_plan"]
                     current_code = modified_analysis["first_step_code"]
+
                     # Log revised analysis plan
                     self.logger.log_response(f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n" + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)]) + f"\n\nRevised Code:\n{current_code}", f"revised_analysis_{step_name}")
                 else:
@@ -1138,6 +1061,13 @@ Consider these alternatives for the next analysis step:
                     self.logger.log_response(f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}", f"no_self_critique_{step_name}")
                     modified_analysis = next_step_analysis
 
+                print(f"ANALYSIS PLAN AFTER NEXT STEP GENERATION AND AFTER CRITIQUE (length: {len(modified_analysis['analysis_plan'])}):", modified_analysis["analysis_plan"])
+
+                # Add the next steps to the notebook
+                steps_text = "\n".join([f"Step {i+1}: {item}" for i, item in enumerate(modified_analysis['analysis_plan'])])
+                next_step_cell = nbf.v4.new_markdown_cell(f"## Next Steps\n{steps_text}")
+                notebook.cells.append(next_step_cell)
+                
                 # Add the next step to the notebook
                 code_description = modified_analysis["code_description"]
                 notebook.cells.append(nbf.v4.new_markdown_cell(f"## {code_description}"))
@@ -1170,7 +1100,12 @@ Consider these alternatives for the next analysis step:
         
         print(f"✅ Completed Analysis {analysis_idx+1}")
 
-        return past_analyses + "\n".join(hypotheses_analysis)
+        # Update past_analyses with the completed analysis summary
+        if hypotheses_analysis:
+            analysis_summary = f"Analysis {analysis_idx+1}: {hypothesis}\n"
+            return past_analyses + analysis_summary
+        else:
+            return past_analyses
 
     def run(self, seeded_hypotheses=None):
         """

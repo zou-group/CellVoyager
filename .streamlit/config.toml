@@ -1,0 +1,14 @@
+[client]
+showSidebarNavigation = false
+
+[server]
+# Allow large .h5ad datasets (10GB). Default is 200MB.
+maxUploadSize = 10240
+
+[theme]
+base = "dark"
+primaryColor = "#2563eb"
+backgroundColor = "#07111f"
+secondaryBackgroundColor = "#0b1829"
+textColor = "#cbd5e1"
+font = "sans serif"

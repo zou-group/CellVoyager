@@ -5,9 +5,8 @@ import openai
 
 
 class DeepResearcher:
-    """Thin wrapper over OpenAI Deep Research models.
-
-    Keeps the original public interface so callers in `agent.py` do not need to change.
+    """
+    Wrapper over OpenAI Deep Research models.
     """
 
     def __init__(self, openai_api_key: str):
