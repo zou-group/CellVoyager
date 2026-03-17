@@ -19,6 +19,8 @@ dependencies:
   - python-igraph
   - leidenalg
   - h5py
+  - instructor
+  - litellm
   - pillow
   - nbformat
   - nbconvert
