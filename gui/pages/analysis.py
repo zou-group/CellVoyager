@@ -31,6 +31,17 @@ if not st.session_state.get("run_output_dir"):
 
 # Recover running state after page refresh/session reset by checking persisted PID.
 run_output_dir = st.session_state.get("run_output_dir")
+# Restore num_analyses from config file if session state was lost (e.g. page reload)
+if run_output_dir and st.session_state.get("run_num_analyses") in (None, 1):
+    _cfg_restore = Path(run_output_dir) / g._RUN_CONFIG_FILE
+    if _cfg_restore.exists():
+        try:
+            _cfg_data = json.loads(_cfg_restore.read_text(encoding="utf-8"))
+            _restored_num = int(_cfg_data.get("num_analyses", 1))
+            if _restored_num > 1:
+                st.session_state["run_num_analyses"] = _restored_num
+        except Exception:
+            pass
 if run_output_dir:
     run_pid = st.session_state.get("run_pid")
     if run_pid is None:
@@ -358,7 +369,28 @@ def _install_continue_scroll_restore() -> None:
             const KEY_Y = "cellvoyager_scroll_y";
             const KEY_RESTORE = "cellvoyager_scroll_restore";
 
-            if (p.sessionStorage.getItem(KEY_RESTORE) === "1") {
+            // Check if scroll-to-bottom is active (set when Continue Analysis is clicked)
+            const scrollBottomTs = Number(p.sessionStorage.getItem("cellvoyager_scroll_to_bottom") || "0");
+            const elapsed = scrollBottomTs ? (Date.now() - scrollBottomTs) : Infinity;
+            if (scrollBottomTs && elapsed < 10000) {
+              // Scroll-to-bottom mode: keep scrolling down for ~10s after Continue
+              p.sessionStorage.removeItem(KEY_RESTORE);
+              const scrollToBottom = () => {
+                const h = Math.max(p.document.documentElement.scrollHeight, p.document.body.scrollHeight);
+                p.document.documentElement.scrollTop = h;
+                p.document.body.scrollTop = h;
+                p.window.scrollTo({ top: h, behavior: 'smooth' });
+              };
+              [0, 100, 300, 600, 1200, 2500, 4000].forEach(t => setTimeout(scrollToBottom, t));
+              const obs = new p.MutationObserver(scrollToBottom);
+              obs.observe(p.document.body, { childList: true, subtree: true });
+              // Stop after remaining time
+              const remaining = Math.max(1000, 10000 - elapsed);
+              setTimeout(() => {
+                obs.disconnect();
+                p.sessionStorage.removeItem("cellvoyager_scroll_to_bottom");
+              }, remaining);
+            } else if (p.sessionStorage.getItem(KEY_RESTORE) === "1") {
               const y = Number(p.sessionStorage.getItem(KEY_Y) || "0");
               p.requestAnimationFrame(() => p.scrollTo(0, y));
               setTimeout(() => p.scrollTo(0, y), 120);
@@ -373,9 +405,9 @@ def _install_continue_scroll_restore() -> None:
                 btn.addEventListener("click", () => {
                   const label = (btn.innerText || "").trim();
                   if (label.includes("Continue")) {
-                    const y = p.scrollY || p.pageYOffset || 0;
-                    p.sessionStorage.setItem(KEY_Y, String(y));
-                    p.sessionStorage.setItem(KEY_RESTORE, "1");
+                    // Signal scroll-to-bottom for Continue Analysis clicks
+                    p.sessionStorage.removeItem(KEY_RESTORE);
+                    p.sessionStorage.setItem("cellvoyager_scroll_to_bottom", String(Date.now()));
                   }
                 }, true);
               });
@@ -538,6 +570,14 @@ with st.sidebar:
                     # Fallback only when pause files cannot be created.
                     g._kill_analysis(show_interactive_edit=True)
                 st.rerun()
+            st.markdown('<div style="margin-bottom:0.5rem"></div>', unsafe_allow_html=True)
+            if st.session_state.get("_is_resuming"):
+                st.warning(
+                    "**Restoring kernel state** — Re-running existing notebook cells. "
+                    "This may take a moment."
+                )
+            else:
+                st.info("**Analysis Running** — The notebook updates in real time as each step completes.")
     else:
         # Completed view sidebar: per-analysis Continue further + Finish
         _completed_out_dir = st.session_state.run_output_dir
@@ -593,7 +633,7 @@ if st.session_state.run_started and not g._has_live_run():
                     pass
     st.rerun()
 
-@st.fragment(run_every=2)
+@st.fragment(run_every=1)
 def _running_view():
     """Polls every 2 s without re-rendering the sidebar."""
     run_output_dir = st.session_state.get("run_output_dir")
@@ -610,29 +650,8 @@ def _running_view():
     stop_request_path = (Path(run_output_dir) / g._STOP_REQUEST_FILE) if run_output_dir else None
     _is_stop_pending = bool(stop_request_path and stop_request_path.exists())
 
-    show_chat = g._should_show_chat()
-    if show_chat:
-        main_col, _gap, chat_col = st.columns([0.81, 0.02, 0.26])
-    else:
-        main_col = st.container()
-        chat_col = None
-
-    with main_col:
+    with st.container():
         st.markdown("---")
-        if st.session_state.get("_is_resuming"):
-            st.warning(
-                "**Restoring kernel state** — The agent is re-running existing notebook cells to restore "
-                "the Python kernel. This may take a moment. Once complete, the analysis will pause and "
-                "let you continue interactively."
-            )
-        else:
-            st.info(
-                "**Analysis Running** — The agent is generating and executing analysis steps. "
-                "The notebook below updates in real time as each step completes. "
-                "Click **Stop Analysis** in the sidebar to pause at any safe checkpoint."
-            )
-        if _is_stop_pending:
-            st.warning("Stop requested. Finishing current sub-step, then pausing for feedback...")
         with st.expander("📋 Output log", expanded=False):
             st.text_area("Log", value=output_text, height=200, disabled=True, label_visibility="collapsed")
         st.markdown('<div class="cv-notebooks-title">Notebooks</div>', unsafe_allow_html=True)
@@ -642,6 +661,25 @@ def _running_view():
             analyses = g._collect_notebooks_by_analysis(run_output_dir, num_total)
             tab_labels = [f"Analysis {i}" + (" ✓" if nb and i <= completed else " ●" if nb and i == current else "") for i, nb in analyses]
             tabs = st.tabs(tab_labels)
+            # Auto-select the tab for the currently running analysis
+            _target_tab = st.session_state.get("_active_run_tab", current - 1)
+            if _target_tab is None:
+                _target_tab = current - 1
+            if _target_tab > 0:
+                st.components.v1.html(f"""<script>
+(function() {{
+  var idx = {_target_tab};
+  var p = window.parent || window;
+  function clickTab() {{
+    var tabs = p.document.querySelectorAll('[data-testid="stTabs"] button[role="tab"]');
+    if (tabs.length > idx) {{ tabs[idx].click(); return true; }}
+    return false;
+  }}
+  var tries = 0;
+  function attempt() {{ if (tries++ > 30) return; if (!clickTab()) setTimeout(attempt, 100); }}
+  attempt();
+}})();
+</script>""", height=0)
             for i, (analysis_idx, nb_path) in enumerate(analyses):
                 with tabs[i]:
                     if nb_path:
@@ -662,15 +700,6 @@ def _running_view():
                     )
             else:
                 st.info("Notebooks will appear here as they are created.")
-
-    if show_chat and chat_col is not None:
-        with chat_col:
-            num_total = st.session_state.get("run_num_analyses", 1)
-            g._render_chat_box(
-                run_output_dir, analysis_idx=1,
-                num_total=num_total,
-                sel_key="chat_analysis_selection_run" if num_total > 1 else None,
-            )
 
     proc_done = proc is not None and proc.poll() is not None
     run_pid = st.session_state.get("run_pid")
@@ -752,7 +781,6 @@ if st.session_state.get("run_started") and g._has_live_run():
         pause_id = f"paused_{req_mtime}"
         edit_mode = st.session_state.get(f"pause_edit_mode_{pause_id}", False)
         show_chat = g._should_show_chat()
-        main_col, _gap, chat_col = st.columns([0.81, 0.02, 0.26])
         num_total = st.session_state.get("run_num_analyses", 1)
         paused_analysis_idx = None
         if nb_path:
@@ -761,19 +789,18 @@ if st.session_state.get("run_started") and g._has_live_run():
             if m:
                 paused_analysis_idx = int(m.group(1))
 
-        with main_col:
-            if _is_between_pause:
-                st.markdown("### ✅ Analysis complete — review before continuing")
-            else:
-                st.markdown('<div class="cv-notebooks-title">⏸\u2003Agent waiting for feedback</div>', unsafe_allow_html=True)
-            if num_total > 1 and paused_analysis_idx is not None:
-                analyses = g._collect_notebooks_by_analysis(st.session_state.run_output_dir, num_total)
-                tab_labels = [f"Analysis {i}" + (" ⏸" if i == paused_analysis_idx else "") for i, _ in analyses]
-                tabs = st.tabs(tab_labels)
-                # Always auto-select the paused analysis tab on every render (Streamlit resets tabs to 0 on each rerun)
-                if paused_analysis_idx > 1:
-                    _target = paused_analysis_idx - 1  # 0-based
-                    st.components.v1.html(f"""<script>
+        if _is_between_pause:
+            st.markdown("### ✅ Analysis complete — review before continuing")
+        else:
+            st.markdown('<div class="cv-notebooks-title">⏸\u2003Agent waiting for feedback</div>', unsafe_allow_html=True)
+        if num_total > 1 and paused_analysis_idx is not None:
+            analyses = g._collect_notebooks_by_analysis(st.session_state.run_output_dir, num_total)
+            tab_labels = [f"Analysis {i}" + (" ⏸" if i == paused_analysis_idx else "") for i, _ in analyses]
+            tabs = st.tabs(tab_labels)
+            # Always auto-select the paused analysis tab on every render (Streamlit resets tabs to 0 on each rerun)
+            if paused_analysis_idx > 1:
+                _target = paused_analysis_idx - 1  # 0-based
+                st.components.v1.html(f"""<script>
 (function() {{
   var idx = {_target};
   var p = window.parent || window;
@@ -787,8 +814,13 @@ if st.session_state.get("run_started") and g._has_live_run():
   attempt();
 }})();
 </script>""", height=0)
-                for i, (aidx, _) in enumerate(analyses):
-                    with tabs[i]:
+            for i, (aidx, _) in enumerate(analyses):
+                with tabs[i]:
+                    if show_chat:
+                        _nb_col, _gap_col, _chat_col = st.columns([0.74, 0.02, 0.24])
+                    else:
+                        _nb_col = st.container()
+                    with _nb_col:
                         if aidx == paused_analysis_idx and nb_path and Path(nb_path).exists():
                             import nbformat as nbf
                             from nbformat.v4 import new_code_cell, new_markdown_cell
@@ -798,12 +830,8 @@ if st.session_state.get("run_started") and g._has_live_run():
                                 try:
                                     summary_text = summary_path.read_text(encoding="utf-8").strip()
                                     if summary_text:
-                                        st.markdown("#### 🤖 What the agent has done so far")
-                                        escaped = html.escape(summary_text).replace("\n", "<br>")
-                                        st.markdown(
-                                            f'<div class="agent-summary-box"><div class="agent-summary-content">{escaped}</div></div>',
-                                            unsafe_allow_html=True,
-                                        )
+                                        st.markdown("**What the agent has done so far:**")
+                                        st.markdown(summary_text)
                                 except Exception:
                                     pass
                         else:
@@ -812,7 +840,17 @@ if st.session_state.get("run_started") and g._has_live_run():
                                 g._render_notebook_jupyter_style(other_nb_path, editable=False)
                             else:
                                 st.info("Pending")
-            elif nb_path and Path(nb_path).exists():
+                    if show_chat:
+                        with _chat_col:
+                            g._render_chat_box(
+                                st.session_state.run_output_dir, analysis_idx=aidx, floating=True,
+                            )
+        elif nb_path and Path(nb_path).exists():
+            if show_chat:
+                _nb_col, _gap_col, _chat_col = st.columns([0.74, 0.02, 0.24])
+            else:
+                _nb_col = st.container()
+            with _nb_col:
                 import nbformat as nbf
                 from nbformat.v4 import new_code_cell, new_markdown_cell
                 result = g._render_notebook_jupyter_style(nb_path, editable=True, pause_id=pause_id, sidebar_actions=True)
@@ -821,22 +859,15 @@ if st.session_state.get("run_started") and g._has_live_run():
                     try:
                         summary_text = summary_path.read_text(encoding="utf-8").strip()
                         if summary_text:
-                            st.markdown("#### 🤖 What the agent has done so far")
-                            escaped = html.escape(summary_text).replace("\n", "<br>")
-                            st.markdown(
-                                f'<div class="agent-summary-box"><div class="agent-summary-content">{escaped}</div></div>',
-                                unsafe_allow_html=True,
-                            )
+                            st.markdown("**What the agent has done so far:**")
+                            st.markdown(summary_text)
                     except Exception:
                         pass
-        if chat_col is not None:
-            with chat_col:
-                if show_chat:
-                    num_total = st.session_state.get("run_num_analyses", 1)
+            if show_chat:
+                with _chat_col:
+                    _chat_aidx = paused_analysis_idx if paused_analysis_idx else 1
                     g._render_chat_box(
-                        st.session_state.run_output_dir, analysis_idx=1, floating=True,
-                        num_total=num_total,
-                        sel_key="chat_analysis_selection_pause" if num_total > 1 else None,
+                        st.session_state.run_output_dir, analysis_idx=_chat_aidx, floating=True,
                     )
         if nb_path and Path(nb_path).exists() and result:
             out = result
@@ -909,6 +940,10 @@ if st.session_state.get("run_started") and g._has_live_run():
                 else:
                     response_path.write_text(feedback or "", encoding="utf-8")
                 request_path.unlink(missing_ok=True)
+                # Clean up stop request file so sidebar no longer shows "Stop requested"
+                _stop_path = (Path(run_output_dir) / g._STOP_REQUEST_FILE) if run_output_dir else None
+                if _stop_path:
+                    _stop_path.unlink(missing_ok=True)
                 st.session_state["_transitioning_from_pause"] = True
                 st.session_state["_pending_scroll_bottom"] = True
                 # Keep the running view on the same analysis tab that was paused
@@ -922,6 +957,9 @@ if st.session_state.get("run_started") and g._has_live_run():
                 _next_feedback = st.session_state.get(f"pause_feedback_{pause_id}", "") or ""
                 response_path.write_text(_next_feedback, encoding="utf-8")
                 request_path.unlink(missing_ok=True)
+                _stop_path = (Path(run_output_dir) / g._STOP_REQUEST_FILE) if run_output_dir else None
+                if _stop_path:
+                    _stop_path.unlink(missing_ok=True)
                 st.session_state["_transitioning_from_pause"] = True
                 st.session_state["_pending_scroll_bottom"] = True
                 # Schedule a tab jump to the next analysis tab (0-based index)
@@ -946,35 +984,32 @@ if st.session_state.get("run_started") and g._has_live_run():
         _pending_tab = st.session_state.pop("_pending_tab_jump", None)
         if _pending_tab is not None:
             st.session_state["_active_run_tab"] = _pending_tab
-        # Always re-inject JS on every full rerun while running, so tab survives reruns
-        _active_run_tab = st.session_state.get("_active_run_tab")
-        if _active_run_tab:
-            st.components.v1.html(f"""<script>
-(function() {{
-  var idx = {_active_run_tab};
+        _do_scroll_bottom = st.session_state.pop("_pending_scroll_bottom", False)
+        if _do_scroll_bottom:
+            # Set sessionStorage flag so _install_continue_scroll_restore picks it up
+            st.components.v1.html("""<script>
+(function() {
   var p = window.parent || window;
-  function clickTab() {{
-    var tabs = p.document.querySelectorAll('[data-testid="stTabs"] button[role="tab"]');
-    if (tabs.length > idx) {{ tabs[idx].click(); return true; }}
-    return false;
-  }}
-  var tries = 0;
-  function attempt() {{ if (tries++ > 30) return; if (!clickTab()) setTimeout(attempt, 100); }}
-  attempt();
-}})();
+  p.sessionStorage.removeItem("cellvoyager_scroll_restore");
+  p.sessionStorage.setItem("cellvoyager_scroll_to_bottom", String(Date.now()));
+})();
 </script>""", height=0)
-        if st.session_state.pop("_pending_scroll_bottom", False):
+        _running_view()
+        # Scroll AFTER the running view has rendered so scrollHeight is correct
+        if _do_scroll_bottom:
             st.components.v1.html("""<script>
 (function() {
   var p = window.parent || window;
   function scrollToBottom() {
-    p.document.documentElement.scrollTop = p.document.body.scrollHeight;
-    p.window.scrollTo({ top: p.document.body.scrollHeight, behavior: 'smooth' });
+    var h = Math.max(p.document.documentElement.scrollHeight, p.document.body.scrollHeight);
+    p.document.documentElement.scrollTop = h;
+    p.document.body.scrollTop = h;
+    p.window.scrollTo({ top: h, behavior: 'smooth' });
   }
-  [100, 600, 1400, 2500].forEach(function(t) { setTimeout(scrollToBottom, t); });
+  scrollToBottom();
+  [100, 300, 600, 1200, 2500, 5000].forEach(function(t) { setTimeout(scrollToBottom, t); });
 })();
 </script>""", height=0)
-        _running_view()
 
 # Interactive edit screen (when analysis was stopped — no agent, but full edit UI)
 elif st.session_state.run_output_dir and not st.session_state.run_started and st.session_state.get("run_show_interactive"):
@@ -1049,12 +1084,8 @@ elif st.session_state.run_output_dir and not st.session_state.run_started and st
         if chat_col is not None:
             with chat_col:
                 if show_chat:
-                    analyses = g._collect_notebooks_by_analysis(st.session_state.run_output_dir, st.session_state.get("run_num_analyses", 1))
-                    num_total_killed = len(analyses)
                     g._render_chat_box(
                         st.session_state.run_output_dir, analysis_idx=1,
-                        num_total=num_total_killed,
-                        sel_key="chat_analysis_selection_killed" if num_total_killed > 1 else None,
                     )
     else:
         st.warning("No notebook found. Click Finish to return home.")
@@ -1086,65 +1117,70 @@ elif st.session_state.run_output_dir and not st.session_state.run_started:
             except Exception:
                 pass
     show_chat = g._should_show_chat()
-    if show_chat:
-        main_col, _gap, chat_col = st.columns([0.81, 0.02, 0.26])
+
+    st.markdown("---")
+    st.markdown("### 📓 Notebooks")
+    st.caption("From your last run.")
+
+    _run_error = st.session_state.get("run_error")
+    # Also try reading from file if session state was lost
+    if not _run_error and st.session_state.run_output_dir:
+        _err_file = Path(st.session_state.run_output_dir) / g._RUN_ERROR_FILE
+        if _err_file.exists():
+            try:
+                _run_error = _err_file.read_text(encoding="utf-8").strip()
+            except Exception:
+                pass
+
+    if _run_error:
+        st.error(f"**Analysis crashed** — {_run_error}")
+        _log_text = g._get_run_log()
+        if _log_text.strip():
+            with st.expander("📋 Full output log", expanded=True):
+                st.code(_log_text, language=None)
     else:
-        main_col = st.container()
-        chat_col = None
+        st.info(
+            "**Analysis Complete** — Your results are ready below. "
+            "Use **Continue Analysis** in the sidebar to extend any analysis further, "
+            "or **Finish Analysis** to return home."
+        )
 
-    with main_col:
-        st.markdown("---")
-        st.markdown("### 📓 Notebooks")
-        st.caption("From your last run.")
+    num_total = st.session_state.get("run_num_analyses", 1)
 
-        _run_error = st.session_state.get("run_error")
-        # Also try reading from file if session state was lost
-        if not _run_error and st.session_state.run_output_dir:
-            _err_file = Path(st.session_state.run_output_dir) / g._RUN_ERROR_FILE
-            if _err_file.exists():
-                try:
-                    _run_error = _err_file.read_text(encoding="utf-8").strip()
-                except Exception:
-                    pass
-
-        if _run_error:
-            st.error(f"**Analysis crashed** — {_run_error}")
-            _log_text = g._get_run_log()
-            if _log_text.strip():
-                with st.expander("📋 Full output log", expanded=True):
-                    st.code(_log_text, language=None)
-        else:
-            st.info(
-                "**Analysis Complete** — Your results are ready below. "
-                "Use **Continue Analysis** in the sidebar to extend any analysis further, "
-                "or **Finish Analysis** to return home."
-            )
-
-        num_total = st.session_state.get("run_num_analyses", 1)
-
-        if num_total > 1:
-            analyses = g._collect_notebooks_by_analysis(st.session_state.run_output_dir, num_total)
-            tab_labels = [f"Analysis {i}" for i, _ in analyses]
-            tabs = st.tabs(tab_labels)
-            for i, (analysis_idx, nb_path) in enumerate(analyses):
-                with tabs[i]:
+    if num_total > 1:
+        analyses = g._collect_notebooks_by_analysis(st.session_state.run_output_dir, num_total)
+        tab_labels = [f"Analysis {i}" for i, _ in analyses]
+        tabs = st.tabs(tab_labels)
+        for i, (analysis_idx, nb_path) in enumerate(analyses):
+            with tabs[i]:
+                if show_chat:
+                    _nb_col, _gap, _chat_col = st.columns([0.74, 0.02, 0.24])
+                else:
+                    _nb_col = st.container()
+                with _nb_col:
                     if nb_path:
                         g._render_notebook_jupyter_style(nb_path, editable=False, save_snapshot=True, output_dir=st.session_state.run_output_dir)
                     else:
                         st.info("No notebook for this analysis.")
+                if show_chat:
+                    with _chat_col:
+                        g._render_chat_box(
+                            st.session_state.run_output_dir, analysis_idx=analysis_idx, floating=True,
+                        )
+    else:
+        if show_chat:
+            _nb_col, _gap, _chat_col = st.columns([0.74, 0.02, 0.24])
         else:
+            _nb_col = st.container()
+        with _nb_col:
             analyses_single = g._collect_notebooks_by_analysis(st.session_state.run_output_dir, 1)
             if analyses_single and analyses_single[0][1]:
                 _, nb_path = analyses_single[0]
                 g._render_notebook_jupyter_style(nb_path, editable=False, save_snapshot=True, output_dir=st.session_state.run_output_dir)
             else:
                 st.info("Run an analysis to see notebooks here.")
-
-    if show_chat and chat_col is not None and st.session_state.run_output_dir:
-        with chat_col:
-            num_total = st.session_state.get("run_num_analyses", 1)
-            g._render_chat_box(
-                st.session_state.run_output_dir, analysis_idx=1,
-                num_total=num_total,
-                sel_key="chat_analysis_selection" if num_total > 1 else None,
-            )
+        if show_chat:
+            with _chat_col:
+                g._render_chat_box(
+                    st.session_state.run_output_dir, analysis_idx=1, floating=True,
+                )

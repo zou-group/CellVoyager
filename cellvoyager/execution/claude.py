@@ -71,6 +71,8 @@ class NotebookSession:
         # Make inline plots show up in notebook outputs and ensure cwd is correct.
         bootstrap = (
             "%matplotlib inline\n"
+            "import warnings\n"
+            "warnings.filterwarnings('ignore')\n"
             "import os\n"
             f"os.chdir(r'''{self.path.parent}''')\n"
         )
@@ -98,6 +100,8 @@ class NotebookSession:
         self.setup_executed = False
         bootstrap = (
             "%matplotlib inline\n"
+            "import warnings\n"
+            "warnings.filterwarnings('ignore')\n"
             "import os\n"
             f"os.chdir(r'''{self.path.parent}''')\n"
         )
@@ -196,7 +200,24 @@ class NotebookSession:
         source = cell.source
         if isinstance(source, list):
             source = "\n".join(source)
+
+        # Signal to the GUI that this cell is executing
+        running_path = self.path.parent / ".cellvoyager_running_cell"
+        try:
+            running_path.write_text(json.dumps({
+                "cell_index": index,
+                "started_at": time.time(),
+            }), encoding="utf-8")
+        except Exception:
+            pass
+
         result = self._execute_source(source)
+
+        # Clear the running signal
+        try:
+            running_path.unlink(missing_ok=True)
+        except Exception:
+            pass
 
         cell["outputs"] = result["outputs"]
         cell["execution_count"] = result["execution_count"]
@@ -235,12 +256,24 @@ class NotebookSession:
         execution_count = None
         error_text = None
         paused_by_user = False
+        killed_by_user = False
+
+        # Kill-cell signal file lives in the notebook's parent directory
+        kill_path = self.path.parent / ".cellvoyager_kill_cell"
 
         import queue
         while True:
             try:
                 msg = self.kc.get_iopub_msg(timeout=2)
             except queue.Empty:
+                # Check for kill signal during idle waits
+                if kill_path.exists():
+                    try:
+                        kill_path.unlink(missing_ok=True)
+                        self.km.interrupt_kernel()
+                        killed_by_user = True
+                    except Exception:
+                        pass
                 continue
             if msg.get("parent_header", {}).get("msg_id") != msg_id:
                 continue
@@ -291,7 +324,10 @@ class NotebookSession:
                 outputs = []
 
         preview = self._outputs_preview(outputs, 4000)
-        ok = error_text is None and not paused_by_user
+        ok = error_text is None and not paused_by_user and not killed_by_user
+
+        if killed_by_user:
+            error_text = "Cell execution was interrupted by user."
 
         return {
             "ok": ok,
@@ -300,6 +336,7 @@ class NotebookSession:
             "preview": preview,
             "error": error_text,
             "paused_by_user": paused_by_user,
+            "killed_by_user": killed_by_user,
         }
 
     @staticmethod
@@ -571,60 +608,49 @@ def run_mcp_server() -> None:
         _SUMMARY_MAX_BULLETS = 5
 
         def _extract_agent_summary(nb: Any) -> str:
-            """Build a concise bullet-point summary of what the agent has done so far."""
-
-            def _first_bullets(block: str, n: int = _SUMMARY_MAX_BULLETS) -> list[str]:
-                """Extract first n bullet items, stripped of markdown."""
-                bullets = []
-                for line in block.split("\n"):
-                    m = re.match(r"^\s*[-*]\s+(.+)|^\s*\d+[.)]\s+(.+)", line)
-                    if m:
-                        item = (m.group(1) or m.group(2) or "").strip().rstrip(".:")
-                        item = re.sub(r"\*\*([^*]+)\*\*", r"\1", item)
-                        if len(item) > 8:
-                            bullets.append(item)
-                            if len(bullets) >= n:
-                                break
-                return bullets
-
-            def _to_bullets(items: list[str]) -> str:
-                """Format as '- item\\n' for display."""
-                return "\n".join(f"- {it}" for it in items)
-
-            last_interpretation = None
-            last_step_summary = None
+            """Use an LLM to produce a 2-bullet summary of what the agent has done so far."""
+            md_parts = []
             for cell in nb.cells:
                 if cell.cell_type != "markdown":
                     continue
                 src = cell.source
                 text = "\n".join(src) if isinstance(src, list) else (src or "")
                 text = text.strip()
-                if not text or text.startswith(_FEEDBACK_CELL_MARKER):
-                    continue
-                first_line = text.split("\n")[0].lower()
-                if "— Interpretation" in text or "Interpretation:" in text:
-                    last_interpretation = text
-                elif "step" in first_line or "steps" in first_line:
-                    if "interpretation" not in first_line:
-                        last_step_summary = text
-            candidate = last_interpretation or last_step_summary
-            if not candidate:
+                if text and not text.startswith(_FEEDBACK_CELL_MARKER):
+                    md_parts.append(text)
+            if not md_parts:
                 return "No steps completed yet."
-            for pattern in (r"\*\*Plan going forward[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)", r"\*\*What the output shows[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)", r"\*\*Output summary[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)"):
-                m = re.search(pattern, candidate, re.DOTALL)
-                if m:
-                    block = m.group(1).strip()
-                    bullets = _first_bullets(block)
-                    if bullets:
-                        return _to_bullets(bullets)
-            no_header = re.sub(r"^#+\s+[^\n]+\n*", "", candidate)
-            no_header = re.sub(r"\*\*[^*]+\*\*[:\s]*", "", no_header)
-            bullets = _first_bullets(no_header)
-            if bullets:
-                return _to_bullets(bullets)
-            first_line = no_header.split("\n")[0].strip()
-            if len(first_line) > 10 and not first_line.endswith(":"):
-                return f"- {first_line[:300]}"
+            context = "\n\n".join(md_parts[-6:])[:4000]
+            prompt = (
+                "Below are markdown cells from a single-cell transcriptomics analysis notebook. "
+                "Summarize what the analysis has done so far in exactly 2 short bullet points. "
+                "Just return the 2 bullet points, nothing else.\n\n" + context
+            )
+            anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
+            if anthropic_key:
+                try:
+                    import anthropic
+                    client = anthropic.Anthropic(api_key=anthropic_key)
+                    resp = client.messages.create(
+                        model="claude-haiku-4-5-20251001", max_tokens=150,
+                        messages=[{"role": "user", "content": prompt}],
+                    )
+                    if resp.content:
+                        return resp.content[0].text.strip()
+                except Exception:
+                    pass
+            openai_key = os.environ.get("OPENAI_API_KEY")
+            if openai_key:
+                try:
+                    from openai import OpenAI
+                    client = OpenAI(api_key=openai_key)
+                    resp = client.chat.completions.create(
+                        model="gpt-4o-mini", max_tokens=150,
+                        messages=[{"role": "user", "content": prompt}],
+                    )
+                    return (resp.choices[0].message.content or "").strip()
+                except Exception:
+                    pass
             return "No steps completed yet."
 
         @mcp.tool()
@@ -643,8 +669,13 @@ def run_mcp_server() -> None:
             if _GUI_MODE and (has_gui_request or force_gui_pause):
                 if not has_gui_request:
                     request_path.write_text(nb_path, encoding="utf-8")
-                if not agent_summary_path.exists():
-                    agent_summary_path.write_text(_extract_agent_summary(session.nb), encoding="utf-8")
+                agent_summary_path.unlink(missing_ok=True)
+                def _write_summary_bg():
+                    try:
+                        agent_summary_path.write_text(_extract_agent_summary(session.nb), encoding="utf-8")
+                    except Exception:
+                        pass
+                threading.Thread(target=_write_summary_bg, daemon=True).start()
                 if response_path.exists():
                     feedback = response_path.read_text(encoding="utf-8").strip()
                     response_path.unlink(missing_ok=True)
@@ -671,7 +702,14 @@ def run_mcp_server() -> None:
 
             response_path.unlink(missing_ok=True)
             request_path.write_text(nb_path, encoding="utf-8")
-            agent_summary_path.write_text(_extract_agent_summary(session.nb), encoding="utf-8")
+            # Clear stale summary and generate new one in background
+            agent_summary_path.unlink(missing_ok=True)
+            def _write_summary():
+                try:
+                    agent_summary_path.write_text(_extract_agent_summary(session.nb), encoding="utf-8")
+                except Exception:
+                    pass
+            threading.Thread(target=_write_summary, daemon=True).start()
             _poll_interval = 0.05  # 50ms for responsive execute handling
             _iter_limit = None  # Wait indefinitely for user feedback in both modes
             _iter = 0
@@ -850,15 +888,17 @@ class CellVoyagerClaudeRunner:
     def _write_initial_notebook(self, analysis: dict[str, Any], analysis_idx: int) -> Path:
         nb = new_notebook()
 
-        hypothesis = analysis["hypothesis"]
-        plan = analysis["analysis_plan"]
+        hypothesis = analysis.get("hypothesis", "No hypothesis provided")
+        plan = analysis.get("analysis_plan", [])
 
         nb.cells.append(new_markdown_cell(f"# Analysis\n\n**Hypothesis**: {hypothesis}"))
 
         setup_code = f"""import scanpy as sc
+import scvi
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 print("Loading data...")
 adata = sc.read_h5ad(r'''{self.h5ad_path}''')
@@ -876,9 +916,9 @@ print(f"Loaded: {{adata.n_obs}} cells x {{adata.n_vars}} genes")
         return notebook_path
 
     def _build_prompt(self, analysis: dict[str, Any], notebook_path: Path) -> str:
-        hypothesis = analysis["hypothesis"]
-        plan = analysis["analysis_plan"]
-        first_step_code = strip_code_fences(analysis["first_step_code"])
+        hypothesis = analysis.get("hypothesis", "No hypothesis provided")
+        plan = analysis.get("analysis_plan", [])
+        first_step_code = strip_code_fences(analysis.get("first_step_code", ""))
 
         plan_text = "\n".join(f"{i+1}. {step}" for i, step in enumerate(plan))
 
@@ -1266,7 +1306,27 @@ class ClaudeJupyterExecutor(CellVoyagerClaudeRunner):
                     analysis_idx: int = 0, seeded: bool = False) -> str:
         """Returns updated past_analyses string for agent_v2 compatibility."""
         notebook_path = super().execute_idea(analysis, analysis_idx)
-        return f"{past_analyses}Analysis {analysis_idx + 1}: Completed. Notebook: {notebook_path}\n\n"
+        # Build a rich summary so the next analysis can be distinct
+        hypothesis = analysis.get("hypothesis", "")
+        plan = analysis.get("analysis_plan", [])
+        plan_str = "\n".join(f"  - {step}" for step in plan) if plan else ""
+        # Extract key findings from notebook markdown cells
+        findings = ""
+        try:
+            nb = nbf.read(notebook_path, as_version=4)
+            for cell in reversed(nb.cells):
+                if cell.cell_type == "markdown":
+                    src = cell.source if isinstance(cell.source, str) else "\n".join(cell.source)
+                    first_line = src.strip().split("\n")[0].lower()
+                    if "summary" in first_line or "finding" in first_line or "conclusion" in first_line:
+                        findings = src.strip()[:500]
+                        break
+        except Exception:
+            pass
+        summary = f"Analysis {analysis_idx + 1}:\n  Hypothesis: {hypothesis}\n  Plan:\n{plan_str}\n"
+        if findings:
+            summary += f"  Key findings:\n  {findings}\n"
+        return f"{past_analyses}{summary}\n"
 
     def resume_from_notebook(self, notebook_path: str, analysis_idx: int = 0, user_feedback: str | None = None, extend: bool = False) -> None:
         """Resume a completed analysis: restore kernel state by executing cells, then pause or extend."""

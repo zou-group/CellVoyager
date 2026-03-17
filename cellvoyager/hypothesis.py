@@ -15,6 +15,30 @@ litellm.drop_params = True  # ignore unsupported params per-model silently
 _instructor_client = instructor.from_litellm(litellm.completion)
 
 
+_MODEL_ALIASES = {
+    "gpt-5.3": "openai/gpt-5.3-chat-latest",
+    "gpt-5.2": "openai/gpt-5.2-chat-latest",
+}
+
+
+def _normalize_model_name(model: str) -> str:
+    """Add provider prefix for litellm if not already present."""
+    if model in _MODEL_ALIASES:
+        return _MODEL_ALIASES[model]
+    if "/" in model:
+        return model  # already has provider prefix
+    if model.startswith("claude-") or model.startswith("anthropic"):
+        return model  # litellm auto-detects Anthropic models
+    # Known auto-detected OpenAI models
+    _auto_detected = {"gpt-4o", "gpt-4o-mini", "gpt-4", "gpt-3.5-turbo", "o1", "o3-mini", "o3", "o4-mini"}
+    if model in _auto_detected:
+        return model
+    # For newer OpenAI models add the prefix
+    if model.startswith(("gpt-", "o1-", "o3-", "o4-")):
+        return f"openai/{model}"
+    return model
+
+
 class AnalysisPlan(BaseModel):
     hypothesis: str
     analysis_plan: list[str]
@@ -45,7 +69,8 @@ class HypothesisGenerator:
         log_prompts=False,
         client=None,  # kept for backward compat, unused
     ):
-        self.model_name = model_name
+        # Ensure litellm can route the model — add provider prefix if needed
+        self.model_name = _normalize_model_name(model_name)
         self.prompt_dir = prompt_dir
         self.coding_guidelines = coding_guidelines
         self.coding_system_prompt = coding_system_prompt

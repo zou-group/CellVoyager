@@ -26,7 +26,7 @@ def _launch_resume(output_dir: str, analysis_idx: int, run_to_completion: bool =
     runs to completion without pausing for feedback."""
     out_dir = Path(output_dir)
     # Clear stale pause/step/stop files so we don't show wrong UI from previous stopped run
-    for f in (_PAUSE_REQUEST_FILE, _PAUSE_RESPONSE_FILE, _STEP_COUNT_FILE, _STOP_REQUEST_FILE):
+    for f in (_PAUSE_REQUEST_FILE, _PAUSE_RESPONSE_FILE, _STEP_COUNT_FILE, _STOP_REQUEST_FILE, _KILL_CELL_FILE, _RUNNING_CELL_FILE):
         (out_dir / f).unlink(missing_ok=True)
     if run_to_completion:
         cfg_path = out_dir / _RUN_CONFIG_FILE
@@ -111,6 +111,8 @@ _PAUSE_RESPONSE_FILE = ".cellvoyager_pause_response"
 _EXECUTE_REQUEST_FILE = ".cellvoyager_execute_request"
 _STEP_COUNT_FILE = ".cellvoyager_step_count"
 _STOP_REQUEST_FILE = ".cellvoyager_stop_request"
+_KILL_CELL_FILE = ".cellvoyager_kill_cell"
+_RUNNING_CELL_FILE = ".cellvoyager_running_cell"
 _AGENT_SUMMARY_FILE = ".cellvoyager_agent_summary"
 _CHAT_REQUEST_FILE = ".cellvoyager_chat_request"
 _CHAT_RESPONSE_FILE = ".cellvoyager_chat_response"
@@ -212,39 +214,56 @@ def _has_live_run() -> bool:
 
 
 def _extract_agent_summary_from_notebook(nb_path: Path) -> str:
-    """Extract a brief summary from the notebook for the pause UI."""
-    import re
+    """Use an LLM to produce a 2-bullet summary of what the agent has done so far."""
     try:
         import nbformat as nbf
         nb = nbf.read(str(nb_path), as_version=4)
     except Exception:
         return "Paused by user."
-    _FEEDBACK = "## 📝 Your feedback"
-    last_interp = None
-    last_step = None
+    # Collect markdown cells as context (skip feedback cells)
+    md_parts = []
     for cell in nb.cells:
         if cell.cell_type != "markdown":
             continue
         src = getattr(cell, "source", "") or ""
         text = "\n".join(src) if isinstance(src, list) else str(src)
         text = text.strip()
-        if not text or text.startswith(_FEEDBACK):
-            continue
-        first = text.split("\n")[0].lower()
-        if "interpretation" in text:
-            last_interp = text
-        elif "step" in first:
-            last_step = text
-    cand = last_interp or last_step
-    if not cand:
+        if text and not text.startswith("## 📝 Your feedback"):
+            md_parts.append(text)
+    if not md_parts:
         return "Paused by user."
-    for pat in (r"\*\*Plan going forward[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)", r"\*\*What the output shows[^*]*\*\*[:\s]*\n?(.+?)(?=\n\n|\n\*\*|$)"):
-        m = re.search(pat, cand, re.DOTALL)
-        if m:
-            block = m.group(1).strip()
-            bullets = [l.strip().lstrip("-*").strip() for l in block.split("\n") if l.strip() and len(l.strip()) > 8][:5]
-            if bullets:
-                return "\n".join(f"- {b}" for b in bullets)
+    context = "\n\n".join(md_parts[-6:])[:4000]  # Last few cells, capped
+    prompt = (
+        "Below are markdown cells from a single-cell transcriptomics analysis notebook. "
+        "Summarize what the analysis has done so far in exactly 2 short bullet points. "
+        "Just return the 2 bullet points, nothing else.\n\n" + context
+    )
+    # Try Anthropic first, then OpenAI
+    anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+    if anthropic_key:
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=anthropic_key)
+            resp = client.messages.create(
+                model="claude-haiku-4-5-20251001", max_tokens=150,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            if resp.content:
+                return resp.content[0].text.strip()
+        except Exception:
+            pass
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key:
+        try:
+            from openai import OpenAI
+            client = OpenAI(api_key=openai_key)
+            resp = client.chat.completions.create(
+                model="gpt-4o-mini", max_tokens=150,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return (resp.choices[0].message.content or "").strip()
+        except Exception:
+            pass
     return "Paused by user."
 
 
@@ -265,11 +284,34 @@ def _request_pause() -> bool:
     (out_dir / _STOP_REQUEST_FILE).write_text("1", encoding="utf-8")
     # Clear stale response from prior pause so backend waits for a fresh Continue/Finish.
     (out_dir / _PAUSE_RESPONSE_FILE).unlink(missing_ok=True)
-    # Optional precomputed summary if a notebook already exists.
-    notebooks = sorted(out_dir.glob("*.ipynb"), key=lambda p: p.stat().st_mtime, reverse=True)
-    if notebooks:
-        summary = _extract_agent_summary_from_notebook(notebooks[0])
-        (out_dir / _AGENT_SUMMARY_FILE).write_text(summary, encoding="utf-8")
+    # Generate summary in background so the Stop button responds instantly.
+    def _bg_summary():
+        try:
+            notebooks = sorted(out_dir.glob("*.ipynb"), key=lambda p: p.stat().st_mtime, reverse=True)
+            if notebooks:
+                summary = _extract_agent_summary_from_notebook(notebooks[0])
+                (out_dir / _AGENT_SUMMARY_FILE).write_text(summary, encoding="utf-8")
+        except Exception:
+            pass
+    import threading
+    threading.Thread(target=_bg_summary, daemon=True).start()
+    return True
+
+
+def _kill_cell_path() -> Path | None:
+    """Return the kill-cell signal file path, or None if no output dir."""
+    out_dir_str = st.session_state.get("run_output_dir")
+    if not out_dir_str:
+        return None
+    return Path(out_dir_str).resolve() / _KILL_CELL_FILE
+
+
+def _request_kill_cell() -> bool:
+    """Signal the agent/kernel to interrupt the currently running cell."""
+    p = _kill_cell_path()
+    if p is None:
+        return False
+    p.write_text("1", encoding="utf-8")
     return True
 
 
@@ -668,6 +710,25 @@ def _render_notebook_jupyter_style(nb_path, editable=False, pause_id=None, stand
     except (nbf.reader.NotJSONError, ValueError, Exception) as e:
         st.warning(f"Could not load notebook `{Path(nb_path).name}` (empty or invalid): {e}")
         return None
+    # If a cell was just killed, clear its outputs from the notebook so the error doesn't linger
+    _killed = st.session_state.pop("_killed_cell", None)
+    if _killed and _killed.get("nb_path") == str(nb_path):
+        _ki = _killed.get("cell_index")
+        if _ki is not None and _ki < len(nb.cells) and nb.cells[_ki].cell_type == "code":
+            nb.cells[_ki].outputs = []
+            try:
+                with open(nb_path, "w", encoding="utf-8") as f:
+                    nbf.write(nb, f)
+            except Exception:
+                pass
+    # Read the running-cell signal file (written by the execution backend)
+    _running_cell_info = None
+    _running_file = Path(nb_path).parent / _RUNNING_CELL_FILE
+    if _running_file.exists():
+        try:
+            _running_cell_info = json.loads(_running_file.read_text(encoding="utf-8"))
+        except Exception:
+            pass
     edit_mode = editable and pause_id and st.session_state.get(f"pause_edit_mode_{pause_id}", False)
     if edit_mode:
         st.markdown(
@@ -732,6 +793,19 @@ def _render_notebook_jupyter_style(nb_path, editable=False, pause_id=None, stand
                 _render_cell_display(cell)
                 if editable:
                     cell_sources.append(_cell_source_str(cell))
+                # In non-edit running view, show progress for the currently executing cell
+                # using the signal file written by the execution backend
+                if (not edit_mode and not editable
+                        and cell.cell_type == "code"
+                        and _running_cell_info is not None
+                        and _running_cell_info.get("cell_index") == i):
+                    _elapsed = time.time() - _running_cell_info.get("started_at", time.time())
+                    _rc, _kc = st.columns([4, 1])
+                    with _rc:
+                        st.info(f"⏳ Running... ({_elapsed:.0f}s)")
+                    with _kc:
+                        if st.button("⛔ Kill", key=f"kill_cell_agent_{nb_path}_{i}", type="primary"):
+                            _request_kill_cell()
             if edit_mode:
                 if cell.cell_type == "code" and not standalone_edit:
                     is_running_this_cell = (
@@ -742,7 +816,18 @@ def _render_notebook_jupyter_style(nb_path, editable=False, pause_id=None, stand
                     )
                     if is_running_this_cell:
                         elapsed = time.monotonic() - float(run_monitor.get("started_monotonic", time.monotonic()))
-                        st.info(f"Running code cell... waiting for completion ({elapsed:.1f}s)")
+                        _rc, _kc = st.columns([4, 1])
+                        with _rc:
+                            st.info(f"⏳ Running code cell... ({elapsed:.0f}s)")
+                        with _kc:
+                            if st.button("⛔ Kill", key=f"kill_cell_edit_{pause_id}_{i}", type="primary"):
+                                _request_kill_cell()
+                                st.session_state.pop("_cell_run_monitor", None)
+                                st.session_state["_killed_cell"] = {
+                                    "nb_path": nb_path,
+                                    "cell_index": i,
+                                }
+                                st.rerun()
                     else:
                         _btn = st.button if sidebar_actions else st.form_submit_button
                         if _btn(
@@ -821,17 +906,8 @@ def _render_notebook_jupyter_style(nb_path, editable=False, pause_id=None, stand
                         continue_clicked = st.form_submit_button("Continue Analysis", help="Send feedback and continue analysis", type="primary", width="stretch")
                     with c3:
                         finish_clicked = st.form_submit_button("Finish Analysis", help="Tell agent to finish the analysis", type="primary", width="stretch")
-        if edit_mode:
-            st.caption(
-                "Use per-cell controls to run and insert below, or add new cells at the end."
-                + ("" if standalone_edit else " Run code cells, then Continue or Finish.")
-            )
-            add_row = st.columns(2)
-            _btn = st.button if sidebar_actions else st.form_submit_button
-            with add_row[0]:
-                add_code = _btn("+ Code cell (at end)")
-            with add_row[1]:
-                add_md = _btn("+ Markdown (at end)")
+        if edit_mode and not standalone_edit:
+            st.caption("Use per-cell controls to run and insert below. Run code cells, then Continue or Finish.")
         if add_code and insert_type is None:
             insert_after_idx = len(nb.cells) - 1
             insert_type = "code"
@@ -969,41 +1045,29 @@ def _render_chat_box(
     output_dir: str | None,
     analysis_idx: int | None = None,
     floating: bool = False,
-    num_total: int = 1,
-    sel_key: str | None = None,
 ):
-    """Lightweight chat panel. Renders a compact analysis selector, message history, and input bar.
+    """Lightweight chat panel with message history and input bar.
     When floating=True, pins the parent column to the viewport."""
     if not output_dir:
         return
 
-    # Compact "Analysis: [selector]" row
-    if num_total > 1 and sel_key:
-        if sel_key not in st.session_state:
-            st.session_state[sel_key] = 1
-        # Only show analyses that have an actual notebook on disk
-        _existing = _collect_notebooks_by_analysis(output_dir, num_total)
-        _created = [i for i, nb in _existing if nb is not None]
-        if not _created:
-            _created = [1]
-        # Clamp the stored selection to the created range
-        if st.session_state[sel_key] not in _created:
-            st.session_state[sel_key] = _created[-1]
-        _lbl, _sel = st.columns([0.28, 0.72])
-        with _lbl:
-            st.markdown(
-                '<p style="margin:0;font-size:0.8rem;'
-                'color:#64748b;font-weight:600">Analysis:</p>',
-                unsafe_allow_html=True,
-            )
-        with _sel:
-            analysis_idx = st.selectbox(
-                "Analysis",
-                options=_created,
-                format_func=lambda x: f"Analysis {x}",
-                key=sel_key,
-                label_visibility="collapsed",
-            )
+    # Header with expand/collapse toggle
+    expanded = st.session_state.get("cv_chat_expanded", False)
+    _h_col, _btn_col = st.columns([3, 1])
+
+    with _h_col:
+        st.markdown(
+            '<p style="margin:0 0 0.4rem 0;font-size:0.95rem;font-weight:700;color:#1e293b">💬 Chat with Agent</p>',
+            unsafe_allow_html=True,
+        )
+    with _btn_col:
+        if st.button(
+            "✕ Close" if expanded else "⤢ Expand",
+            key=f"cv_chat_expand_btn_{analysis_idx}",
+            help="Close overlay" if expanded else "Expand to full overlay",
+        ):
+            st.session_state["cv_chat_expanded"] = not expanded
+            st.rerun()
 
     suffix = f"_analysis_{analysis_idx}" if analysis_idx is not None else ""
     key = f"agent_chat_{output_dir}{suffix}"
@@ -1017,23 +1081,6 @@ def _render_chat_box(
         messages.append({"role": "user", "content": pending_prompt})
         _save_chat_history(output_dir, analysis_idx, messages)
         st.session_state[pending_reply_key] = True
-
-    # Header with expand/collapse toggle
-    expanded = st.session_state.get("cv_chat_expanded", False)
-    _h_col, _btn_col = st.columns([2.5, 1])
-    with _h_col:
-        st.markdown(
-            '<p style="margin:0 0 0.4rem 0;font-size:0.95rem;font-weight:700;color:#1e293b">💬 Chat with Agent</p>',
-            unsafe_allow_html=True,
-        )
-    with _btn_col:
-        if st.button(
-            "✕ Close" if expanded else "⤢ Expand",
-            key="cv_chat_expand_btn",
-            help="Close overlay" if expanded else "Expand to full overlay",
-        ):
-            st.session_state["cv_chat_expanded"] = not expanded
-            st.rerun()
 
     # CSS — base styles + optional overlay when expanded
     _overlay_css = (
@@ -1074,8 +1121,14 @@ def _render_chat_box(
         '[data-testid="stColumn"]:has([data-testid="stForm"]) [data-testid="stHorizontalBlock"]:has(select) { align-items:center !important; }'
         '[data-testid="stForm"] input { background:#fff !important; border:1px solid #cbd5e1 !important; border-radius:6px !important; color:#0f172a !important; }'
         '[data-testid="stForm"] input::placeholder { color:#94a3b8 !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) [data-testid="stForm"] { margin-bottom:0 !important; padding-bottom:0 !important; border:none !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) [data-testid="stForm"] > div { padding-bottom:0 !important; gap:0 !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) [data-testid="stVerticalBlockBorderWrapper"] { margin-bottom:0 !important; padding-bottom:0 !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) [data-testid="stVerticalBlock"] { gap:0.35rem !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) .cv-chat-anchor { display:none !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) iframe { display:none !important; }'
         # Chat box container — prominent border so it stands out on dark backgrounds
-        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) { background:#ffffff !important; border:2px solid #60a5fa !important; border-radius:12px !important; padding:0.75rem !important; box-shadow:0 0 20px rgba(96,165,250,0.6), 0 0 40px rgba(96,165,250,0.25) !important; max-height:calc(100vh - 4rem) !important; overflow-y:auto !important; }'
+        '[data-testid="stColumn"]:has(.cv-chat-top-anchor) { background:#ffffff !important; border:2px solid #60a5fa !important; border-radius:12px !important; padding:0.75rem 0.75rem 0.25rem 0.75rem !important; box-shadow:0 0 20px rgba(96,165,250,0.6), 0 0 40px rgba(96,165,250,0.25) !important; max-height:500px !important; overflow-y:auto !important; }'
         # All text inside chat box — force dark (override dark theme)
         '[data-testid="stColumn"]:has(.cv-chat-top-anchor) * { color:#0f172a !important; }'
         # Buttons inside chat box — restore white text for dark-theme buttons
@@ -1217,42 +1270,41 @@ def _render_chat_box(
             (function () {
               try {
                 const p = window.parent;
-                const BOX_ID = 'cv-floating-chat';
-                const applyFloat = () => {
-                  const anchor = p.document.querySelector('.cv-chat-top-anchor');
-                  if (!anchor) return false;
-                  // Walk up to the stColumn ancestor
-                  let col = anchor.parentElement;
-                  while (col && col.getAttribute && col.getAttribute('data-testid') !== 'stColumn') {
-                    col = col.parentElement;
-                  }
-                  if (!col) return false;
-                  col.id = BOX_ID;
-                  Object.assign(col.style, {
-                    position:    'sticky',
-                    top:         '3.5rem',
-                    alignSelf:   'flex-start',
-                    maxHeight:   'calc(100vh - 5rem)',
-                    overflowY:   'auto',
-                    zIndex:      '998',
-                    borderRadius:'10px',
-                    boxShadow:   '0 4px 20px rgba(30,64,175,0.18)',
-                    padding:     '0.5rem',
+                const applyFloatAll = () => {
+                  // Apply floating to ALL chat columns (each tab has its own)
+                  const anchors = p.document.querySelectorAll('.cv-chat-top-anchor');
+                  anchors.forEach(anchor => {
+                    let col = anchor.parentElement;
+                    while (col && col.getAttribute && col.getAttribute('data-testid') !== 'stColumn') {
+                      col = col.parentElement;
+                    }
+                    if (!col) return;
+                    Object.assign(col.style, {
+                      position:    'sticky',
+                      top:         '3.5rem',
+                      alignSelf:   'flex-start',
+                      maxHeight:   'calc(100vh - 5rem)',
+                      overflowY:   'auto',
+                      zIndex:      '998',
+                      borderRadius:'10px',
+                      boxShadow:   '0 4px 20px rgba(30,64,175,0.18)',
+                      padding:     '0.5rem',
+                    });
                   });
-                  return true;
+                  return anchors.length > 0;
                 };
-                // Retry until the anchor is in DOM
+                // Retry until anchors are in DOM
                 let tries = 0;
-                const retry = () => { if (!applyFloat() && tries++ < 20) setTimeout(retry, 150); };
+                const retry = () => { if (!applyFloatAll() && tries++ < 20) setTimeout(retry, 150); };
                 retry();
                 // Re-apply on resize
                 if (!p._cvChatResizeWired) {
                   p._cvChatResizeWired = true;
-                  p.addEventListener('resize', applyFloat, { passive: true });
+                  p.addEventListener('resize', applyFloatAll, { passive: true });
                 }
                 // Re-apply whenever DOM changes (Streamlit reruns may recreate the column)
                 if (!p._cvChatObserver) {
-                  p._cvChatObserver = new p.MutationObserver(() => applyFloat());
+                  p._cvChatObserver = new p.MutationObserver(() => applyFloatAll());
                   p._cvChatObserver.observe(p.document.body, { childList: true, subtree: false });
                 }
               } catch (e) {}

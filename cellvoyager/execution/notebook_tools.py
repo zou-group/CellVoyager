@@ -7,6 +7,7 @@ Works entirely within the CellVoyager process.
 """
 import os
 import asyncio
+from pathlib import Path
 from typing import Any
 
 import nbformat as nbf
@@ -66,16 +67,30 @@ def _outputs_to_text(outputs: list) -> str:
     return "\n".join(parts) if parts else "(no output)"
 
 
-def _run_cell_sync(kernel_client, code: str, timeout: int = 300):
-    """Execute code in kernel (sync). Returns (success, outputs_list, error_msg)."""
+def _run_cell_sync(kernel_client, code: str, timeout: int = 300,
+                    kernel_manager=None, kill_file_path=None):
+    """Execute code in kernel (sync). Returns (success, outputs_list, error_msg).
+
+    If kernel_manager and kill_file_path are provided, checks for a kill signal
+    file and interrupts the kernel when found.
+    """
     msg_id = kernel_client.execute(code)
     outputs = []
 
     while True:
         try:
-            msg = kernel_client.get_iopub_msg(timeout=timeout)
+            msg = kernel_client.get_iopub_msg(timeout=2)
         except Exception:
-            break
+            # Check for kill signal during idle waits
+            if kernel_manager and kill_file_path:
+                kp = Path(kill_file_path)
+                if kp.exists():
+                    try:
+                        kp.unlink(missing_ok=True)
+                        kernel_manager.interrupt_kernel()
+                    except Exception:
+                        pass
+            continue
 
         msg_type = msg["msg_type"]
         content = msg["content"]
@@ -222,10 +237,28 @@ def create_jupyter_mcp_server(
         if cell.cell_type != "code":
             return {"content": [{"type": "text", "text": f"Error: Cell {idx} is not a code cell"}]}
         code = cell.source if isinstance(cell.source, str) else "".join(cell.source)
+        _kill_path = os.path.join(output_dir, ".cellvoyager_kill_cell")
+        _running_path = os.path.join(output_dir, ".cellvoyager_running_cell")
+        # Signal to the GUI that this cell is executing
+        import json as _json, time as _time
+        try:
+            Path(_running_path).write_text(_json.dumps({
+                "cell_index": idx,
+                "started_at": _time.time(),
+            }), encoding="utf-8")
+        except Exception:
+            pass
         loop = asyncio.get_event_loop()
         success, outputs, err = await loop.run_in_executor(
-            None, lambda: _run_cell_sync(kernel_client, code)
+            None, lambda: _run_cell_sync(kernel_client, code,
+                                          kernel_manager=kernel_manager,
+                                          kill_file_path=_kill_path)
         )
+        # Clear the running signal
+        try:
+            Path(_running_path).unlink(missing_ok=True)
+        except Exception:
+            pass
         # Attach outputs to cell and save
         clean = []
         for o in outputs:

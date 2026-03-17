@@ -1,5 +1,5 @@
 """
-CLI entry point for CellVoyager analysis with configurable execution module.
+CLI entry point for CellVoyager analysis.
 """
 import json
 import os

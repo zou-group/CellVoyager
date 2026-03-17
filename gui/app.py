@@ -1017,6 +1017,7 @@ context_source: structured_fields
             "use_deepresearch": _use_deepresearch,
             "intervene_every": int(_intervene_every),
             "ding_on_pause": bool(st.session_state.get("home_ding_on_pause", False)),
+            "num_analyses": int(_num_analyses),
         }
         (run_output_dir / g._RUN_CONFIG_FILE).write_text(json.dumps(run_config), encoding="utf-8")
         cmd = [
@@ -1056,6 +1057,7 @@ context_source: structured_fields
         st.session_state.run_started = True
         st.session_state.run_interactive_mode = True
         st.session_state.run_thread_started = True
+        st.session_state.pop("_active_run_tab", None)
         log_path = run_output_dir / _RUN_LOG_FILE
         t = threading.Thread(target=g._read_output, args=(proc, st.session_state.run_output, log_path))
         t.daemon = True
