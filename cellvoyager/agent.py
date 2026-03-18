@@ -71,7 +71,10 @@ class AnalysisAgentV2:
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
 
-        self.client = openai.OpenAI(api_key=openai_api_key)
+        self.client = openai.OpenAI(
+            api_key=openai_api_key,
+            base_url=os.environ.get("OPENAI_BASE_URL", None),
+        )
 
         self.use_self_critique = use_self_critique
         self.use_VLM = use_VLM

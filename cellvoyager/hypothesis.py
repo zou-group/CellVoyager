@@ -10,6 +10,10 @@ from cellvoyager.utils import get_documentation
 
 litellm.drop_params = True  # ignore unsupported params per-model silently
 
+# Support custom base URLs (e.g., MiniMax) via environment variable
+if os.environ.get("OPENAI_BASE_URL"):
+    litellm.api_base = os.environ["OPENAI_BASE_URL"]
+
 # Instructor client wrapping LiteLLM — handles retries, validation, and structured output
 # for all OpenAI and Anthropic models uniformly.
 _instructor_client = instructor.from_litellm(litellm.completion)

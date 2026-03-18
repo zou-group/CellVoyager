@@ -1,30 +1,48 @@
-# OS
-.DS_Store
-._*
-
-# Python
-__pycache__/
-*.pyc
-*.egg-info/
-.pytest_cache/
-
+```
 # Environment
 .env
+.env.local
+.env.*
 
-# Data files
-example/covid19_slim.h5ad
-example/covid19.h5ad
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
 
-# Runtime directories
-gui_uploads/
-outputs/
-logs/
-logs_successRate/
-jobs_files/
+# Build artifacts
+dist/
+build/
+target/
 
-# Legacy / internal
-run_agent.sh
-CellBench_2/
-caseStudies_paperSummaries/
-tests/
-website/
+# Editors
+.vscode/
+.idea/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# System
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Compiled files
+*.pyc
+*.class
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
+```

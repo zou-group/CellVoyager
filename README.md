@@ -25,6 +25,13 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxx
 ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxx
 ```
 
+To use MiniMax models (OpenAI-compatible API), set the base URL:
+
+```
+OPENAI_API_KEY=your_minimax_api_key
+OPENAI_BASE_URL=https://api.minimaxi.com/v1
+```
+
 # Usage
 
 ## GUI (Recommended)
