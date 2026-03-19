@@ -134,7 +134,7 @@ class IdeaExecutor:
         is_minimax = any(x in self.model_name.lower() for x in ["minimax", "minmax"])
         if is_minimax:
             prompt += "\n\nIMPORTANT: Your response MUST be a valid JSON object with the following structure:\n"
-            prompt += '{\n  "analysis_plan": [\n    "step 1 description",\n    "step 2 description",\n    ...\n  ]\n}\n'
+            prompt += '{\n  "analysis_plan": [\n    "step 1 description",\n    "step 2 description",\n    ...\n  ],\n  "first_step_code": "python code string here"\n}\n'
             prompt += "Do NOT include any text before or after the JSON object. Only return the JSON."
 
         # Retry logic for generating valid analysis plan
@@ -193,6 +193,11 @@ class IdeaExecutor:
                 if "analysis_plan" not in analysis:
                     if attempt == max_retries:
                         raise ValueError("Generated analysis missing 'analysis_plan' key after all retries")
+                    continue
+
+                if "first_step_code" not in analysis:
+                    if attempt == max_retries:
+                        raise ValueError("Generated analysis missing 'first_step_code' key after all retries")
                     continue
 
                 if not isinstance(analysis["analysis_plan"], list):
@@ -286,9 +291,8 @@ class IdeaExecutor:
             print(f"⚠️ Warning: Large fix_code prompt detected ({estimated_tokens} estimated tokens)")
 
         # Check if model supports response_format (MiniMax doesn't support it)
-        supports_response_format = not any(
-            x in self.model_name.lower() for x in ["minimax", "minmax"]
-        )
+        is_minimax = any(x in self.model_name.lower() for x in ["minimax", "minmax"])
+        supports_response_format = not is_minimax
         
         create_kwargs = {
             "model": self.model_name,
@@ -304,6 +308,17 @@ class IdeaExecutor:
         
         response = self.client.chat.completions.create(**create_kwargs)
         fixed_code = response.choices[0].message.content
+        
+        # Clean the fixed code: remove <think> tags and extract code blocks
+        if is_minimax:
+            fixed_code = re.sub(r'<think>.*?</think>', '', fixed_code, flags=re.DOTALL | re.IGNORECASE)
+        
+        # Extract code from markdown blocks if present
+        code_block_match = re.search(r'```(?:python)?\n(.*?)\n```', fixed_code, re.DOTALL)
+        if code_block_match:
+            fixed_code = code_block_match.group(1).strip()
+        else:
+            fixed_code = strip_code_markers(fixed_code).strip()
 
         return fixed_code
 

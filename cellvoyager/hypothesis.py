@@ -90,12 +90,69 @@ class HypothesisGenerator:
 
     def _complete_structured(self, messages: list) -> dict:
         """Call LiteLLM via instructor and return a validated AnalysisPlan dict."""
-        result = _instructor_client.chat.completions.create(
-            model=self.model_name,
-            messages=list(messages),
-            response_model=AnalysisPlan,
-        )
-        return result.model_dump()
+        # Check if using MiniMax model
+        is_minimax = any(x in self.model_name.lower() for x in ["minimax", "minmax"])
+        
+        if is_minimax:
+            # For MiniMax, use regular completion and parse JSON manually
+            import json
+            import re
+            
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    response = litellm.completion(
+                        model=self.model_name,
+                        messages=list(messages),
+                        temperature=0.1,
+                    )
+                    result = response.choices[0].message.content
+                    
+                    if result is None:
+                        if attempt == max_retries - 1:
+                            raise ValueError("MiniMax API returned None response")
+                        continue
+                    
+                    # Clean the result
+                    result = result.strip()
+                    # Remove <think> tags and their content (thinking process from reasoning models)
+                    result = re.sub(r'<think>.*?</think>', '', result, flags=re.DOTALL | re.IGNORECASE)
+                    result = result.strip()
+                    # Try to extract JSON from the response if it contains extra text
+                    json_match = re.search(r'\{.*\}', result, re.DOTALL)
+                    if json_match:
+                        result = json_match.group(0)
+                    # Also try to extract from markdown code blocks
+                    md_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', result, re.DOTALL)
+                    if md_match:
+                        result = md_match.group(1)
+                    
+                    analysis = json.loads(result)
+                    
+                    # Validate required fields
+                    required_fields = ["hypothesis", "analysis_plan", "first_step_code"]
+                    for field in required_fields:
+                        if field not in analysis:
+                            if attempt == max_retries - 1:
+                                raise ValueError(f"Generated analysis missing '{field}' key")
+                            continue
+                    
+                    return analysis
+                    
+                except Exception as e:
+                    if attempt == max_retries - 1:
+                        print(f"❌ All retry attempts failed for _complete_structured with MiniMax: {e}")
+                        raise
+                    print(f"⚠️ Attempt {attempt + 1} failed: {e}. Retrying...")
+                    continue
+        else:
+            # Use instructor for other models
+            result = _instructor_client.chat.completions.create(
+                model=self.model_name,
+                messages=list(messages),
+                response_model=AnalysisPlan,
+            )
+            return result.model_dump()
 
     def _complete(self, messages: list) -> str:
         """Call LiteLLM for plain-text responses (e.g. critique feedback)."""
