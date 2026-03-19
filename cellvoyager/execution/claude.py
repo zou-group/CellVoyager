@@ -643,9 +643,16 @@ def run_mcp_server() -> None:
             if openai_key:
                 try:
                     from openai import OpenAI
-                    client = OpenAI(api_key=openai_key)
+                    # Support custom base URL for MiniMax and other compatible APIs
+                    base_url = os.environ.get("OPENAI_BASE_URL")
+                    client_kwargs = {"api_key": openai_key}
+                    if base_url:
+                        client_kwargs["base_url"] = base_url
+                    client = OpenAI(**client_kwargs)
+                    # Use the configured model or default to gpt-4o-mini
+                    model_name = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
                     resp = client.chat.completions.create(
-                        model="gpt-4o-mini", max_tokens=150,
+                        model=model_name, max_tokens=150,
                         messages=[{"role": "user", "content": prompt}],
                     )
                     return (resp.choices[0].message.content or "").strip()

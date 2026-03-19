@@ -27,10 +27,23 @@ ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxx
 
 To use MiniMax models (OpenAI-compatible API), set the base URL:
 
-```
+```bash
 OPENAI_API_KEY=your_minimax_api_key
 OPENAI_BASE_URL=https://api.minimaxi.com/v1
 ```
+
+Then run with:
+
+```bash
+python run_cellvoyager.py \
+  --h5ad-path ./example/pbmc.h5ad \
+  --paper-path ./example/pbmc_summary.txt \
+  --analysis-name pbmc_minimax_test \
+  --model-name "MiniMax-M2.7-highspeed" \
+  --execution-mode legacy
+```
+
+**Note:** MiniMax-M2.7-highspeed is a reasoning model that outputs thinking process (`<think>` tags). The code automatically strips these tags before parsing JSON responses.
 
 # Usage
 

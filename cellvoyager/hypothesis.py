@@ -22,6 +22,7 @@ _instructor_client = instructor.from_litellm(litellm.completion)
 _MODEL_ALIASES = {
     "gpt-5.3": "openai/gpt-5.3-chat-latest",
     "gpt-5.2": "openai/gpt-5.2-chat-latest",
+    "MiniMax-M2.7-highspeed": "openai/MiniMax-M2.7-highspeed",
 }
 
 

@@ -129,18 +129,35 @@ class IdeaExecutor:
                 num_steps_left=num_steps_left,
             )
 
+        # For MiniMax and other models that don't support response_format,
+        # add explicit JSON instructions to the prompt
+        is_minimax = any(x in self.model_name.lower() for x in ["minimax", "minmax"])
+        if is_minimax:
+            prompt += "\n\nIMPORTANT: Your response MUST be a valid JSON object with the following structure:\n"
+            prompt += '{\n  "analysis_plan": [\n    "step 1 description",\n    "step 2 description",\n    ...\n  ]\n}\n'
+            prompt += "Do NOT include any text before or after the JSON object. Only return the JSON."
+
         # Retry logic for generating valid analysis plan
-        max_retries = 2
+        max_retries = 3
         for attempt in range(max_retries + 1):
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model_name,
-                    messages=[
+                # Check if model supports response_format (MiniMax doesn't support it)
+                supports_response_format = not is_minimax
+                
+                create_kwargs = {
+                    "model": self.model_name,
+                    "messages": [
                         {"role": "system", "content": self.coding_system_prompt},
                         {"role": "user", "content": prompt},
                     ],
-                    response_format={"type": "json_object"},
-                )
+                    "temperature": 0.1 if is_minimax else None,  # Lower temperature for MiniMax for more deterministic output
+                }
+                
+                # Only add response_format for models that support it
+                if supports_response_format:
+                    create_kwargs["response_format"] = {"type": "json_object"}
+                
+                response = self.client.chat.completions.create(**create_kwargs)
                 result = response.choices[0].message.content
 
                 if result is None:
@@ -149,10 +166,26 @@ class IdeaExecutor:
                         raise ValueError("OpenAI API returned None response for next step after all retries")
                     continue
 
+                # Clean the result for MiniMax and other models that might add extra text
+                if is_minimax:
+                    result = result.strip()
+                    # Remove <think> tags and their content (thinking process from reasoning models)
+                    result = re.sub(r'<think>.*?</think>', '', result, flags=re.DOTALL | re.IGNORECASE)
+                    result = result.strip()
+                    # Try to extract JSON from the response if it contains extra text
+                    json_match = re.search(r'\{.*\}', result, re.DOTALL)
+                    if json_match:
+                        result = json_match.group(0)
+                    # Also try to extract from markdown code blocks
+                    md_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', result, re.DOTALL)
+                    if md_match:
+                        result = md_match.group(1)
+
                 try:
                     analysis = json.loads(result)
                 except json.JSONDecodeError as e:
                     print(f"⚠️ JSON decode error in generate_next_step (attempt {attempt + 1}): {e}")
+                    print(f"   Raw response: {result[:500]}..." if len(result) > 500 else f"   Raw response: {result}")
                     if attempt == max_retries:
                         raise
                     continue
@@ -252,13 +285,24 @@ class IdeaExecutor:
         if estimated_tokens > 50000:
             print(f"⚠️ Warning: Large fix_code prompt detected ({estimated_tokens} estimated tokens)")
 
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
+        # Check if model supports response_format (MiniMax doesn't support it)
+        supports_response_format = not any(
+            x in self.model_name.lower() for x in ["minimax", "minmax"]
+        )
+        
+        create_kwargs = {
+            "model": self.model_name,
+            "messages": [
                 {"role": "system", "content": "You are a coding assistant helping to fix code."},
                 {"role": "user", "content": prompt},
             ],
-        )
+        }
+        
+        # Only add response_format for models that support it
+        if supports_response_format:
+            create_kwargs["response_format"] = {"type": "text"}
+        
+        response = self.client.chat.completions.create(**create_kwargs)
         fixed_code = response.choices[0].message.content
 
         return fixed_code
@@ -273,16 +317,27 @@ class IdeaExecutor:
         ```
         """
 
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
+        # Check if model supports response_format (MiniMax doesn't support it)
+        supports_response_format = not any(
+            x in self.model_name.lower() for x in ["minimax", "minmax"]
+        )
+        
+        create_kwargs = {
+            "model": self.model_name,
+            "messages": [
                 {
                     "role": "system",
                     "content": "You are a single-cell bioinformatics expert providing concise code descriptions.",
                 },
                 {"role": "user", "content": prompt},
             ],
-        )
+        }
+        
+        # Only add response_format for models that support it
+        if supports_response_format:
+            create_kwargs["response_format"] = {"type": "text"}
+        
+        response = self.client.chat.completions.create(**create_kwargs)
 
         return response.choices[0].message.content.strip()
 
@@ -346,16 +401,27 @@ class IdeaExecutor:
                         print(f"Warning: Error processing image: {str(e)}")
                         continue
 
-                response = self.client.chat.completions.create(
-                    model="gpt-4o",
-                    messages=[
+                # Check if model supports response_format (MiniMax doesn't support it)
+                supports_response_format = not any(
+                    x in self.model_name.lower() for x in ["minimax", "minmax"]
+                )
+                
+                create_kwargs = {
+                    "model": self.model_name,
+                    "messages": [
                         {
                             "role": "system",
                             "content": "You are a single-cell transcriptomics expert providing feedback on Python code and analysis plan.",
                         },
                         {"role": "user", "content": user_content},
                     ],
-                )
+                }
+                
+                # Only add response_format for models that support it
+                if supports_response_format:
+                    create_kwargs["response_format"] = {"type": "text"}
+                
+                response = self.client.chat.completions.create(**create_kwargs)
                 feedback = response.choices[0].message.content
             finally:
                 image_outputs.clear()
@@ -363,16 +429,27 @@ class IdeaExecutor:
                 import gc
                 gc.collect()
         else:
-            response = self.client.chat.completions.create(
-                model=self.model_name,
-                messages=[
+            # Check if model supports response_format (MiniMax doesn't support it)
+            supports_response_format = not any(
+                x in self.model_name.lower() for x in ["minimax", "minmax"]
+            )
+            
+            create_kwargs = {
+                "model": self.model_name,
+                "messages": [
                     {
                         "role": "system",
                         "content": "You are a single-cell bioinformatics expert providing feedback on Python code and analysis plan.",
                     },
                     {"role": "user", "content": prompt},
                 ],
-            )
+            }
+            
+            # Only add response_format for models that support it
+            if supports_response_format:
+                create_kwargs["response_format"] = {"type": "text"}
+            
+            response = self.client.chat.completions.create(**create_kwargs)
             feedback = response.choices[0].message.content
 
         return feedback

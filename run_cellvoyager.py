@@ -5,7 +5,11 @@ import json
 import os
 import argparse
 from pathlib import Path
+from dotenv import load_dotenv
 from cellvoyager.agent import AnalysisAgentV2
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def main():
