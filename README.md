@@ -2,6 +2,11 @@
 <img src="gui/assets/logo.jpeg" alt="CellVoyager Logo" width="700">
 </div>
 
+# Demo
+To try out the CellVoyager UI, check out the [CellVoyager demo](https://cellvoyager.org).
+
+*Note: because of memory constraints, this uses a pre-loaded dataset + dataset summary (the one used for the COVID-19 case study).*
+
 # Installation
 
 Clone the repository and create the conda environment:
