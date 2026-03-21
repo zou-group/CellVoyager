@@ -69,7 +69,7 @@ def main():
     parser.add_argument(
         "--model-name",
         default="claude-sonnet-4-6",
-        help="LLM model for hypothesis generation — any OpenAI or Anthropic model (e.g. o3-mini, gpt-4o, claude-sonnet-4-5). Default: o3-mini",
+        help="LLM model for hypothesis generation — OpenAI, Anthropic, or Kimi/Moonshot (e.g. o3-mini, gpt-4o, claude-sonnet-4-5, kimi-k2.5). Default: claude-sonnet-4-6",
     )
     parser.add_argument(
         "--execution-model",

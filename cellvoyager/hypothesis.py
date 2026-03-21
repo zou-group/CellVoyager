@@ -18,6 +18,9 @@ _instructor_client = instructor.from_litellm(litellm.completion)
 _MODEL_ALIASES = {
     "gpt-5.3": "openai/gpt-5.3-chat-latest",
     "gpt-5.2": "openai/gpt-5.2-chat-latest",
+    "kimi-k2": "moonshot/kimi-k2",
+    "kimi-k2.5": "moonshot/kimi-k2.5",
+    "kimi-latest": "moonshot/kimi-latest",
 }
 
 
@@ -29,6 +32,9 @@ def _normalize_model_name(model: str) -> str:
         return model  # already has provider prefix
     if model.startswith("claude-") or model.startswith("anthropic"):
         return model  # litellm auto-detects Anthropic models
+    # Moonshot/Kimi models — LiteLLM uses moonshot/ prefix, env: MOONSHOT_API_KEY
+    if model.startswith(("kimi-", "moonshot-v1")):
+        return f"moonshot/{model}"
     # Known auto-detected OpenAI models
     _auto_detected = {"gpt-4o", "gpt-4o-mini", "gpt-4", "gpt-3.5-turbo", "o1", "o3-mini", "o3", "o4-mini"}
     if model in _auto_detected:
