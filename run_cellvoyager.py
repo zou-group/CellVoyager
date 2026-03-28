@@ -5,7 +5,10 @@ import json
 import os
 import argparse
 from pathlib import Path
+from dotenv import load_dotenv
 from cellvoyager.agent import AnalysisAgentV2
+
+load_dotenv()
 
 
 def main():
@@ -178,11 +181,14 @@ def main():
 
     args = parser.parse_args()
 
-    # Check if OpenAI API key is available
+    # OpenAI API key — required for legacy execution mode and deep research,
+    # optional for claude execution mode.
     openai_api_key = os.getenv("OPENAI_API_KEY")
-    if not openai_api_key:
+    needs_openai = (args.execution_mode != "claude") or args.deepresearch
+    if needs_openai and not openai_api_key:
         print("❌ Error: OPENAI_API_KEY environment variable not set")
         print("Please set your OpenAI API key: export OPENAI_API_KEY='your-key-here'")
+        print("(Not required when using --execution-mode claude without --deepresearch)")
         return 1
 
     # Resume mode: handle separately before normal validation

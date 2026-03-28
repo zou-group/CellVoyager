@@ -10,6 +10,9 @@ import subprocess
 import sys
 import threading
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Ensure project root is on sys.path so `gui` resolves as a package
 _project_root = str(Path(__file__).resolve().parent.parent)

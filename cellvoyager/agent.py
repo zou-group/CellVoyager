@@ -26,9 +26,9 @@ class AnalysisAgentV2:
         self,
         h5ad_path,
         paper_summary_path,
-        openai_api_key,
         model_name,
         analysis_name,
+        openai_api_key=None,
         num_analyses=5,
         max_iterations=6,
         prompt_dir=None,
@@ -71,7 +71,7 @@ class AnalysisAgentV2:
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
 
-        self.client = openai.OpenAI(api_key=openai_api_key)
+        self.client = openai.OpenAI(api_key=openai_api_key) if openai_api_key else None
 
         self.use_self_critique = use_self_critique
         self.use_VLM = use_VLM
