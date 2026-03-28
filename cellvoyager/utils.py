@@ -109,9 +109,9 @@ def get_documentation(code: str, max_characters: int = 10000) -> str:
 
     docs = []
     for name in sorted(set(call_names)):
-        # Only include functions that start with 'sc.' (scanpy) or 'scvi.' (scvi-tools)
+        # Only include functions that start with 'sc.' (scanpy)
         ###### MODIFY IN NEEDED FOR OTHER PACKAGES ######
-        if not (name.startswith('sc.') or name.startswith('scvi.') or name.startswith('scanpy.')):
+        if not (name.startswith('sc.') or name.startswith('scanpy.')):
             continue
             
         try:

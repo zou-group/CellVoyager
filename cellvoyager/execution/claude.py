@@ -893,9 +893,8 @@ class CellVoyagerClaudeRunner:
 
         nb.cells.append(new_markdown_cell(f"# Analysis\n\n**Hypothesis**: {hypothesis}"))
 
-        _scvi_import = "" if os.getenv("CELLVOYAGER_DEMO_MODE", "0") == "1" else "import scvi\n"
         setup_code = f"""import scanpy as sc
-{_scvi_import}import numpy as np
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns

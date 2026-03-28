@@ -18,7 +18,7 @@ from cellvoyager.execution.legacy import IdeaExecutor
 from cellvoyager.logger import Logger
 from cellvoyager.deepresearch import DeepResearcher
 
-AVAILABLE_PACKAGES = "scanpy, scvi, anndata, matplotlib, numpy, seaborn, pandas, scipy"
+AVAILABLE_PACKAGES = "scanpy, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 
 
 class AnalysisAgentV2:

@@ -12,7 +12,7 @@ from nbformat.v4 import new_code_cell, new_output
 from jupyter_client import KernelManager
 from cellvoyager.utils import get_documentation
 
-AVAILABLE_PACKAGES = "scanpy, scvi, anndata, matplotlib, numpy, seaborn, pandas, scipy"
+AVAILABLE_PACKAGES = "scanpy, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 
 
 def strip_code_markers(text):
