@@ -40,7 +40,8 @@ for file_name in data_files:
 df = pd.concat(dfs, ignore_index=True)
 
 analyses_full = df['analyses_full'].tolist()
-home_dir = "/home/groups/jamesz/salber/scAgent_v2"
+# Repo root, so the bundled prompts are found regardless of where this is run from
+repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def fix_malformed_json(json_str):
     """Fix common JSON formatting issues"""
@@ -110,7 +111,7 @@ def get_response(prompt, system_prompt, use_json=False):
         result = response.choices[0].message.content
         return result
 
-analyses_overview = open(os.path.join(home_dir, "prompts", "DeepResearch_Analyses.txt")).read()
+analyses_overview = open(os.path.join(repo_root, "cellvoyager", "prompts", "DeepResearch_Analyses.txt")).read()
 
 first_draft_prompt = f"""
 You will be provided the background/introduction from a research paper.
