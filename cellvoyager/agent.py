@@ -3,20 +3,21 @@ CellVoyager agent: Modular architecture with separate hypothesis generation and 
 Uses HypothesisGenerator (cellvoyager.hypothesis) and either IdeaExecutor
 (cellvoyager.execution.legacy) or ClaudeJupyterExecutor (cellvoyager.execution.claude).
 """
-import os
+
 import datetime
-import pandas as pd
-import numpy as np
-import openai
-import h5py
-from h5py import Dataset, Group
+import os
 
 import anndata
+import h5py
+import numpy as np
+import openai
+import pandas as pd
+from h5py import Dataset, Group
 
-from cellvoyager.hypothesis import HypothesisGenerator
-from cellvoyager.execution.legacy import IdeaExecutor
-from cellvoyager.logger import Logger
 from cellvoyager.deepresearch import DeepResearcher
+from cellvoyager.execution.legacy import IdeaExecutor
+from cellvoyager.hypothesis import HypothesisGenerator
+from cellvoyager.logger import Logger
 
 AVAILABLE_PACKAGES = "scanpy, anndata, matplotlib, numpy, seaborn, pandas, scipy"
 
@@ -43,6 +44,8 @@ class AnalysisAgentV2:
         use_deepresearch_background=True,
         execution_mode="legacy",
         anthropic_api_key=None,
+        hypothesis_debug=False,
+        api_base_url=None,
         **execution_kwargs,
     ):
         """
@@ -54,45 +57,80 @@ class AnalysisAgentV2:
                 e.g. jupyter_port=8888, auto_start_jupyter=True, stop_jupyter_on_complete=False.
         """
         self.h5ad_path = h5ad_path
-        self.paper_summary = open(paper_summary_path).read()
+        self.paper_summary = open(paper_summary_path, encoding="utf-8").read()
+        self.hypothesis_debug_mode = hypothesis_debug
         self.openai_api_key = openai_api_key
         self.model_name = model_name
         self.analysis_name = analysis_name
         self.max_iterations = max_iterations
         self.num_analyses = num_analyses
-        self.prompt_dir = prompt_dir or os.path.join(os.path.dirname(__file__), "prompts")
+        self.prompt_dir = prompt_dir or os.path.join(
+            os.path.dirname(__file__), "prompts"
+        )
         self.log_prompts = log_prompts
         self.max_fix_attempts = max_fix_attempts
         self.use_deepresearch_background = use_deepresearch_background
+        self.api_base_url = api_base_url
 
         if output_dir is not None:
             self.output_dir = os.path.abspath(output_dir)
+
         else:
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            self.output_dir = os.path.join(output_home, "outputs", f"{analysis_name}_{timestamp}")
+            self.output_dir = os.path.join(
+                output_home, "outputs", f"{analysis_name}_{timestamp}"
+            )
 
-        self.client = openai.OpenAI(api_key=openai_api_key) if openai_api_key else None
+        # TODO swap with local model
+        self.client = None
+
+        if self.api_base_url:
+            executor_base_url = self.api_base_url.rstrip("/")
+            if not executor_base_url.endswith("/v1"):
+                executor_base_url += "/v1"
+
+            self.client = openai.OpenAI(
+                api_key=openai_api_key or "ollama",
+                base_url=executor_base_url,
+            )
+
+        elif openai_api_key:
+            self.client = openai.OpenAI(api_key=openai_api_key)
 
         self.use_self_critique = use_self_critique
         self.use_VLM = use_VLM
         self.use_documentation = use_documentation
+        self.api_base_url = api_base_url
 
-        os.makedirs(self.output_dir, exist_ok=True)
+        if not self.hypothesis_debug_mode:
+            os.makedirs(self.output_dir, exist_ok=True)
 
         # Coding guidelines (same as agent.py)
-        self._analyses_overview = open(os.path.join(self.prompt_dir, "DeepResearch_Analyses.txt")).read()
+        self._analyses_overview = open(
+            os.path.join(self.prompt_dir, "DeepResearch_Analyses.txt"), encoding="utf-8"
+        ).read()
         if self.use_VLM:
             coding_guidelines_template = open(
-                os.path.join(self.prompt_dir, "coding_guidelines.txt")
+                os.path.join(self.prompt_dir, "coding_guidelines.txt"), encoding="utf-8"
             ).read()
         else:
             coding_guidelines_template = open(
-                os.path.join(self.prompt_dir, "ablations", "coding_guidelines_NO_VLM_ABLATION.txt")
+                os.path.join(
+                    self.prompt_dir,
+                    "ablations",
+                    "coding_guidelines_NO_VLM_ABLATION.txt",
+                ),
+                encoding="utf-8",
             ).read()
 
-        self.coding_system_prompt = open(
-            os.path.join(self.prompt_dir, "coding_system_prompt.txt")
-        ).read().format(max_iterations=self.max_iterations)
+        self.coding_system_prompt = (
+            open(
+                os.path.join(self.prompt_dir, "coding_system_prompt.txt"),
+                encoding="utf-8",
+            )
+            .read()
+            .format(max_iterations=self.max_iterations)
+        )
 
         self.coding_guidelines = coding_guidelines_template.format(
             name=self.analysis_name,
@@ -110,8 +148,12 @@ class AnalysisAgentV2:
             self.adata_summary = ""
         else:
             if execution_mode == "claude":
-                print("Loading h5ad metadata for summarization (no full AnnData load)...")
-                self.adata_summary = self._summarize_adata_obs_only(self.h5ad_path, length_cutoff=25)
+                print(
+                    "Loading h5ad metadata for summarization (no full AnnData load)..."
+                )
+                self.adata_summary = self._summarize_adata_obs_only(
+                    self.h5ad_path, length_cutoff=25
+                )
             else:
                 print("Loading anndata for summarization...")
                 self.adata_summary = self._summarize_adata_full(self.h5ad_path)
@@ -146,13 +188,18 @@ class AnalysisAgentV2:
             max_iterations=self.max_iterations,
             deepresearch_background=self.deepresearch_background,
             log_prompts=self.log_prompts,
+            api_base_url=self.api_base_url,
         )
 
         # (2) Idea execution module
+        executor_model_name = self.model_name
+        if executor_model_name.startswith(("ollama/", "ollama_chat/")):
+            executor_model_name = executor_model_name.split("/", 1)[1]
+
         shared_executor_kwargs = dict(
             hypothesis_generator=self.hypothesis_generator,
             client=self.client,
-            model_name=self.model_name,
+            model_name=executor_model_name,
             prompt_dir=self.prompt_dir,
             coding_guidelines=self.coding_guidelines,
             coding_system_prompt=self.coding_system_prompt,
@@ -169,15 +216,21 @@ class AnalysisAgentV2:
             use_documentation=self.use_documentation,
         )
 
-        if execution_mode == "claude":
-            from cellvoyager.execution.claude import ClaudeJupyterExecutor
-            self.executor = ClaudeJupyterExecutor(
-                **shared_executor_kwargs,
-                anthropic_api_key=anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY"),
-                **execution_kwargs,
-            )
+        if self.hypothesis_debug_mode:
+            self.executor = None
+
         else:
-            self.executor = IdeaExecutor(**shared_executor_kwargs)
+            if execution_mode == "claude":
+                from cellvoyager.execution.claude import ClaudeJupyterExecutor
+
+                self.executor = ClaudeJupyterExecutor(
+                    **shared_executor_kwargs,
+                    anthropic_api_key=anthropic_api_key
+                    or os.environ.get("ANTHROPIC_API_KEY"),
+                    **execution_kwargs,
+                )
+            else:
+                self.executor = IdeaExecutor(**shared_executor_kwargs)
 
     def _summarize_adata_full(self, h5ad_path, length_cutoff=25):
         """Summarize all AnnData attributes: .obs, .var, .obsm, .layers, .uns, .obsp, .varp."""
@@ -186,7 +239,10 @@ class AnalysisAgentV2:
         except Exception as e:
             try:
                 fallback = self._summarize_adata_obs_only(h5ad_path, length_cutoff)
-                return f"Could not load full adata ({e}). Falling back to .obs only.\n\n" + fallback
+                return (
+                    f"Could not load full adata ({e}). Falling back to .obs only.\n\n"
+                    + fallback
+                )
             except Exception as e2:
                 return f"Could not load adata: {e}. Fallback also failed: {e2}"
 
@@ -271,7 +327,10 @@ class AnalysisAgentV2:
             try:
                 unique_vals = df[col].dropna().unique()
                 if len(unique_vals) > length_cutoff:
-                    vals_str = str(list(unique_vals[:length_cutoff])) + f" ... and {len(unique_vals) - length_cutoff} more"
+                    vals_str = (
+                        str(list(unique_vals[:length_cutoff]))
+                        + f" ... and {len(unique_vals) - length_cutoff} more"
+                    )
                 else:
                     vals_str = str(list(unique_vals))
                 lines.append(f"  {col}: {vals_str}")
@@ -282,7 +341,10 @@ class AnalysisAgentV2:
     def _summarize_adata_obs_only(self, h5ad_path, length_cutoff):
         """Fallback: summarize only .obs when full load fails."""
         self.adata_obs = self._load_h5ad_obs(h5ad_path)
-        return "Below is a description of the columns in adata.obs:\n" + self._summarize_df(self.adata_obs, length_cutoff)
+        return (
+            "Below is a description of the columns in adata.obs:\n"
+            + self._summarize_df(self.adata_obs, length_cutoff)
+        )
 
     def _load_h5ad_obs(self, h5ad_path):
         """Load just the .obs data from an h5ad file while preserving data types"""
@@ -294,18 +356,27 @@ class AnalysisAgentV2:
                 item = f["obs"][raw_k]
                 if isinstance(item, Dataset):
                     data = item[:]
-                elif isinstance(item, Group) and "codes" in item.keys() and "categories" in item.keys():
+                elif (
+                    isinstance(item, Group)
+                    and "codes" in item.keys()
+                    and "categories" in item.keys()
+                ):
                     data = item["codes"][:]
                     categories = item["categories"][:]
                     categories = [
-                        x.decode("utf-8") if isinstance(x, bytes) else str(x) for x in categories
+                        x.decode("utf-8") if isinstance(x, bytes) else str(x)
+                        for x in categories
                     ]
                     data = pd.Categorical.from_codes(
-                        data.astype(int) if not np.issubdtype(data.dtype, np.integer) else data,
+                        data.astype(int)
+                        if not np.issubdtype(data.dtype, np.integer)
+                        else data,
                         categories=categories,
                     )
                 else:
-                    raise ValueError(f"Didnt account for this datatype in h5ad: {type(item)}")
+                    raise ValueError(
+                        f"Didnt account for this datatype in h5ad: {type(item)}"
+                    )
 
                 if "categories" in item.attrs:
                     try:
@@ -323,7 +394,9 @@ class AnalysisAgentV2:
                                 for x in cat_vals
                             ]
                         data = pd.Categorical.from_codes(
-                            data.astype(int) if not np.issubdtype(data.dtype, np.integer) else data,
+                            data.astype(int)
+                            if not np.issubdtype(data.dtype, np.integer)
+                            else data,
                             categories=categories,
                         )
                     except Exception as e:
@@ -354,7 +427,10 @@ class AnalysisAgentV2:
                 if "_index" in f["obs"]:
                     idx = f["obs"]["_index"][:]
                     index = np.array(
-                        [x.decode("utf-8") if isinstance(x, bytes) else str(x) for x in idx]
+                        [
+                            x.decode("utf-8") if isinstance(x, bytes) else str(x)
+                            for x in idx
+                        ]
                     )
                 else:
                     index = None
@@ -373,6 +449,9 @@ class AnalysisAgentV2:
         Args:
             seeded_hypotheses: Optional list of hypothesis strings for AI to develop into full analyses.
         """
+        if self.executor is None:
+            raise RuntimeError("Executor not initialized. Cannot run analysis.")
+
         past_analyses = ""
 
         for analysis_idx in range(self.num_analyses):
@@ -387,32 +466,46 @@ class AnalysisAgentV2:
                 analysis = self.hypothesis_generator.generate_idea(
                     past_analyses, analysis_idx, seeded_hypothesis
                 )
-                print(f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx+1}")
+                print(
+                    f"🚀 Generated Initial Analysis Plan for Analysis {analysis_idx + 1}"
+                )
 
                 # Phase 2: Idea Execution
                 past_analyses = self.executor.execute_idea(
                     analysis, past_analyses, analysis_idx, seeded=seeded
                 )
-                print(f"✅ Completed Analysis {analysis_idx+1}")
+                print(f"✅ Completed Analysis {analysis_idx + 1}")
 
                 # In interactive mode, pause between analyses so the user can review
                 # the completed notebook and optionally provide feedback before continuing.
-                if analysis_idx + 1 < self.num_analyses and hasattr(self.executor, "inter_analysis_pause"):
+                if analysis_idx + 1 < self.num_analyses and hasattr(
+                    self.executor, "inter_analysis_pause"
+                ):
                     nb_path = os.path.join(
-                        self.output_dir, f"{self.analysis_name}_analysis_{analysis_idx + 1}.ipynb"
+                        self.output_dir,
+                        f"{self.analysis_name}_analysis_{analysis_idx + 1}.ipynb",
                     )
                     _user_stopped = False
                     while True:
-                        feedback = self.executor.inter_analysis_pause(nb_path, analysis_idx)
+                        feedback = self.executor.inter_analysis_pause(
+                            nb_path, analysis_idx
+                        )
                         if feedback in ("__STOP__", "__FINISH__"):
                             print(f"⏹ User stopped after Analysis {analysis_idx + 1}.")
                             _user_stopped = True
                             break
                         if feedback.startswith("__CONTINUE_CURRENT__"):
-                            user_note = feedback[len("__CONTINUE_CURRENT__"):].lstrip(":").strip()
-                            print(f"📝 Extending Analysis {analysis_idx + 1} further...")
+                            user_note = (
+                                feedback[len("__CONTINUE_CURRENT__") :]
+                                .lstrip(":")
+                                .strip()
+                            )
+                            print(
+                                f"📝 Extending Analysis {analysis_idx + 1} further..."
+                            )
                             self.executor.resume_from_notebook(
-                                nb_path, analysis_idx,
+                                nb_path,
+                                analysis_idx,
                                 user_feedback=user_note or None,
                                 extend=True,
                             )
@@ -424,10 +517,14 @@ class AnalysisAgentV2:
                         break
 
             except ValueError as e:
-                if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(e):
-                    print(f"🚫 API refusal/error for Analysis {analysis_idx+1}. Skipping to next analysis.")
+                if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(
+                    e
+                ):
+                    print(
+                        f"🚫 API refusal/error for Analysis {analysis_idx + 1}. Skipping to next analysis."
+                    )
                     print(f"   Error: {str(e)}")
-                    past_analyses += f"Analysis {analysis_idx+1}: Skipped due to API refusal/error.\n\n"
+                    past_analyses += f"Analysis {analysis_idx + 1}: Skipped due to API refusal/error.\n\n"
                     continue
                 else:
                     raise
@@ -436,7 +533,57 @@ class AnalysisAgentV2:
         if hasattr(self.executor, "stop_persistent_kernel"):
             self.executor.stop_persistent_kernel()
         import gc
+
         gc.collect()
+
+    def run_hypothesis_debug(self, seeded_hypotheses=None):
+        """
+        Run only the hypothesis generation module for debugging purposes.
+        Does not execute ideas, create notebooks, or start Jupyter.
+        """
+        past_analyses = ""
+        generated_analyses = []
+
+        for analysis_idx in range(self.num_analyses):
+            seeded_hypothesis = None
+
+            if seeded_hypotheses and analysis_idx < len(seeded_hypotheses):
+                seeded_hypothesis = seeded_hypotheses[analysis_idx]
+
+            try:
+                analysis = self.hypothesis_generator.generate_idea(
+                    past_analyses, analysis_idx, seeded_hypothesis
+                )
+
+                print("\n" + "=" * 80)
+                print(f"HYPOTHESIS DEBUG: Analysis {analysis_idx + 1}")
+                print("=" * 80)
+
+                generated_analyses.append(analysis)
+
+                past_analyses += (
+                    f"Analysis {analysis_idx + 1} generated but not executed:\n"
+                    f"{analysis}\n\n"
+                )
+
+            except ValueError as e:
+                if "OpenAI API refused" in str(e) or "OpenAI API returned None" in str(
+                    e
+                ):
+                    print(
+                        f"🚫 API refusal/error for Analysis {analysis_idx + 1}. "
+                        "Skipping to next analysis."
+                    )
+                    print(f"   Error: {str(e)}")
+                    past_analyses += (
+                        f"Analysis {analysis_idx + 1}: "
+                        "Skipped due to API refusal/error.\n\n"
+                    )
+                    continue
+                else:
+                    raise
+
+        return generated_analyses
 
     def run_resume(self, notebook_path: str, analysis_idx: int = 0):
         """
@@ -447,4 +594,6 @@ class AnalysisAgentV2:
         if hasattr(self.executor, "resume_from_notebook"):
             self.executor.resume_from_notebook(notebook_path, analysis_idx)
         else:
-            raise ValueError("Resume requires execution_mode=claude (ClaudeJupyterExecutor)")
+            raise ValueError(
+                "Resume requires execution_mode=claude (ClaudeJupyterExecutor)"
+            )
