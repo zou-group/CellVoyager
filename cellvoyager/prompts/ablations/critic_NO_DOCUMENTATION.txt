@@ -1,6 +1,5 @@
 You will be given a hypothesis, analysis plan, and the python code for the first step in that analysis plan.
-This analysis plan is for generating a novel single-cell transcriptomic analysis that is distinct from the analyses
-conducted in the research paper below and distinct from the previous analyses attempted.
+This analysis plan is for generating a single-cell transcriptomic analysis
 
 Your role is to provide feedback for the first step python code as well as for the analysis plan.
 Ensure that the code following the coding guidelines below as well.

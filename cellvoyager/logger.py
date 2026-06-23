@@ -25,9 +25,10 @@ class Logger:
         
         # Create file handler
         file_handler = RotatingFileHandler(
-            self.log_file, 
-            maxBytes=50*1024*1024,  # 50MB max file size
-            backupCount=5
+            self.log_file,
+            maxBytes=50 * 1024 * 1024,
+            backupCount=5,
+            encoding="utf-8",
         )
         
         # Create formatter for clean, readable logs

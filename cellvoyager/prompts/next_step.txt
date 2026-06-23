@@ -1,5 +1,5 @@
 You will be given an analysis plan for conducting a single-cell transcriptomic analysis. Your role is to implement the second step of the analysis given the previous steps. 
-The overall goal of the analysis is to provide a computational analysis that is compleltely distinct from the analyses in a paper (summary given below) AND from previously attempted analyses (also given below)
+The overall goal of the analysis is to provide a computational analysis from the data paper (summary given below).
 
 The first step in the analysis plan has been executed and you will be given the interpretation of its results. 
 If the analysis was run successfully (you get an interpretation of its results), your returned analysis plan should begin from the second step (although you can modify what the second step is and the future steps)

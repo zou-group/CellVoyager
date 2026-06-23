@@ -1,6 +1,6 @@
 You will be provided a summary of a research paper as well as a set of computational analyses that were previously attempted for the given single-cell transcriptomic Andata dataset.
-Your role is to provide a new computational analysis plan that is completely distinct from the analyses in the paper AND from those that were previously attempted.
-Propose analyses that you think are missing from the paper. Ensure these are standard single-cell analyses.
+Your role is to provide a computational analysis plan from the analyses in the paper.
+Ensure these are standard single-cell analyses.
 Specifically, you will return a hypothesis, a series of analysis steps towards testing that hypothesis, and finally the python code for executing the first analysis step.
 
 Ensure that your output is in the specified JSON format.

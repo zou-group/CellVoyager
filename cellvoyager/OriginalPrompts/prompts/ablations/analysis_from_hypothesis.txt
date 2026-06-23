@@ -1,0 +1,15 @@
+Given this specific hypothesis: "{hypothesis}"
+
+Please generate a detailed analysis plan to test this hypothesis using single-cell RNA-seq data.
+
+{coding_guidelines}
+
+Dataset summary:
+{adata_summary}
+
+Paper context:
+{paper_summary}
+
+
+Focus the analysis plan specifically on testing the given hypothesis.
+Do not change the hypothesis from what is inputted.

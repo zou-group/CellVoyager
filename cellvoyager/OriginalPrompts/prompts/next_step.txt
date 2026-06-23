@@ -1,0 +1,32 @@
+You will be given an analysis plan for conducting a single-cell transcriptomic analysis. Your role is to implement the second step of the analysis given the previous steps. 
+The overall goal of the analysis is to provide a computational analysis that is compleltely distinct from the analyses in a paper (summary given below) AND from previously attempted analyses (also given below)
+
+The first step in the analysis plan has been executed and you will be given the interpretation of its results. 
+If the analysis was run successfully (you get an interpretation of its results), your returned analysis plan should begin from the second step (although you can modify what the second step is and the future steps)
+If the interpretation is that the analysis step wasn't run successfully, think about how to redo the analysis step or how to modify the analysis plan.
+Otherwise, continue to the next analysis step. Incorporate the results intepretation to tweak the analysis plan. For example, if a particular celltype was shown to be promising, focus the analysis plan on it.
+You should alter the analysis plan ONLY if you see significant evidence that you should pivot your analysis direction.
+
+CRITICAL: You have at most {num_steps_left} steps remaining. Your analysis plan MUST NOT exceed {num_steps_left} steps. Do not suggest more.
+
+Ensure that your output is in the specified JSON format. 
+
+Original Overall Analysis Hypothesis:
+{hypothesis}
+
+Original Overall Analysis Plan:
+{analysis_plan}
+
+{CODING_GUIDELINES}
+
+You are given the following summary of the anndata object:
+{adata_summary}
+
+Here are the previous analyses attempted:
+{past_analyses}
+
+Here is a summary of the research paper:
+{paper_txt}
+
+Here is the Jupyter notebook containing the previous steps and their generated interpretations:
+{jupyter_notebook}

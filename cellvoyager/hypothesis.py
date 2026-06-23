@@ -2,10 +2,16 @@
 Hypothesis generation module.
 Extracted from agent.py - Phase 1: Idea Generation.
 """
+
+import json
 import os
+import traceback
+import uuid
+
 import instructor
 import litellm
 from pydantic import BaseModel
+
 from cellvoyager.utils import get_documentation
 
 litellm.drop_params = True  # ignore unsupported params per-model silently
@@ -13,6 +19,11 @@ litellm.drop_params = True  # ignore unsupported params per-model silently
 # Instructor client wrapping LiteLLM — handles retries, validation, and structured output
 # for all OpenAI and Anthropic models uniformly.
 _instructor_client = instructor.from_litellm(litellm.completion)
+
+_ollama_instructor_client = instructor.from_litellm(
+    litellm.completion,
+    mode=instructor.Mode.JSON,
+)
 
 
 _MODEL_ALIASES = {
@@ -36,7 +47,16 @@ def _normalize_model_name(model: str) -> str:
     if model.startswith(("kimi-", "moonshot-v1")):
         return f"moonshot/{model}"
     # Known auto-detected OpenAI models
-    _auto_detected = {"gpt-4o", "gpt-4o-mini", "gpt-4", "gpt-3.5-turbo", "o1", "o3-mini", "o3", "o4-mini"}
+    _auto_detected = {
+        "gpt-4o",
+        "gpt-4o-mini",
+        "gpt-4",
+        "gpt-3.5-turbo",
+        "o1",
+        "o3-mini",
+        "o3",
+        "o4-mini",
+    }
     if model in _auto_detected:
         return model
     # For newer OpenAI models add the prefix
@@ -61,7 +81,7 @@ class HypothesisGenerator:
 
     def __init__(
         self,
-        model_name,
+        model_name,  # kept for backward compat, unused
         prompt_dir,
         coding_guidelines,
         coding_system_prompt,
@@ -73,10 +93,12 @@ class HypothesisGenerator:
         max_iterations=6,
         deepresearch_background="",
         log_prompts=False,
+        api_base_url=None,
         client=None,  # kept for backward compat, unused
     ):
         # Ensure litellm can route the model — add provider prefix if needed
         self.model_name = _normalize_model_name(model_name)
+
         self.prompt_dir = prompt_dir
         self.coding_guidelines = coding_guidelines
         self.coding_system_prompt = coding_system_prompt
@@ -88,20 +110,138 @@ class HypothesisGenerator:
         self.max_iterations = max_iterations
         self.deepresearch_background = deepresearch_background
         self.log_prompts = log_prompts
+        self.api_base_url = api_base_url
+        self.total_input_tokens = 0
+        self.total_output_tokens = 0
+        self.total_tokens = 0
 
-    def _complete_structured(self, messages: list) -> dict:
-        """Call LiteLLM via instructor and return a validated AnalysisPlan dict."""
-        result = _instructor_client.chat.completions.create(
-            model=self.model_name,
-            messages=list(messages),
-            response_model=AnalysisPlan,
+    def _record_token_usage(self, response, phase: str, call_id: str):
+        """Record token usage from LiteLLM response."""
+        usage = getattr(response, "usage", None)
+
+        output_tokens = int(getattr(usage, "completion_tokens", 0))
+        input_tokens = int(getattr(usage, "prompt_tokens", 0))
+        total_tokens = int(getattr(usage, "total_tokens", 0))
+
+        self.total_input_tokens += input_tokens
+        self.total_output_tokens += output_tokens
+        self.total_tokens += total_tokens
+
+        self.logger.log_response(
+            f"Token usage for call_id={call_id} [{phase}]:\n"
+            f"usage: {usage}\n"
+            f"Input tokens: {input_tokens}\n"
+            f"Output tokens: {output_tokens}\n"
+            f"Total tokens: {total_tokens}",
+            f"token_usage_{phase}_{call_id}",
         )
-        return result.model_dump()
 
-    def _complete(self, messages: list) -> str:
-        """Call LiteLLM for plain-text responses (e.g. critique feedback)."""
-        response = litellm.completion(model=self.model_name, messages=list(messages))
-        return response.choices[0].message.content
+    def _format_messages_for_log(self, messages: list) -> str:
+        """Readable formatting for LLM chat messages."""
+        return json.dumps(messages, indent=2, ensure_ascii=False, default=str)
+
+    def _complete_structured(
+        self, messages: list, phase: str = "structured_completion"
+    ) -> dict:
+        """Call LiteLLM via instructor and return a validated AnalysisPlan dict."""
+
+        call_id = uuid.uuid4().hex[:10]
+
+        if self.log_prompts:
+            self.logger.log_prompt(
+                "llm_messages",
+                self._format_messages_for_log(messages),
+                f"LLM REQUEST [{phase}] call_id={call_id}",
+            )
+
+        try:
+            is_ollama = self.model_name.startswith(("ollama/", "ollama_chat/"))
+
+            client = _ollama_instructor_client if is_ollama else _instructor_client
+
+            kwargs = {
+                "model": self.model_name,
+                "messages": list(messages),
+                "response_model": AnalysisPlan,
+                "max_retries": 2,
+            }
+
+            if self.api_base_url:
+                kwargs["api_base"] = self.api_base_url
+
+            if is_ollama:
+                kwargs["format"] = AnalysisPlan.model_json_schema()
+                kwargs["timeout"] = 300.0
+
+            result, raw_response = client.chat.completions.create_with_completion(
+                **kwargs
+            )
+            self._record_token_usage(raw_response, phase, call_id)
+
+            output = result.model_dump()
+
+            self.logger.log_response(
+                json.dumps(output, indent=2, ensure_ascii=False, default=str),
+                f"LLM STRUCTURED RESPONSE [{phase}] call_id={call_id}",
+            )
+
+            return output
+
+        except Exception as e:
+            self.logger.log_error(
+                f"LLM STRUCTURED ERROR [{phase}] call_id={call_id}\n"
+                f"{type(e).__name__}: {e}\n\n"
+                f"{traceback.format_exc()}"
+            )
+            raise
+
+    def _complete(self, messages: list, phase: str = "text_completion") -> str:
+        """Call LiteLLM for plain-text responses, e.g. critique feedback."""
+        call_id = uuid.uuid4().hex[:10]
+
+        if self.log_prompts:
+            self.logger.log_prompt(
+                "llm_messages",
+                self._format_messages_for_log(messages),
+                f"LLM REQUEST [{phase}] call_id={call_id}",
+            )
+
+        try:
+            if self.api_base_url:
+                response = litellm.completion(
+                    model=self.model_name,
+                    messages=list(messages),
+                    api_base=self.api_base_url,
+                )
+                self._record_token_usage(response, phase, call_id)
+            else:
+                response = litellm.completion(
+                    model=self.model_name,
+                    messages=list(messages),
+                )
+                self._record_token_usage(response, phase, call_id)
+
+            content = response.choices[0].message.content
+
+            usage = getattr(response, "usage", None)
+            usage_text = ""
+            if usage is not None:
+                usage_text = f"\n\nUSAGE:\n{json.dumps(usage, indent=2, default=str)}"
+
+            self.logger.log_response(
+                f"{content}{usage_text}",
+                f"LLM TEXT RESPONSE [{phase}] call_id={call_id}",
+            )
+
+            return content
+
+        except Exception as e:
+            self.logger.log_error(
+                f"LLM TEXT ERROR [{phase}] call_id={call_id}\n"
+                f"{type(e).__name__}: {e}\n\n"
+                f"{traceback.format_exc()}"
+            )
+            raise
 
     def generate_jupyter_summary(self, notebook_cells):
         """Generate a comprehensive summary of notebook cells including source code and outputs (including errors)"""
@@ -110,7 +250,11 @@ class HypothesisGenerator:
 
         jupyter_summary = ""
         for cell in notebook_cells:
-            if cell["cell_type"] == "code" or cell["cell_type"] == "markdown" or cell["cell_type"] == "error":
+            if (
+                cell["cell_type"] == "code"
+                or cell["cell_type"] == "markdown"
+                or cell["cell_type"] == "error"
+            ):
                 jupyter_summary += f"{cell['source']}\n"
 
         return jupyter_summary
@@ -129,10 +273,13 @@ class HypothesisGenerator:
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Initial Analysis")
 
-        return self._complete_structured([
-            {"role": "system", "content": self.coding_system_prompt},
-            {"role": "user", "content": prompt},
-        ])
+        return self._complete_structured(
+            [
+                {"role": "system", "content": self.coding_system_prompt},
+                {"role": "user", "content": prompt},
+            ],
+            phase="initial_analysis",
+        )
 
     def critique_step(self, analysis, past_analyses, notebook_cells, num_steps_left):
         hypothesis = analysis["hypothesis"]
@@ -163,7 +310,11 @@ class HypothesisGenerator:
                 num_steps_left=num_steps_left,
             )
         else:
-            prompt = open(os.path.join(self.prompt_dir, "ablations", "critic_NO_DOCUMENTATION.txt")).read()
+            prompt = open(
+                os.path.join(
+                    self.prompt_dir, "ablations", "critic_NO_DOCUMENTATION.txt"
+                )
+            ).read()
             prompt = prompt.format(
                 hypothesis=hypothesis,
                 analysis_plan=analysis_plan,
@@ -176,13 +327,16 @@ class HypothesisGenerator:
                 num_steps_left=num_steps_left,
             )
 
-        return self._complete([
-            {
-                "role": "system",
-                "content": "You are a single-cell bioinformatics expert providing feedback on code and analysis plan.",
-            },
-            {"role": "user", "content": prompt},
-        ])
+        return self._complete(
+            [
+                {
+                    "role": "system",
+                    "content": "You are a single-cell bioinformatics expert providing feedback on code and analysis plan.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+            phase="critique_step",
+        )
 
     def incorporate_critique(self, analysis, feedback, notebook_cells, num_steps_left):
         hypothesis = analysis["hypothesis"]
@@ -207,15 +361,32 @@ class HypothesisGenerator:
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Incorporate Critiques")
 
-        return self._complete_structured([
-            {"role": "system", "content": self.coding_system_prompt},
-            {"role": "user", "content": prompt},
-        ])
+        return self._complete_structured(
+            [
+                {"role": "system", "content": self.coding_system_prompt},
+                {"role": "user", "content": prompt},
+            ]
+        )
 
-    def get_feedback(self, analysis, past_analyses, notebook_cells, num_steps_left, iterations=1):
+    def get_feedback(
+        self, analysis, past_analyses, notebook_cells, num_steps_left, iterations=1
+    ):
         current_analysis = analysis
         for i in range(iterations):
-            feedback = self.critique_step(current_analysis, past_analyses, notebook_cells, num_steps_left)
+            self.logger.log_response(
+                f"Starting self-critique itteration {i + 1}/{iterations}",
+                f"self_critique_iteration_{i + 1}",
+            )
+
+            feedback = self.critique_step(
+                current_analysis, past_analyses, notebook_cells, num_steps_left
+            )
+
+            self.logger.log_response(
+                feedback,
+                f"self_critique_feedback_iteration_{i + 1}",
+            )
+
             current_analysis = self.incorporate_critique(
                 current_analysis, feedback, notebook_cells, num_steps_left
             )
@@ -236,7 +407,9 @@ class HypothesisGenerator:
         """
         if seeded_hypothesis is not None:
             print(f"🌱 Using seeded hypothesis: {seeded_hypothesis}")
-            return self.generate_analysis_from_hypothesis(seeded_hypothesis, past_analyses, analysis_idx)
+            return self.generate_analysis_from_hypothesis(
+                seeded_hypothesis, past_analyses, analysis_idx
+            )
 
         print("🧠 Generating new analysis idea...")
 
@@ -244,7 +417,7 @@ class HypothesisGenerator:
         analysis = self.generate_initial_analysis(past_analyses)
 
         if analysis_idx is not None:
-            step_name = f"{analysis_idx+1}_1"
+            step_name = f"{analysis_idx + 1}_1"
             hypothesis = analysis["hypothesis"]
             analysis_plan = analysis["analysis_plan"]
             initial_code = analysis["first_step_code"]
@@ -252,18 +425,22 @@ class HypothesisGenerator:
             # Log only the output of the analysis
             self.logger.log_response(
                 f"Hypothesis: {hypothesis}\n\nAnalysis Plan:\n"
-                + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)])
+                + "\n".join(
+                    [f"{i + 1}. {step}" for i, step in enumerate(analysis_plan)]
+                )
                 + f"\n\nInitial Code:\n{initial_code}",
                 f"initial_analysis_{step_name}",
             )
 
         # Get feedback for the initial analysis plan and modify it accordingly
         if self.use_self_critique:
-            modified_analysis = self.get_feedback(analysis, past_analyses, None, self.max_iterations)
+            modified_analysis = self.get_feedback(
+                analysis, past_analyses, None, self.max_iterations
+            )
 
             if analysis_idx is not None:
                 self.logger.log_response(
-                    f"APPLIED INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}",
+                    f"APPLIED INITIAL SELF-CRITIQUE - Analysis {analysis_idx + 1}",
                     f"self_critique_{step_name}",
                 )
 
@@ -274,23 +451,41 @@ class HypothesisGenerator:
                 # Log revised analysis plan
                 self.logger.log_response(
                     f"Revised Hypothesis: {hypothesis}\n\nRevised Analysis Plan:\n"
-                    + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)])
+                    + "\n".join(
+                        [f"{i + 1}. {step}" for i, step in enumerate(analysis_plan)]
+                    )
                     + f"\n\nRevised Code:\n{current_code}",
                     f"revised_analysis_{step_name}",
                 )
+
+            self.logger.log_response(
+                f"Total Token Usage for Hypothesis Generation:\n"
+                f"Input tokens: {self.total_input_tokens}\n"
+                f"Output tokens: {self.total_output_tokens}\n"
+                f"Total tokens: {self.total_tokens}",
+            )
 
             return modified_analysis
         else:
             if analysis_idx is not None:
                 print("🚫 Skipping feedback on next step (no self-critique)")
                 self.logger.log_response(
-                    f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx+1}",
+                    f"SKIPPING INITIAL SELF-CRITIQUE - Analysis {analysis_idx + 1}",
                     f"no_self_critique_{step_name}",
                 )
 
+            self.logger.log_response(
+                f"Total Token Usage for Hypothesis Generation:\n"
+                f"Input tokens: {self.total_input_tokens}\n"
+                f"Output tokens: {self.total_output_tokens}\n"
+                f"Total tokens: {self.total_tokens}",
+            )
+
             return analysis
 
-    def generate_analysis_from_hypothesis(self, hypothesis, past_analyses, analysis_idx=None):
+    def generate_analysis_from_hypothesis(
+        self, hypothesis, past_analyses, analysis_idx=None
+    ):
         """
         Generate an analysis plan from a simple hypothesis string using AI
 
@@ -303,7 +498,9 @@ class HypothesisGenerator:
             dict: Analysis containing hypothesis, analysis_plan, first_step_code, etc.
         """
         # Create a modified prompt that incorporates the seeded hypothesis
-        prompt = open(os.path.join(self.prompt_dir, "ablations", "analysis_from_hypothesis.txt")).read()
+        prompt = open(
+            os.path.join(self.prompt_dir, "ablations", "analysis_from_hypothesis.txt")
+        ).read()
         prompt = prompt.format(
             hypothesis=hypothesis,
             coding_guidelines=self.coding_guidelines,
@@ -314,10 +511,12 @@ class HypothesisGenerator:
         if self.log_prompts:
             self.logger.log_prompt("user", prompt, "Seeded Hypothesis Analysis")
 
-        analysis = self._complete_structured([
-            {"role": "system", "content": self.coding_system_prompt},
-            {"role": "user", "content": prompt},
-        ])
+        analysis = self._complete_structured(
+            [
+                {"role": "system", "content": self.coding_system_prompt},
+                {"role": "user", "content": prompt},
+            ]
+        )
 
         analysis = self.get_feedback(analysis, past_analyses, None, self.max_iterations)
 
@@ -326,14 +525,16 @@ class HypothesisGenerator:
 
         # Log the seeded hypothesis analysis
         if analysis_idx is not None:
-            step_name = f"{analysis_idx+1}_1"
+            step_name = f"{analysis_idx + 1}_1"
             analysis_plan = analysis["analysis_plan"]
             initial_code = analysis["first_step_code"]
 
             # Log the seeded hypothesis analysis
             self.logger.log_response(
                 f"Seeded Hypothesis: {hypothesis}\n\nGenerated Analysis Plan:\n"
-                + "\n".join([f"{i+1}. {step}" for i, step in enumerate(analysis_plan)])
+                + "\n".join(
+                    [f"{i + 1}. {step}" for i, step in enumerate(analysis_plan)]
+                )
                 + f"\n\nInitial Code:\n{initial_code}",
                 f"seeded_hypothesis_{step_name}",
             )

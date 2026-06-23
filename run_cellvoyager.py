@@ -1,18 +1,22 @@
 """
 CLI entry point for CellVoyager analysis.
 """
+
+import argparse
 import json
 import os
-import argparse
 from pathlib import Path
-from dotenv import load_dotenv
+
 from cellvoyager.agent import AnalysisAgentV2
+from dotenv import load_dotenv
 
 load_dotenv()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run CellVoyager analysis agent (v2 with modular execution)")
+    parser = argparse.ArgumentParser(
+        description="Run CellVoyager analysis agent (v2 with modular execution)"
+    )
 
     # REQUIRED arguments
     parser.add_argument(
@@ -74,6 +78,35 @@ def main():
         default="claude-sonnet-4-6",
         help="LLM model for hypothesis generation — OpenAI, Anthropic, or Kimi/Moonshot (e.g. o3-mini, gpt-4o, claude-sonnet-4-5, kimi-k2.5). Default: claude-sonnet-4-6",
     )
+
+    parser.add_argument(
+        "--local-llm",
+        action="store_true",
+        help="enables the use of a local LLM for hypothesis generation.",
+    )
+
+    parser.add_argument(
+        "--hypothesis-debug",
+        action="store_true",
+        help=(
+            "Only run hypothesis generation, print the full response, "
+            "and exit without creating notebooks or running execution."
+        ),
+    )
+
+    parser.add_argument(
+        "--from-analysis-json",
+        action="append",
+        metavar="PATH",
+        dest="from_analysis_json",
+        default=None,
+        help=(
+            "Path to a *_plan.json file saved by a previous run. Hypothesis generation is "
+            "skipped entirely and the saved plan is executed directly. Repeat the flag for "
+            "multiple analyses, e.g. --from-analysis-json run1/my_analysis_1_plan.json."
+        ),
+    )
+
     parser.add_argument(
         "--execution-model",
         default=None,
@@ -179,16 +212,28 @@ def main():
         help="Override intervene_every for resume (e.g. 999 to run to completion without pausing).",
     )
 
+    parser.add_argument(
+        "--api-base-url",
+        default=None,
+        help="Base URL for LLM API (e.g. for proxy or custom provider). If not set, will use default for the specified model.",
+    )
+
     args = parser.parse_args()
 
     # OpenAI API key — required for legacy execution mode and deep research,
     # optional for claude execution mode.
     openai_api_key = os.getenv("OPENAI_API_KEY")
-    needs_openai = (args.execution_mode != "claude") or args.deepresearch
+
+    needs_openai = args.local_llm is None and (
+        args.execution_mode != "claude" or args.deepresearch
+    )
+
     if needs_openai and not openai_api_key:
         print("❌ Error: OPENAI_API_KEY environment variable not set")
         print("Please set your OpenAI API key: export OPENAI_API_KEY='your-key-here'")
-        print("(Not required when using --execution-mode claude without --deepresearch)")
+        print(
+            "(Not required when using --execution-mode claude without --deepresearch)"
+        )
         return 1
 
     # Resume mode: handle separately before normal validation
@@ -199,10 +244,16 @@ def main():
         out_dir = Path(args.resume_output_dir)
         config_path = out_dir / ".run_config.json"
         if not config_path.exists():
-            print("❌ Error: No run config found. Run config is created when starting from the GUI.")
+            print(
+                "❌ Error: No run config found. Run config is created when starting from the GUI."
+            )
             return 1
         cfg = json.loads(config_path.read_text(encoding="utf-8"))
-        notebook_path = out_dir / f"{cfg['analysis_name']}_analysis_{args.resume_analysis_idx}.ipynb"
+        notebook_path = (
+            out_dir
+            / f"{cfg['analysis_name']}_analysis_{args.resume_analysis_idx}.ipynb"
+        )
+
         if not notebook_path.exists():
             print(f"❌ Error: Notebook not found: {notebook_path}")
             return 1
@@ -214,8 +265,14 @@ def main():
         if exec_mode != "claude":
             print("❌ Error: Resume only supports execution_mode=claude")
             return 1
-        intervene = args.resume_intervene_every if args.resume_intervene_every is not None else cfg.get("intervene_every", 1)
-        print("🔄 Resume mode: restoring kernel state, then entering interactive mode...")
+        intervene = (
+            args.resume_intervene_every
+            if args.resume_intervene_every is not None
+            else cfg.get("intervene_every", 1)
+        )
+        print(
+            "🔄 Resume mode: restoring kernel state, then entering interactive mode..."
+        )
         resume_exec_kwargs = {
             "jupyter_port": args.jupyter_port,
             "jupyter_token": args.jupyter_token,
@@ -245,6 +302,8 @@ def main():
             use_deepresearch_background=cfg.get("use_deepresearch", False),
             execution_mode=exec_mode,
             anthropic_api_key=anthropic_api_key,
+            hypothesis_debug=args.hypothesis_debug,
+            api_base_url=args.api_base_url,
             **resume_exec_kwargs,
         )
         try:
@@ -259,7 +318,7 @@ def main():
             return 1
 
     # Check Anthropic API key when using claude execution
-    if args.execution_mode == "claude":
+    if args.execution_mode == "claude" and not args.hypothesis_debug:
         anthropic_api_key = args.anthropic_api_key or os.getenv("ANTHROPIC_API_KEY")
         if not anthropic_api_key:
             print("❌ Error: ANTHROPIC_API_KEY required for --execution-mode claude")
@@ -325,20 +384,45 @@ def main():
         use_deepresearch_background=args.deepresearch,
         execution_mode=args.execution_mode,
         anthropic_api_key=args.anthropic_api_key or os.getenv("ANTHROPIC_API_KEY"),
+        hypothesis_debug=args.hypothesis_debug,
+        api_base_url=args.api_base_url,
         **execution_kwargs,
     )
 
-    try:
-        print("🔬 Running analyses...")
-        agent.run()
-        print("\n✅ Analysis complete!")
+    # Resolve --from-analysis-json paths into pre-built analysis dicts
+    prebuilt_analyses = None
+    if args.from_analysis_json:
+        prebuilt_analyses = []
+        for json_path in args.from_analysis_json:
+            json_path = os.path.abspath(json_path)
+            if not os.path.exists(json_path):
+                print(f"❌ Error: analysis JSON not found: {json_path}")
+                return 1
+            with open(json_path, encoding="utf-8") as fh:
+                prebuilt_analyses.append(json.load(fh))
+        print(f"Loaded {len(prebuilt_analyses)} pre-built analysis plan(s) — skipping hypothesis generation.")
+
+    if args.hypothesis_debug:
+        print(
+            "🔍 Hypothesis generation debug mode enabled. Generating hypotheses and printing full response..."
+        )
+        agent.run_hypothesis_debug()
+        print("\n✅ Hypothesis generation complete!")
         return 0
-    except KeyboardInterrupt:
-        print("\n⚠️ Analysis interrupted by user")
-        return 1
-    except Exception as e:
-        print(f"❌ Error during analysis: {e}")
-        return 1
+    else:
+        try:
+            print("🔬 Running analyses...")
+            agent.run(
+                prebuilt_analyses=prebuilt_analyses,
+            )
+            print("\n✅ Analysis complete!")
+            return 0
+        except KeyboardInterrupt:
+            print("\n⚠️ Analysis interrupted by user")
+            return 1
+        except Exception as e:
+            print(f"❌ Error during analysis: {e}")
+            return 1
 
 
 if __name__ == "__main__":
